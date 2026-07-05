@@ -1,11 +1,9 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import Portfolio from '@/components/Portfolio'
-import { name, jobTitle, pageSeo, siteUrl, socialLinks } from '@/lib/site'
-import { withBase } from '@/lib/with-base'
+import { name, jobTitle, homePageUrl, pageSeo, socialLinks } from '@/lib/site'
 
 const { title, description } = pageSeo.home
-const sitePageUrl = new URL(withBase(), siteUrl).href
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -14,13 +12,13 @@ const jsonLd = {
       '@type': 'Person',
       name,
       jobTitle,
-      url: sitePageUrl,
+      url: homePageUrl,
       sameAs: [socialLinks.github, socialLinks.linkedin],
     },
     {
       '@type': 'WebSite',
       name,
-      url: sitePageUrl,
+      url: homePageUrl,
     },
   ],
 }

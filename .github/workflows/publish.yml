@@ -30,6 +30,13 @@ jobs:
       - name: Build with Astro
         run: bun run build
 
+      - name: Verify SEO artifacts
+        run: |
+          test -f dist/sitemap-index.xml
+          grep -q 'https://rifkifajarramadhani.github.io/me/sitemap-index.xml' dist/robots.txt
+          grep -q 'rel="canonical" href="https://rifkifajarramadhani.github.io/me/"' dist/index.html
+          ! grep -q '<loc>https://rifkifajarramadhani.github.io/me</loc>' dist/sitemap-0.xml
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

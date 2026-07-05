@@ -17,8 +17,8 @@ const {
   noindex = false,
 } = Astro.props
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site)
-const ogImage = new URL(image ?? defaultOgImage, Astro.site)
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href
+const ogImage = new URL(image ?? defaultOgImage, Astro.site).href
 ---
 
 <!doctype html>
@@ -30,8 +30,13 @@ const ogImage = new URL(image ?? defaultOgImage, Astro.site)
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex" />}
+    {noindex ? (
+      <meta name="robots" content="noindex" />
+    ) : (
+      <meta name="robots" content="index, follow" />
+    )}
     <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" type="application/xml" href={withBase('sitemap-index.xml')} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />

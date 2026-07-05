@@ -8,6 +8,7 @@ export const defaultDescription =
   'Full-stack software engineer based in Indonesia with 4 years of experience building web applications with TypeScript, Golang, PHP, React, Vue, and Tailwind CSS.'
 
 export const siteUrl = import.meta.env.SITE
+export const homePageUrl = new URL(withBase(), siteUrl).href
 export const defaultOgImage = withBase('og-image.png')
 
 export const socialLinks = {
