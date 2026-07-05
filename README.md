@@ -30,7 +30,7 @@ bun run build
 bun preview
 ```
 
-The site is configured for GitHub Pages with `base: '/portfolio'`. Preview uses the same base path.
+The site is configured for GitHub Pages with `base: '/me'`. Preview uses the same base path.
 
 ## Config
 
@@ -56,7 +56,7 @@ Place images in `public/` and reference them in [`src/data/projects.ts`](src/dat
 previewImage: 'my-project.png'
 ```
 
-Images are served with the Astro base path (`/portfolio/` on GitHub Pages).
+Images are served with the Astro base path (`/me/` on GitHub Pages).
 
 ### Skills
 

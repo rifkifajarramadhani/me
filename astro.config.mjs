@@ -5,6 +5,6 @@ import sitemap from '@astrojs/sitemap'
 
 export default defineConfig({
   site: 'https://rifkifajarramadhani.github.io',
-  base: '/portfolio',
+  base: '/me',
   integrations: [react(), tailwind({ applyBaseStyles: false }), sitemap()],
 })
