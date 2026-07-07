@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rifkifajarramadhani.github.io/me/sitemap-index.xml
+Sitemap: https://rifkiramadhani.my.id/sitemap-index.xml
