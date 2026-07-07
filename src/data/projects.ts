@@ -27,16 +27,52 @@ const PROJECTS: {
   },
   {
     name: 'Shelflife',
-    description: `This app is designed to help customers effortlessly explore and purchase a curated selection of streetwear and lifestyle products from Shelf Life. The main feature enables users to browse the latest drops and exclusive items while securely ordering and paying through a streamlined payment gateway. With a focus on enhancing your shopping experience, this app makes it easy to stay on trend and access unique styles, all from the convenience of your mobile device.`,
+    featured: true,
+    tags: ['Vue', 'Node.js', 'Streetwear', 'E-commerce'],
+    description:
+      'A premium streetwear and sneaker storefront for one of South Africa\'s most influential lifestyle retailers. Shoppers browse new drops, explore curated collections, and check out through a polished e-commerce experience built for hype-driven product launches and everyday style.',
     liveLink: 'https://www.shelflife.co.za/',
     previewImage: 'shelflife/1.png',
     repoUrl: '#',
   },
   {
     name: 'Museum Macan',
-    description: 'This is an app to assist clients in making reservations and purchasing tickets to enter their museums. The main feature in this application is ordering and paying for tickets using a payment gateway to facilitate the processing of the data they manage.',
+    featured: true,
+    tags: ['Vue', 'Node.js', 'Ticketing', 'Cultural'],
+    description:
+      'The digital front door for Museum MACAN — Indonesia\'s leading museum of modern and contemporary art. Visitors explore exhibitions and programs, book tickets, and plan their visit through a refined, content-rich experience that mirrors the museum\'s curatorial quality.',
     liveLink: 'https://www.museummacan.org/',
-    previewImage: 'museum-macan/1.PNG',
+    previewImage: 'museum-macan/1.png',
+    repoUrl: '#',
+  },
+  {
+    name: 'Woermann Fresh',
+    featured: true,
+    tags: ['Vue', 'Node.js', 'E-commerce', 'Grocery'],
+    description:
+      'An online grocery platform for Woermann Fresh supermarkets in Namibia. Customers browse fresh produce, butchery, bakery, and household essentials, place orders for same-day delivery, and track purchases from store to doorstep — all through a streamlined storefront built for everyday shopping at scale.',
+    liveLink: 'https://shop.woermannfresh.com/',
+    previewImage: 'woermann-fresh/1.png',
+    repoUrl: '#',
+  },
+  {
+    name: 'Hey Halfway',
+    featured: true,
+    tags: ['Vue', 'Node.js', 'Automotive', 'Search'],
+    description:
+      'A nationwide used-car marketplace for the Halfway Group, one of South Africa\'s largest independent dealer networks. Drivers search, save, and compare vehicles across 22 dealerships, calculate finance instalments, and connect with sales teams — turning a fragmented dealer network into a single, searchable buying experience.',
+    liveLink: 'https://www.heyhalfway.com/',
+    previewImage: 'hey-halfway/1.png',
+    repoUrl: '#',
+  },
+  {
+    name: 'Comprimage',
+    featured: true,
+    tags: ['Astro', 'TypeScript', 'WebAssembly', 'PWA'],
+    description:
+      'A privacy-first image toolkit that runs entirely in the browser. Resize, compress, and convert images with modern codecs like MozJPEG, WebP, AVIF, and JPEG XL — no uploads, no server processing. Progressive resizing and auto-quality tuning deliver dramatically smaller files while keeping visuals sharp.',
+    liveLink: 'https://comprimage.rifkiramadhani.my.id/',
+    previewImage: 'comprimage/1.png',
     repoUrl: '#',
   },
 ]
