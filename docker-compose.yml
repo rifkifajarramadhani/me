@@ -1,20 +1,47 @@
 services:
   web:
+    image: ghcr.io/rifkifajarramadhani/me:${IMAGE_TAG:-latest}
     build:
       context: .
       args:
         SITE_URL: ${SITE_URL}
         BASE_PATH: ${BASE_PATH:-/}
-    environment:
-      DOMAIN: ${DOMAIN}
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
+    expose:
+      - "80"
+    networks:
+      # Public edge network: the shared Traefik proxy routes external traffic here.
+      - edge
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=edge
+      # Apex site
+      - "traefik.http.routers.me.rule=Host(`rifkiramadhani.my.id`)"
+      - traefik.http.routers.me.entrypoints=websecure
+      - traefik.http.routers.me.tls=true
+      - traefik.http.routers.me.tls.certresolver=letsencrypt
+      - traefik.http.services.me.loadbalancer.server.port=80
+      # Per-IP edge rate limit: 100 req/s average, burst 200
+      - traefik.http.middlewares.me-ratelimit.ratelimit.average=100
+      - traefik.http.middlewares.me-ratelimit.ratelimit.burst=200
+      - traefik.http.routers.me.middlewares=me-ratelimit
+      # www -> apex 301 redirect
+      - "traefik.http.routers.me-www.rule=Host(`www.rifkiramadhani.my.id`)"
+      - traefik.http.routers.me-www.entrypoints=websecure
+      - traefik.http.routers.me-www.tls=true
+      - traefik.http.routers.me-www.tls.certresolver=letsencrypt
+      - "traefik.http.middlewares.me-redirect-www.redirectregex.regex=^https?://www\\.(.+)"
+      - "traefik.http.middlewares.me-redirect-www.redirectregex.replacement=https://$${1}"
+      - traefik.http.middlewares.me-redirect-www.redirectregex.permanent=true
+      - traefik.http.routers.me-www.middlewares=me-redirect-www
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/healthz"]
+      interval: 10s
+      timeout: 3s
+      start_period: 10s
+      retries: 5
     restart: unless-stopped
 
-volumes:
-  caddy_data:
-  caddy_config:
+networks:
+  edge:
+    name: edge
+    external: true

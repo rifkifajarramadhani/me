@@ -1,5 +1,0 @@
-{$DOMAIN} {
-	root * /srv
-	encode gzip
-	file_server
-}
