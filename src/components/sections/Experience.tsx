@@ -24,6 +24,9 @@ export default function Experience() {
                   {role.role}{' '}
                   <span className="text-accent-2">@ {role.company}</span>
                 </h3>
+                <p className="mt-1 font-mono text-xs uppercase tracking-wider text-text-secondary/70">
+                  {role.country}
+                </p>
                 <p className="mt-2 leading-relaxed text-text-secondary">
                   {role.description}
                 </p>
