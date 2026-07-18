@@ -18,7 +18,7 @@ const PROJECTS: {
   },
   {
     name: 'Outdoor Warehouse',
-    featured: true,
+    featured: false,
     tags: ['Vue', 'Node.js', 'Tailwind', 'E-commerce'],
     description: `This app is designed to help customers easily shop for outdoor gear at Sportsman’s Warehouse. The main feature allows users to browse a wide selection of equipment for fishing, hunting, camping, and more. With a secure payment gateway, you can effortlessly order and pay for your items, ensuring a smooth transaction process. Whether you’re gearing up for your next adventure or seeking expert advice, our app simplifies your shopping experience, making it easier than ever to get outdoors!`,
     liveLink: 'https://www.outdoorwarehouse.co.za/',
@@ -27,7 +27,7 @@ const PROJECTS: {
   },
   {
     name: 'Shelflife',
-    featured: true,
+    featured: false,
     tags: ['Vue', 'Node.js', 'Streetwear', 'E-commerce'],
     description:
       'A premium streetwear and sneaker storefront for one of South Africa\'s most influential lifestyle retailers. Shoppers browse new drops, explore curated collections, and check out through a polished e-commerce experience built for hype-driven product launches and everyday style.',
@@ -47,7 +47,7 @@ const PROJECTS: {
   },
   {
     name: 'Woermann Fresh',
-    featured: true,
+    featured: false,
     tags: ['Vue', 'Node.js', 'E-commerce', 'Grocery'],
     description:
       'An online grocery platform for Woermann Fresh supermarkets in Namibia. Customers browse fresh produce, butchery, bakery, and household essentials, place orders for same-day delivery, and track purchases from store to doorstep — all through a streamlined storefront built for everyday shopping at scale.',
