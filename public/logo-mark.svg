@@ -1,5 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
-  <title id="title">Rifki RF terminal monogram</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">RF terminal monogram</title>
+  <desc id="desc">The letters R and F with a green terminal prompt and cursor.</desc>
   <rect width="512" height="512" rx="88" fill="#171514" />
   <path
     fill="#fdfcfc"

@@ -10,6 +10,8 @@ export const defaultDescription =
 export const siteUrl = import.meta.env.SITE
 export const homePageUrl = new URL(withBase(), siteUrl).href
 export const defaultOgImage = withBase('og-image.png')
+export const defaultTwitterImage = withBase('twitter-image.png')
+export const defaultSocialImageAlt = `${name} — ${jobTitle}`
 
 export const socialLinks = {
   github: 'https://github.com/rifkifajarramadhani',

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 480" role="img" aria-labelledby="title desc">
+  <title id="title">Rifki Fajar Ramadhani, Full-Stack Engineer</title>
+  <desc id="desc">RF terminal monogram beside Rifki Fajar Ramadhani's name and role.</desc>
+  <g transform="translate(40 40) scale(.78125)">
+    <rect width="512" height="512" rx="88" fill="#171514" />
+    <path
+      fill="#fdfcfc"
+      fill-rule="evenodd"
+      d="M96 92h146c75 0 122 42 122 109 0 46-23 80-64 97l76 122h-82l-66-110h-54v110H96V92Zm78 66v88h62c33 0 50-15 50-44 0-30-17-44-50-44h-62Z"
+    />
+    <path fill="#fdfcfc" d="M330 92h102v66h-24v67h20v66h-20v129h-78V92Z" />
+    <path fill="#3fb950" d="m86 354 36 33-36 33 17 19 57-52-57-52-17 19Zm78 53h62v26h-62v-26Z" />
+  </g>
+  <text x="500" y="218" fill="#171514" font-family="'JetBrains Mono', monospace" font-size="72" font-weight="700" letter-spacing="-2">Rifki Fajar Ramadhani</text>
+  <text x="504" y="292" fill="#646262" font-family="'JetBrains Mono', monospace" font-size="36" font-weight="500">Full-Stack Engineer</text>
+  <path fill="#3fb950" d="M504 336h420v8H504z" />
+</svg>
