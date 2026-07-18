@@ -5,7 +5,7 @@ export const shortName = 'Rifki'
 export const jobTitle = 'Full-Stack Engineer'
 export const defaultTitle = `${shortName} | ${jobTitle}`
 export const defaultDescription =
-  'Full-stack software engineer based in Indonesia with 4 years of experience building web applications with TypeScript, Golang, PHP, React, Vue, and Tailwind CSS.'
+  'Full-stack software engineer based in Indonesia with 6 years of experience building web applications with TypeScript, Golang, PHP, React, Vue, and Tailwind CSS.'
 
 export const siteUrl = import.meta.env.SITE
 export const homePageUrl = new URL(withBase(), siteUrl).href
@@ -25,7 +25,7 @@ export const pageSeo = {
   about: {
     title: `About | ${shortName}`,
     description:
-      'Full-stack web developer with 4 years of experience in TypeScript, Golang, PHP, React, Vue, and Tailwind CSS. Skilled in scalable architectures and seamless user experiences.',
+      'Full-stack web developer with 6 years of experience in TypeScript, Golang, PHP, React, Vue, and Tailwind CSS. Skilled in scalable architectures and seamless user experiences.',
   },
   work: {
     title: `Work | ${shortName}`,

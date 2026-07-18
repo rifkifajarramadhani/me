@@ -1,15 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SiGithub, SiGmail, SiLinkedin } from '@icons-pack/react-simple-icons'
-import { name, socialLinks } from '@/lib/site'
+import { name, jobTitle, socialLinks } from '@/lib/site'
 
 const taglines = ['build things for the web.', 'build digital experiences.']
 
 const socials = [
-  { icon: SiGmail, href: socialLinks.email, label: 'Email' },
-  { icon: SiGithub, href: socialLinks.github, label: 'GitHub' },
-  { icon: SiLinkedin, href: socialLinks.linkedin, label: 'LinkedIn' },
+  { href: socialLinks.github, label: 'github' },
+  { href: socialLinks.email, label: 'email' },
+  { href: socialLinks.linkedin, label: 'linkedin' },
 ]
+
+function PromptLine({ command, children }: { command: string; children?: ReactNode }) {
+  return (
+    <p className="font-mono text-sm leading-relaxed sm:text-base">
+      <span className="mr-[0.4ch] text-prompt">$</span>
+      <span className="text-ink-subtle">{command}</span>
+      {children && (
+        <>
+          {' '}
+          <span className="text-ink">{children}</span>
+        </>
+      )}
+    </p>
+  )
+}
 
 export default function Hero() {
   const [i, setI] = useState(0)
@@ -22,71 +36,82 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-6"
+      className="relative mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-6 pt-20"
     >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, staggerChildren: 0.1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="terminal-window"
       >
-        <p className="mb-5 font-mono text-accent-1">Hi, my name is</p>
-        <h1 className="text-4xl font-bold text-text-primary sm:text-6xl lg:text-7xl">
-          {name}.
-        </h1>
-        <h2 className="mt-3 flex flex-wrap items-baseline gap-x-3 text-3xl font-bold text-text-secondary sm:text-5xl lg:text-6xl">
-          <span>I</span>
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={i}
-              className="text-accent-1"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.4 }}
-            >
-              {taglines[i]}
-            </motion.span>
-          </AnimatePresence>
-        </h2>
+        <div className="terminal-titlebar">
+          <div className="flex items-center gap-1.5">
+            <span className="size-[0.62rem] rounded-full bg-danger" />
+            <span className="size-[0.62rem] rounded-full bg-warning" />
+            <span className="size-[0.62rem] rounded-full bg-success" />
+          </div>
+          <span className="font-mono text-xs text-ink-tertiary">~/portfolio</span>
+        </div>
 
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-text-secondary">
-          I'm a full-stack software engineer based in Indonesia with 4 years of
-          experience crafting innovative and efficient web applications with
-          TypeScript, Golang, PHP, React, Vue, and Tailwind CSS.
-        </p>
+        <div className="space-y-3 p-6 sm:p-8">
+          <PromptLine command="whoami">{name}</PromptLine>
+          <PromptLine command="cat role.txt">{jobTitle}</PromptLine>
 
-        <div className="mt-10 flex flex-wrap items-center gap-6">
-          <a
-            href="#work"
-            className="rounded border border-accent-1 px-6 py-3 font-mono text-accent-1 transition-colors hover:bg-accent-1/10"
-          >
-            Check out my work
-          </a>
-          <div className="flex items-center gap-5">
-            {socials.map(({ icon: Icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="text-text-secondary transition-colors hover:text-accent-1"
+          <div className="flex flex-wrap items-baseline gap-x-2 font-mono text-sm sm:text-base">
+            <span className="text-prompt">$</span>
+            <span className="text-ink-subtle">echo</span>
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={i}
+                className="text-primary"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.35 }}
               >
-                <Icon className="h-6 w-6" title="" />
-              </a>
-            ))}
+                &quot;{taglines[i]}&quot;
+              </motion.span>
+            </AnimatePresence>
+            <span className="inline-block h-[1.05em] w-[0.55ch] translate-y-[0.12em] animate-command-caret bg-primary motion-reduce:animate-none" />
+          </div>
+
+          <p className="max-w-xl pt-2 font-mono text-sm leading-[1.7] text-ink-muted">
+            Full-stack software engineer based in Indonesia with 6 years of experience
+            crafting web applications with TypeScript, Golang, PHP, React, Vue, and
+            Tailwind CSS.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4 pt-4">
+            <a
+              href="#work"
+              className="border border-hairline-strong px-4 py-2 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
+            >
+              <span className="text-prompt">[</span> view work <span className="text-prompt">]</span>
+            </a>
+            <div className="flex flex-wrap items-center gap-3">
+              {socials.map(({ href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+                >
+                  <span className="text-prompt">[</span> {label} <span className="text-prompt">]</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </motion.div>
 
       <a
         href="#about"
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-text-secondary/50 transition-colors hover:text-accent-1"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 font-mono text-xs text-ink-tertiary transition-colors hover:text-primary"
         aria-label="Scroll to about"
       >
-        <svg className="h-6 w-6 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="m6 9 6 6 6-6" />
-        </svg>
+        <span className="text-prompt">[</span> scroll <span className="text-prompt">]</span>
       </a>
     </section>
   )

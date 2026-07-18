@@ -4,14 +4,27 @@ import { withBase } from '@/lib/with-base'
 ---
 
 <Layout title="Page Not Found | Rifki" description="The page you are looking for does not exist." noindex>
-  <div class="font-base">
-    <h1 class="text-2xl font-heading sm:text-4xl">404</h1>
-    <p class="mt-4 text-base sm:text-lg">Page not found.</p>
+  <div class="mx-auto flex min-h-screen max-w-2xl flex-col items-start justify-center px-6">
+    <p class="mb-2 font-mono text-[0.72rem] font-bold uppercase tracking-[0.14em] text-ink-subtle">
+      <span class="text-prompt">[</span>
+      error
+      <span class="text-prompt">]</span>
+    </p>
+    <h1 class="font-mono text-2xl font-bold text-ink sm:text-3xl">
+      <span class="mr-[0.4ch] text-prompt">$</span>
+      cat 404.txt
+      <span
+        class="ml-[0.15ch] inline-block h-[1.05em] w-[0.55ch] translate-y-[0.16em] animate-command-caret bg-primary motion-reduce:animate-none"
+      ></span>
+    </h1>
+    <p class="mt-4 font-mono text-sm leading-[1.7] text-ink-muted">
+      Page not found. The path you requested does not exist on this system.
+    </p>
     <a
-      class="border-border dark:border-darkBorder shadow-light dark:shadow-dark mt-8 inline-block rounded-base border-2 bg-main px-4 py-2 text-sm font-base transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none sm:text-base dark:hover:shadow-none"
+      class="mt-8 border border-hairline-strong px-4 py-2 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
       href={withBase()}
     >
-      Back to home
+      <span class="text-prompt">[</span> back to home <span class="text-prompt">]</span>
     </a>
   </div>
 </Layout>
