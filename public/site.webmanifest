@@ -1,13 +1,19 @@
 {
-  "name": "Rifki Fajar Ramadhani | Full-Stack Engineer",
+  "name": "Rifki Fajar Ramadhani",
   "short_name": "Rifki",
-  "description": "Portfolio of Rifki Fajar Ramadhani, a full-stack software engineer based in Indonesia.",
-  "start_url": ".",
-  "scope": ".",
+  "description": "Portfolio of Rifki Fajar Ramadhani, a full-stack software engineer based in Indonesia who has been building web applications since 2018.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#fdfcfc",
   "theme_color": "#171514",
   "icons": [
+    {
+      "src": "favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "android-chrome-192x192.png",
       "sizes": "192x192",

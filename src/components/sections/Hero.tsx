@@ -54,7 +54,13 @@ export default function Hero() {
         </div>
 
         <div className="space-y-3 p-6 sm:p-8">
-          <PromptLine command="whoami">{name}</PromptLine>
+          <div className="font-mono text-sm leading-relaxed sm:text-base">
+            <span className="mr-[0.4ch] text-prompt">$</span>
+            <span className="text-ink-subtle">whoami</span>{' '}
+            <h1 className="inline font-mono text-xl font-semibold tracking-[-0.02em] text-ink sm:text-2xl">
+              {name}
+            </h1>
+          </div>
           <PromptLine command="cat role.txt">{jobTitle}</PromptLine>
 
           <div className="flex flex-wrap items-baseline gap-x-2 font-mono text-sm sm:text-base">
@@ -76,9 +82,8 @@ export default function Hero() {
           </div>
 
           <p className="max-w-xl pt-2 font-mono text-sm leading-[1.7] text-ink-muted">
-            Full-stack software engineer based in Indonesia with 6 years of experience
-            crafting web applications with TypeScript, Golang, PHP, React, Vue, and
-            Tailwind CSS.
+            Full-stack software engineer based in Indonesia, building web applications
+            since 2018 with TypeScript, Golang, PHP, React, Vue, and Tailwind CSS.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-4">

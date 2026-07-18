@@ -7,7 +7,7 @@ import {
   defaultSocialImageAlt,
   defaultTitle,
   defaultTwitterImage,
-  shortName,
+  name,
 } from '@/lib/site'
 
 interface Props {
@@ -34,8 +34,9 @@ const twitterImage = new URL(image ?? defaultTwitterImage, Astro.site).href
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" href={withBase('favicon.ico')} sizes="any" />
-    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <link rel="icon" type="image/png" sizes="96x96" href={withBase('favicon-96x96.png')} />
+    <link rel="icon" type="image/svg+xml" sizes="any" href={withBase('favicon.svg')} />
+    <link rel="icon" href={withBase('favicon.ico')} sizes="16x16 32x32 48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href={withBase('favicon-32x32.png')} />
     <link rel="icon" type="image/png" sizes="16x16" href={withBase('favicon-16x16.png')} />
     <link rel="apple-touch-icon" sizes="180x180" href={withBase('apple-touch-icon.png')} />
@@ -55,7 +56,7 @@ const twitterImage = new URL(image ?? defaultTwitterImage, Astro.site).href
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={shortName} />
+    <meta property="og:site_name" content={name} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
