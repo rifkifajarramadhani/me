@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#171514" />
+  <g transform="translate(72 72) scale(.71875)">
+    <rect width="512" height="512" rx="88" fill="#171514" />
+    <path
+      fill="#fdfcfc"
+      fill-rule="evenodd"
+      d="M96 92h146c75 0 122 42 122 109 0 46-23 80-64 97l76 122h-82l-66-110h-54v110H96V92Zm78 66v88h62c33 0 50-15 50-44 0-30-17-44-50-44h-62Z"
+    />
+    <path fill="#fdfcfc" d="M330 92h102v66h-24v67h20v66h-20v129h-78V92Z" />
+    <path fill="#3fb950" d="m86 354 36 33-36 33 17 19 57-52-57-52-17 19Zm78 53h62v26h-62v-26Z" />
+  </g>
+</svg>
