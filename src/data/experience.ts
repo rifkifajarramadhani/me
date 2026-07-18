@@ -13,7 +13,7 @@ const PAST_ROLES: {
       description:
         'Ship and maintain high-traffic e-commerce platforms for retail brands across Southern Africa — from outdoor gear and streetwear to grocery and automotive. I work across the stack with Vue, Node.js, and Tailwind, building product discovery, checkout flows, and integrations that stay fast and reliable under real customer load.',
       startDate: 'May 2024',
-      endDate: 'Now',
+      endDate: 'Present',
     },
     {
       company: 'Northbit ID',
@@ -21,13 +21,13 @@ const PAST_ROLES: {
       role: 'Back-End Engineer',
       description:
         'Designed and delivered backend systems for client projects, from API architecture to database modeling. Focused on clean, maintainable code, thoughtful schema design, and performance under production constraints — with regular code reviews to keep quality high across the team.',
-      startDate: 'April 2021',
-      endDate: 'March 2023',
+      startDate: 'January 2023',
+      endDate: 'December 2024',
     },
     {
       company: 'AutoWealth SG',
       country: 'Singapore',
-      role: 'Software Engineer',
+      role: 'Analyst Programmer (Software Engineer)',
       description:
         'Led a full revamp of AutoWealth\'s main platform and cut data-loading times by up to 50%. Built a template system that streamlined client onboarding, worked across frontend and backend for responsive UX, and shipped features through close collaboration with product and engineering peers.',
       startDate: 'January 2022',
@@ -48,8 +48,8 @@ const PAST_ROLES: {
       role: 'Web Developer',
       description:
         'Owned the company website end to end — from requirements and implementation through deployment and ongoing support. Responded quickly to client issues and kept the site stable as business needs evolved.',
-      startDate: 'February 2019',
-      endDate: 'May 2019',
+      startDate: 'August 2020',
+      endDate: 'November 2020',
     },
     {
       company: 'Brawijaya University Hospital',

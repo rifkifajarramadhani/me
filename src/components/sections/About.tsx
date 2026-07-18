@@ -22,9 +22,9 @@ export default function About() {
       <div className="grid gap-10 md:grid-cols-3">
         <Reveal className="panel space-y-4 p-6 text-ink-muted md:col-span-2">
           <p className="leading-[1.7]">
-            Hello! I'm Rifki, a passionate full-stack web developer based in
-            Indonesia with 6 years of experience crafting innovative and
-            efficient web applications. I enjoy building products end-to-end —
+            Hello! I'm Rifki Fajar Ramadhani, a passionate full-stack web developer
+            based in Indonesia who has been building web applications since 2018. I
+            enjoy building products end-to-end —
             from designing clean, scalable back-end architectures to shipping
             polished, responsive front-ends.
           </p>

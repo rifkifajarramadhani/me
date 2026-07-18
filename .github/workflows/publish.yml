@@ -36,8 +36,19 @@ jobs:
       - name: Verify SEO artifacts
         run: |
           test -f dist/sitemap-index.xml
+          test -f dist/favicon-96x96.png
           grep -q 'https://rifkiramadhani.my.id/sitemap-index.xml' dist/robots.txt
           grep -q 'rel="canonical" href="https://rifkiramadhani.my.id/"' dist/index.html
+          grep -q '<title>Rifki Fajar Ramadhani | Full-Stack Engineer in Indonesia</title>' dist/index.html
+          grep -q '<meta property="og:site_name" content="Rifki Fajar Ramadhani"' dist/index.html
+          grep -q 'rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png"' dist/index.html
+          grep -q '"alternateName":\["Rifki","rifkiramadhani.my.id"\]' dist/index.html
+          grep -q '"name": "Rifki Fajar Ramadhani"' dist/site.webmanifest
+          test "$(grep -o '<h1[ >]' dist/index.html | wc -l)" -eq 1
+          grep -q '<h1[^>]*>Rifki Fajar Ramadhani</h1>' dist/index.html
+          bun -e "const b = await Bun.file('dist/favicon-96x96.png').arrayBuffer(); const v = new DataView(b); if (v.getUint32(16) !== 96 || v.getUint32(20) !== 96) process.exit(1)"
+          ! grep -R -q 'rifkifajarramadhani.github.io/portfolio' dist resume
+          ! grep -a -q 'rifkifajarramadhani.github.io/portfolio' public/resume.pdf
 
       - name: Log in to GHCR
         uses: docker/login-action@v3

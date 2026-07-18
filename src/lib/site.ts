@@ -2,10 +2,11 @@ import { withBase } from '@/lib/with-base'
 
 export const name = 'Rifki Fajar Ramadhani'
 export const shortName = 'Rifki'
+export const alternateSiteNames = [shortName, 'rifkiramadhani.my.id'] as const
 export const jobTitle = 'Full-Stack Engineer'
-export const defaultTitle = `${shortName} | ${jobTitle}`
+export const defaultTitle = `${name} | ${jobTitle} in Indonesia`
 export const defaultDescription =
-  'Full-stack software engineer based in Indonesia with 6 years of experience building web applications with TypeScript, Golang, PHP, React, Vue, and Tailwind CSS.'
+  'Rifki Fajar Ramadhani is a full-stack software engineer based in Indonesia, building web applications since 2018 with TypeScript, Golang, PHP, React, and Vue.'
 
 export const siteUrl = import.meta.env.SITE
 export const homePageUrl = new URL(withBase(), siteUrl).href
@@ -27,7 +28,7 @@ export const pageSeo = {
   about: {
     title: `About | ${shortName}`,
     description:
-      'Full-stack web developer with 6 years of experience in TypeScript, Golang, PHP, React, Vue, and Tailwind CSS. Skilled in scalable architectures and seamless user experiences.',
+      'About Rifki Fajar Ramadhani, a full-stack web developer based in Indonesia who has been building web applications since 2018.',
   },
   work: {
     title: `Work | ${shortName}`,

@@ -1,15 +1,25 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import Portfolio from '@/components/Portfolio'
-import { name, jobTitle, homePageUrl, pageSeo, socialLinks } from '@/lib/site'
+import {
+  alternateSiteNames,
+  name,
+  jobTitle,
+  homePageUrl,
+  pageSeo,
+  socialLinks,
+} from '@/lib/site'
 
 const { title, description } = pageSeo.home
+const websiteId = `${homePageUrl}#website`
+const personId = `${homePageUrl}#person`
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'Person',
+      '@id': personId,
       name,
       jobTitle,
       url: homePageUrl,
@@ -17,8 +27,11 @@ const jsonLd = {
     },
     {
       '@type': 'WebSite',
+      '@id': websiteId,
       name,
+      alternateName: alternateSiteNames,
       url: homePageUrl,
+      about: { '@id': personId },
     },
   ],
 }
