@@ -8,6 +8,16 @@ const PROJECTS: {
   tags?: string[]
 }[] = [
   {
+    name: 'Typefn',
+    featured: true,
+    tags: ['TanStack Start', 'Go', 'PostgreSQL', 'Tree-sitter'],
+    description:
+      'A Monkeytype-style typing trainer for software engineers, built on real functions from permissively licensed open-source repositories. Tree-sitter extracts the corpus across TypeScript, JavaScript, Go, PHP, and Python, and the trainer preserves auto-indent while marking errors without force-correcting. Timed runs feed history, leaderboards, and adaptive weak-symbol drills.',
+    liveLink: 'https://www.typefn.dev/',
+    previewImage: 'typefn/1.png',
+    repoUrl: '#',
+  },
+  {
     name: 'Sportsmans Warehouse',
     featured: true,
     tags: ['Vue', 'Node.js', 'Tailwind', 'Payment Gateway'],
@@ -71,8 +81,17 @@ const PROJECTS: {
     tags: ['Astro', 'TypeScript', 'WebAssembly', 'PWA'],
     description:
       'A privacy-first image toolkit that runs entirely in the browser. Resize, compress, and convert images with modern codecs like MozJPEG, WebP, AVIF, and JPEG XL — no uploads, no server processing. Progressive resizing and auto-quality tuning deliver dramatically smaller files while keeping visuals sharp.',
-    liveLink: 'https://comprimage.rifkiramadhani.my.id/',
+    liveLink: 'https://comprimage.my.id/',
     previewImage: 'comprimage/1.png',
+    repoUrl: '#',
+  },
+  {
+    name: 'AutoWealth',
+    tags: ['PHP', 'Bootstrap', 'CSS'],
+    description:
+      'An institutional-grade robo-advisor for Singapore investors — globally diversified, index-tracking portfolios across CPF, SRS, and cash accounts.',
+    liveLink: 'https://www.autowealth.com.sg/',
+    previewImage: '',
     repoUrl: '#',
   },
 ]
