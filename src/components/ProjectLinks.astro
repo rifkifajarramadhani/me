@@ -1,0 +1,37 @@
+---
+interface Props {
+  repoUrl: string
+  liveLink: string
+}
+
+const { repoUrl, liveLink } = Astro.props
+---
+
+<div class="flex items-center gap-3 font-mono text-xs">
+  {
+    repoUrl && repoUrl !== '#' && (
+      <a
+        href={repoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Repository"
+        class="text-ink-subtle transition-colors hover:text-primary"
+      >
+        <span class="text-prompt">[</span>repo<span class="text-prompt">]</span>
+      </a>
+    )
+  }
+  {
+    liveLink && (
+      <a
+        href={liveLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Live site"
+        class="text-ink-subtle transition-colors hover:text-primary"
+      >
+        <span class="text-prompt">[</span>live<span class="text-prompt">]</span>
+      </a>
+    )
+  }
+</div>

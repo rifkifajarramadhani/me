@@ -1,8 +1,8 @@
 # Portfolio
 
-A dark-themed personal portfolio with scroll animations for [rifkiramadhani.my.id](https://rifkiramadhani.my.id).
+A dark-themed personal portfolio with lightweight native scroll animations for [rifkiramadhani.my.id](https://rifkiramadhani.my.id).
 
-**Stack:** Astro 5, React 18, Tailwind CSS, Framer Motion, TypeScript, Bun
+**Stack:** Astro 5, Tailwind CSS, TypeScript, Bun
 
 ## Get started
 
@@ -92,7 +92,7 @@ The container is served by nginx and routed through Traefik with TLS (Let's Encr
 
 ### Social links
 
-Edit `socialLinks` in [`src/lib/site.ts`](src/lib/site.ts). Social icons in the UI use [`@icons-pack/react-simple-icons`](https://simpleicons.org/).
+Edit `socialLinks` in [`src/lib/site.ts`](src/lib/site.ts). Skill icons in the UI use [`simple-icons`](https://simpleicons.org/).
 
 ### Project preview images
 

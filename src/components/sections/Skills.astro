@@ -1,0 +1,181 @@
+---
+import SKILLS from '@/data/skills'
+import Reveal from '@/components/Reveal.astro'
+import SectionHeading from '@/components/SectionHeading.astro'
+---
+
+<section id="skills" class="mx-auto max-w-4xl px-6 py-24">
+  <Reveal>
+    <SectionHeading command="ls skills/" kicker="skills" />
+  </Reveal>
+
+  <Reveal>
+    <div data-skills-tabs>
+      <div
+        class="mb-8 flex flex-wrap gap-2 font-mono text-sm"
+        role="tablist"
+        aria-label="Skill categories"
+      >
+        {
+          SKILLS.map((group, index) => (
+            <button
+              id={`skills-tab-${index}`}
+              type="button"
+              role="tab"
+              aria-selected={index === 0 ? 'true' : 'false'}
+              aria-controls={`skills-panel-${index}`}
+              tabindex={index === 0 ? 0 : -1}
+              data-skills-tab={index}
+              class:list={[
+                'border-b-2 px-2 py-1 transition-colors',
+                index === 0
+                  ? 'is-active border-primary text-primary'
+                  : 'border-transparent text-ink-subtle hover:text-ink',
+              ]}
+            >
+              {group.field}
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        SKILLS.map((group, index) => (
+          <div
+            id={`skills-panel-${index}`}
+            role="tabpanel"
+            aria-labelledby={`skills-tab-${index}`}
+            data-skills-panel={index}
+            class:list={[
+              'skills-panel grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4',
+              index > 0 && 'mt-8',
+            ]}
+          >
+            {group.skills.map(({ skill, icon }) => (
+              <div class="group flex flex-col items-center gap-3 border border-hairline bg-surface-1 p-5 transition-colors hover:border-primary">
+                <svg
+                  class="h-8 w-8 text-ink-subtle transition-colors group-hover:text-primary"
+                  viewBox="0 0 24 24"
+                  role="img"
+                  aria-label={skill}
+                >
+                  <path d={icon.path} fill="currentColor" />
+                </svg>
+                <span class="text-xs text-ink-subtle">{skill}</span>
+              </div>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </Reveal>
+</section>
+
+<script>
+  const tabsRoot = document.querySelector('[data-skills-tabs]')
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+  if (tabsRoot) {
+    const tabs = Array.from(tabsRoot.querySelectorAll('[role="tab"]'))
+    const panels = Array.from(tabsRoot.querySelectorAll('[role="tabpanel"]'))
+    let activeIndex = 0
+    let transitionId = 0
+
+    const setTabClasses = (tab, active) => {
+      tab.classList.toggle('border-primary', active)
+      tab.classList.toggle('text-primary', active)
+      tab.classList.toggle('is-active', active)
+      tab.classList.toggle('border-transparent', !active)
+      tab.classList.toggle('text-ink-subtle', !active)
+      tab.setAttribute('aria-selected', String(active))
+      tab.tabIndex = active ? 0 : -1
+    }
+
+    const selectTab = async (nextIndex, focus = false) => {
+      if (nextIndex === activeIndex || !tabs[nextIndex] || !panels[nextIndex]) return
+
+      const currentPanel = panels[activeIndex]
+      const nextPanel = panels[nextIndex]
+      const currentTransition = ++transitionId
+
+      tabs.forEach((tab, index) => setTabClasses(tab, index === nextIndex))
+      if (focus) tabs[nextIndex].focus()
+
+      if (!reducedMotion.matches) {
+        await currentPanel
+          .animate(
+            [
+              { opacity: 1, transform: 'translateY(0)' },
+              { opacity: 0, transform: 'translateY(-12px)' },
+            ],
+            { duration: 300, easing: 'ease' },
+          )
+          .finished.catch(() => undefined)
+      }
+
+      if (currentTransition !== transitionId) return
+      currentPanel.hidden = true
+      currentPanel.classList.add('mt-8')
+      nextPanel.hidden = false
+      nextPanel.classList.remove('mt-8')
+
+      if (!reducedMotion.matches) {
+        nextPanel.animate(
+          [
+            { opacity: 0, transform: 'translateY(12px)' },
+            { opacity: 1, transform: 'translateY(0)' },
+          ],
+          { duration: 300, easing: 'ease' },
+        )
+      }
+
+      activeIndex = nextIndex
+    }
+
+    panels.forEach((panel, index) => {
+      panel.hidden = index !== activeIndex
+      panel.classList.toggle('mt-8', index !== activeIndex)
+    })
+    tabs.forEach((tab, index) => {
+      tab.classList.toggle('is-active', index === activeIndex)
+    })
+
+    tabsRoot.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return
+      const tab = event.target.closest('[role="tab"]')
+      if (!tab) return
+      void selectTab(Number(tab.dataset.skillsTab))
+    })
+
+    tabsRoot.addEventListener('keydown', (event) => {
+      if (!(event.target instanceof Element)) return
+      const tab = event.target.closest('[role="tab"]')
+      if (!tab) return
+
+      const index = tabs.indexOf(tab)
+      let nextIndex
+      if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length
+      if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length
+      if (event.key === 'Home') nextIndex = 0
+      if (event.key === 'End') nextIndex = tabs.length - 1
+      if (nextIndex === undefined) return
+
+      event.preventDefault()
+      void selectTab(nextIndex, true)
+    })
+  }
+</script>
+
+<style>
+  .skills-panel[hidden] {
+    display: none;
+  }
+
+  [role='tab'].is-active::before {
+    content: '[_';
+  }
+
+  [role='tab'].is-active::after {
+    content: '_]';
+  }
+</style>

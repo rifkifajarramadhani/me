@@ -1,6 +1,6 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import Portfolio from '@/components/Portfolio'
+import Portfolio from '@/components/Portfolio.astro'
 import {
   alternateSiteNames,
   name,
@@ -39,5 +39,5 @@ const jsonLd = {
 
 <Layout title={title} description={description}>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-  <Portfolio client:load />
+  <Portfolio />
 </Layout>

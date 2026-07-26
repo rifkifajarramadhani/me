@@ -1,0 +1,153 @@
+---
+import { withBase } from '@/lib/with-base'
+import { shortName } from '@/lib/site'
+import ThemeToggle from '@/components/ThemeToggle.astro'
+
+const links = [
+  { href: '#about', label: 'about' },
+  { href: '#skills', label: 'skills' },
+  { href: '#experience', label: 'experience' },
+  { href: '#work', label: 'work' },
+  { href: '#contact', label: 'contact' },
+]
+---
+
+<header
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent bg-transparent transition-all duration-300"
+  data-scrolled="false"
+  data-open="false"
+>
+  <nav class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+    <a
+      href="#hero"
+      class="font-mono text-sm font-bold text-ink transition-colors hover:text-primary"
+      aria-label="Home"
+    >
+      <span class="text-prompt">[</span>{shortName.toLowerCase()}<span class="text-prompt">]</span>
+    </a>
+
+    <ul class="hidden items-center gap-6 md:flex">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class="font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+            >
+              <span class="text-prompt">~/</span>{link.label}
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a
+          href={withBase('resume.pdf')}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border border-hairline-strong px-3 py-1.5 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
+        >
+          <span class="text-prompt">~/</span>resume.pdf
+        </a>
+      </li>
+      <li>
+        <ThemeToggle />
+      </li>
+    </ul>
+
+    <div class="flex items-center gap-4 md:hidden">
+      <ThemeToggle />
+      <button
+        id="mobile-menu-toggle"
+        type="button"
+        class="font-mono text-sm text-ink-subtle hover:text-primary"
+        aria-label="Toggle menu"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+      >
+        <span class="text-prompt">[</span>
+        <span data-menu-label> menu </span>
+        <span class="text-prompt">]</span>
+      </button>
+    </div>
+  </nav>
+
+  <ul
+    id="mobile-menu"
+    class="hidden flex-col gap-1 border-t border-hairline bg-surface-1/95 px-6 py-4 backdrop-blur-lg md:hidden"
+  >
+    {
+      links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            data-mobile-menu-link
+            class="block py-2 font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+          >
+            <span class="text-prompt">~/</span>{link.label}
+          </a>
+        </li>
+      ))
+    }
+    <li>
+      <a
+        href={withBase('resume.pdf')}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-mobile-menu-link
+        class="mt-2 inline-block border border-hairline-strong px-3 py-1.5 font-mono text-sm text-ink-subtle hover:border-primary hover:text-primary"
+      >
+        <span class="text-prompt">~/</span>resume.pdf
+      </a>
+    </li>
+  </ul>
+</header>
+
+<style>
+  #site-header[data-scrolled='true'],
+  #site-header[data-open='true'] {
+    border-color: var(--hairline);
+    background: color-mix(in srgb, var(--surface-1) 20%, transparent);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 5%);
+    backdrop-filter: blur(16px);
+  }
+</style>
+
+<script>
+  const header = document.querySelector('#site-header')
+  const menu = document.querySelector('#mobile-menu')
+  const toggle = document.querySelector('#mobile-menu-toggle')
+  const menuLabel = toggle?.querySelector('[data-menu-label]')
+
+  const setMenuOpen = (open) => {
+    if (!header || !menu || !toggle) return
+
+    header.dataset.open = String(open)
+    toggle.setAttribute('aria-expanded', String(open))
+    menu.classList.toggle('hidden', !open)
+    menu.classList.toggle('flex', open)
+    if (menuLabel) menuLabel.textContent = open ? ' x ' : ' menu '
+  }
+
+  const syncScrolled = () => {
+    if (header) header.dataset.scrolled = String(window.scrollY > 20)
+  }
+
+  toggle?.addEventListener('click', () => {
+    setMenuOpen(toggle.getAttribute('aria-expanded') !== 'true')
+  })
+
+  document.querySelectorAll('[data-mobile-menu-link]').forEach((link) => {
+    link.addEventListener('click', () => setMenuOpen(false))
+  })
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setMenuOpen(false)
+      toggle.focus()
+    }
+  })
+
+  syncScrolled()
+  window.addEventListener('scroll', syncScrolled, { passive: true })
+</script>

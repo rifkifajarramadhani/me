@@ -1,0 +1,37 @@
+<button
+  type="button"
+  data-theme-toggle
+  class="font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+  aria-label="Switch to light mode"
+>
+  <span class="text-prompt">[</span>
+  <span data-theme-label> light </span>
+  <span class="text-prompt">]</span>
+</button>
+
+<script>
+  const syncThemeToggles = () => {
+    const dark = document.documentElement.classList.contains('dark')
+
+    document.querySelectorAll('[data-theme-toggle]').forEach((toggle) => {
+      toggle.setAttribute(
+        'aria-label',
+        dark ? 'Switch to light mode' : 'Switch to dark mode',
+      )
+
+      const label = toggle.querySelector('[data-theme-label]')
+      if (label) label.textContent = dark ? ' light ' : ' dark '
+    })
+  }
+
+  document.querySelectorAll('[data-theme-toggle]').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const dark = !document.documentElement.classList.contains('dark')
+      document.documentElement.classList.toggle('dark', dark)
+      localStorage.setItem('theme', dark ? 'dark' : 'light')
+      syncThemeToggles()
+    })
+  })
+
+  syncThemeToggles()
+</script>

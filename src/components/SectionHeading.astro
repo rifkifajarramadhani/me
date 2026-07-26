@@ -1,0 +1,14 @@
+---
+import CommandHeading from '@/components/CommandHeading.astro'
+
+interface Props {
+  command: string
+  kicker?: string
+}
+
+const { command, kicker } = Astro.props
+---
+
+<div class="mb-10">
+  <CommandHeading command={command} kicker={kicker} />
+</div>

@@ -75,6 +75,7 @@ const twitterImage = new URL(image ?? defaultTwitterImage, Astro.site).href
     />
     <script is:inline>
       ;(function () {
+        document.documentElement.classList.add('js')
         const stored = localStorage.getItem('theme')
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
         if (stored === 'dark' || (!stored && prefersDark)) {
