@@ -44,50 +44,64 @@ export default function Projects() {
       </Reveal>
 
       <div className="flex flex-col gap-16">
-        {featured.map((project, id) => (
-          <Reveal key={project.name}>
-            <div className="grid items-start gap-6 md:grid-cols-12">
-              <div className={cn('md:col-span-7', id % 2 === 1 && 'md:order-2')}>
-                <a
-                  href={project.liveLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block overflow-hidden border border-hairline-strong"
-                >
-                  <img
-                    src={withBase(project.previewImage)}
-                    alt={project.name}
-                    loading="lazy"
-                    className="aspect-video w-full object-cover object-top transition-opacity duration-300 group-hover:opacity-90"
-                  />
-                </a>
-                {project.tags && (
-                  <ul className="mt-4 flex flex-wrap gap-2 font-mono text-xs text-ink-subtle">
-                    {project.tags.map((tag) => (
-                      <li key={tag}>
-                        <span className="text-prompt">[</span>
-                        {tag}
-                        <span className="text-prompt">]</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              <div className={cn('md:col-span-5', id % 2 === 1 && 'md:order-1')}>
-                <p className="mb-2 font-mono text-xs text-primary">
-                  <span className="text-prompt">[</span>featured<span className="text-prompt">]</span>
-                </p>
-                <h3 className="mb-4 text-xl font-semibold text-ink">{project.name}</h3>
-                <div className="panel p-5 text-sm leading-[1.7] text-ink-muted">
-                  {project.description}
+        {featured.map((project, id) => {
+          const previewHref = project.liveLink || (project.repoUrl !== '#' ? project.repoUrl : '')
+          const preview = (
+            <img
+              src={withBase(project.previewImage)}
+              alt={project.name}
+              loading="lazy"
+              className="aspect-video w-full object-cover object-top transition-opacity duration-300 group-hover:opacity-90"
+            />
+          )
+
+          return (
+            <Reveal key={project.name}>
+              <div className="grid items-start gap-6 md:grid-cols-12">
+                <div className={cn('md:col-span-7', id % 2 === 1 && 'md:order-2')}>
+                  {previewHref ? (
+                    <a
+                      href={previewHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block overflow-hidden border border-hairline-strong"
+                    >
+                      {preview}
+                    </a>
+                  ) : (
+                    <div className="group block overflow-hidden border border-hairline-strong">
+                      {preview}
+                    </div>
+                  )}
+                  {project.tags && (
+                    <ul className="mt-4 flex flex-wrap gap-2 font-mono text-xs text-ink-subtle">
+                      {project.tags.map((tag) => (
+                        <li key={tag}>
+                          <span className="text-prompt">[</span>
+                          {tag}
+                          <span className="text-prompt">]</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-                <div className="mt-4">
-                  <ProjectLinks repoUrl={project.repoUrl} liveLink={project.liveLink} />
+                <div className={cn('md:col-span-5', id % 2 === 1 && 'md:order-1')}>
+                  <p className="mb-2 font-mono text-xs text-primary">
+                    <span className="text-prompt">[</span>featured
+                    <span className="text-prompt">]</span>
+                  </p>
+                  <h3 className="mb-4 text-xl font-semibold text-ink">{project.name}</h3>
+                  <div className="panel p-5 text-sm leading-[1.7] text-ink-muted">
+                    {project.description}
+                  </div>
+                  <div className="mt-4">
+                    <ProjectLinks repoUrl={project.repoUrl} liveLink={project.liveLink} />
+                  </div>
                 </div>
               </div>
-            </div>
-          </Reveal>
-        ))}
+            </Reveal>
+          )
+        })}
       </div>
 
       {others.length > 0 && (

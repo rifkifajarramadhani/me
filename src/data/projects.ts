@@ -86,6 +86,16 @@ const PROJECTS: {
     repoUrl: '#',
   },
   {
+    name: 'aibar',
+    featured: true,
+    tags: ['Go', 'Waybar', 'Clean Architecture', 'CLI'],
+    description:
+      'A Waybar usage monitor for AI coding tools. It watches local Codex sessions and polls Claude\'s OAuth usage endpoint, surfacing every provider and usage window as a compact tray icon with usage bars, percentages, and reset countdowns. Built in Go on a domain-first Clean Architecture where the core depends only on the standard library and every external source lives behind a port.',
+    liveLink: '',
+    previewImage: 'aibar/1.png',
+    repoUrl: 'https://github.com/rifkifajarramadhani/aibar',
+  },
+  {
     name: 'AutoWealth',
     tags: ['PHP', 'Bootstrap', 'CSS'],
     description:
