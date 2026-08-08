@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-08T15:30:43+07:00",
+  "title": "Design System: Rifki Fajar Ramadhani Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#fdfcfc",
+        "tonalRamp": [
+          "#242222",
+          "#484545",
+          "#6d6969",
+          "#928e8e",
+          "#b8b4b4",
+          "#d6d3d3",
+          "#ebe9e9",
+          "#fdfcfc"
+        ]
+      },
+      "carbon": {
+        "role": "neutral",
+        "displayName": "Carbon",
+        "canonical": "#171514",
+        "tonalRamp": [
+          "#171514",
+          "#332f2e",
+          "#514c4a",
+          "#706a68",
+          "#928b89",
+          "#b5afad",
+          "#dad6d5",
+          "#f7f5f4"
+        ]
+      },
+      "carbon-panel": {
+        "role": "neutral",
+        "displayName": "Carbon Panel",
+        "canonical": "#201d1d",
+        "tonalRamp": [
+          "#191616",
+          "#383333",
+          "#575050",
+          "#776e6e",
+          "#988e8e",
+          "#b9b1b1",
+          "#ddd8d8",
+          "#f8f5f5"
+        ]
+      },
+      "carbon-titlebar": {
+        "role": "neutral",
+        "displayName": "Carbon Titlebar",
+        "canonical": "#2a2626",
+        "tonalRamp": [
+          "#1a1717",
+          "#3b3535",
+          "#5b5353",
+          "#7b7272",
+          "#9c9292",
+          "#bdb5b5",
+          "#ded9d9",
+          "#f8f5f5"
+        ]
+      },
+      "ink-muted-light": {
+        "role": "neutral",
+        "displayName": "Muted Carbon Ink",
+        "canonical": "#424245",
+        "tonalRamp": [
+          "#202023",
+          "#3d3d40",
+          "#5b5b5f",
+          "#79797d",
+          "#99999d",
+          "#bababe",
+          "#dddddf",
+          "#f5f5f6"
+        ]
+      },
+      "steel": {
+        "role": "neutral",
+        "displayName": "Steel",
+        "canonical": "#646262",
+        "tonalRamp": [
+          "#222121",
+          "#414040",
+          "#616060",
+          "#818080",
+          "#a19f9f",
+          "#c0bebe",
+          "#dedddd",
+          "#f5f4f4"
+        ]
+      },
+      "ash": {
+        "role": "neutral",
+        "displayName": "Ash",
+        "canonical": "#9a9898",
+        "tonalRamp": [
+          "#242323",
+          "#454343",
+          "#666464",
+          "#878585",
+          "#a8a6a6",
+          "#c6c4c4",
+          "#e2e0e0",
+          "#f7f6f6"
+        ]
+      },
+      "ink-muted-dark": {
+        "role": "neutral",
+        "displayName": "Muted Paper Ink",
+        "canonical": "#c8c4c4",
+        "tonalRamp": [
+          "#272525",
+          "#494646",
+          "#6b6767",
+          "#8d8989",
+          "#afaaaa",
+          "#cbc7c7",
+          "#e4e1e1",
+          "#f8f6f6"
+        ]
+      },
+      "paper-panel": {
+        "role": "neutral",
+        "displayName": "Paper Panel",
+        "canonical": "#f8f7f7",
+        "tonalRamp": [
+          "#242222",
+          "#474444",
+          "#6b6767",
+          "#8f8b8b",
+          "#b4b0b0",
+          "#d2cfcf",
+          "#e8e6e6",
+          "#f8f7f7"
+        ]
+      },
+      "paper-titlebar": {
+        "role": "neutral",
+        "displayName": "Paper Titlebar",
+        "canonical": "#f1eeee",
+        "tonalRamp": [
+          "#252222",
+          "#494444",
+          "#6d6767",
+          "#918b8b",
+          "#b5afaf",
+          "#d2cece",
+          "#e6e3e3",
+          "#f7f5f5"
+        ]
+      },
+      "hairline-light": {
+        "role": "neutral",
+        "displayName": "Light Hairline",
+        "canonical": "rgba(15, 0, 0, 0.12)",
+        "tonalRamp": [
+          "rgba(15, 0, 0, 0.92)",
+          "rgba(15, 0, 0, 0.72)",
+          "rgba(15, 0, 0, 0.54)",
+          "rgba(15, 0, 0, 0.38)",
+          "rgba(15, 0, 0, 0.26)",
+          "rgba(15, 0, 0, 0.18)",
+          "rgba(15, 0, 0, 0.12)",
+          "rgba(15, 0, 0, 0.06)"
+        ]
+      },
+      "hairline-dark": {
+        "role": "neutral",
+        "displayName": "Dark Hairline",
+        "canonical": "rgba(253, 252, 252, 0.14)",
+        "tonalRamp": [
+          "rgba(253, 252, 252, 0.06)",
+          "rgba(253, 252, 252, 0.10)",
+          "rgba(253, 252, 252, 0.14)",
+          "rgba(253, 252, 252, 0.22)",
+          "rgba(253, 252, 252, 0.34)",
+          "rgba(253, 252, 252, 0.50)",
+          "rgba(253, 252, 252, 0.70)",
+          "rgba(253, 252, 252, 0.92)"
+        ]
+      },
+      "operational-green": {
+        "role": "primary",
+        "displayName": "Operational Green",
+        "canonical": "#1f8f3c",
+        "tonalRamp": [
+          "#06250d",
+          "#0c4319",
+          "#126126",
+          "#197f34",
+          "#2b9e49",
+          "#55bd6b",
+          "#8cdaa0",
+          "#cef3d5"
+        ]
+      },
+      "operational-green-hover": {
+        "role": "primary",
+        "displayName": "Operational Green Deep",
+        "canonical": "#187a32",
+        "tonalRamp": [
+          "#05230c",
+          "#0a3d17",
+          "#105824",
+          "#167431",
+          "#269044",
+          "#4eaf64",
+          "#85cf99",
+          "#c9efcf"
+        ]
+      },
+      "operational-green-bright": {
+        "role": "primary",
+        "displayName": "Operational Green Bright",
+        "canonical": "#3fb950",
+        "tonalRamp": [
+          "#08270e",
+          "#10471d",
+          "#19672c",
+          "#24883d",
+          "#3faa51",
+          "#68c976",
+          "#9ce2a7",
+          "#d6f5dc"
+        ]
+      },
+      "operational-green-bright-hover": {
+        "role": "primary",
+        "displayName": "Operational Green Bright Lift",
+        "canonical": "#56d364",
+        "tonalRamp": [
+          "#092910",
+          "#124a20",
+          "#1c6b31",
+          "#2a8d43",
+          "#49b45a",
+          "#72d07f",
+          "#a4e6ae",
+          "#daf6df"
+        ]
+      },
+      "operational-green-ink": {
+        "role": "primary",
+        "displayName": "Operational Green Ink",
+        "canonical": "#0d1f12",
+        "tonalRamp": [
+          "#0d1f12",
+          "#243b29",
+          "#3e5843",
+          "#59765e",
+          "#76957a",
+          "#96b59a",
+          "#bad7bd",
+          "#e0f5e2"
+        ]
+      },
+      "warning-amber": {
+        "role": "tertiary",
+        "displayName": "Warning Amber",
+        "canonical": "#ff9f0a",
+        "tonalRamp": [
+          "#351d00",
+          "#623700",
+          "#925300",
+          "#c17000",
+          "#ed8d00",
+          "#ffae32",
+          "#ffd080",
+          "#ffedcf"
+        ]
+      },
+      "warning-amber-dark": {
+        "role": "tertiary",
+        "displayName": "Warning Amber Bright",
+        "canonical": "#ffd60a",
+        "tonalRamp": [
+          "#332900",
+          "#5d4c00",
+          "#887000",
+          "#b49500",
+          "#dfba00",
+          "#ffda31",
+          "#ffe982",
+          "#fff6cf"
+        ]
+      },
+      "danger-red": {
+        "role": "secondary",
+        "displayName": "Danger Red",
+        "canonical": "#ff3b30",
+        "tonalRamp": [
+          "#390504",
+          "#690b08",
+          "#99130e",
+          "#c91e18",
+          "#ee352b",
+          "#ff675f",
+          "#ff9f9a",
+          "#ffd9d6"
+        ]
+      },
+      "danger-red-dark": {
+        "role": "secondary",
+        "displayName": "Danger Red Bright",
+        "canonical": "#ff453a",
+        "tonalRamp": [
+          "#3a0605",
+          "#6b0c09",
+          "#9b1511",
+          "#ca211b",
+          "#ef3e34",
+          "#ff7068",
+          "#ffa6a1",
+          "#ffdcda"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero identity shown as command output."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section commands and top-level error headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Project and experience anchors."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Portfolio evidence, descriptions, and supporting copy."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase kickers, metadata, and compact status text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "header-ambient",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 5%)",
+        "purpose": "Separates the fixed header from content after scrolling or while the mobile menu is open."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-enter",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Hero, section, and reveal entrances."
+      },
+      {
+        "name": "duration-state",
+        "value": "300ms",
+        "purpose": "Hover opacity and tab-panel state changes."
+      },
+      {
+        "name": "duration-tagline",
+        "value": "350ms",
+        "purpose": "Tagline exit and entry."
+      },
+      {
+        "name": "duration-hero",
+        "value": "600ms",
+        "purpose": "Initial terminal-window entrance."
+      },
+      {
+        "name": "duration-reveal",
+        "value": "700ms",
+        "purpose": "Scroll-triggered section reveals."
+      },
+      {
+        "name": "caret-command",
+        "value": "1.05s steps(1) infinite",
+        "purpose": "Command-caret blink; disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      { "name": "w450", "value": "max-width: 450px" },
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Terminal Window",
+      "kind": "custom",
+      "refersTo": "terminal-window",
+      "description": "Signature hero container for identity, role, tagline, and primary paths.",
+      "html": "<section class=\"ds-terminal\"><header class=\"ds-terminal-bar\"><span class=\"ds-terminal-lights\"><i class=\"ds-light ds-danger\"></i><i class=\"ds-light ds-warning\"></i><i class=\"ds-light ds-success\"></i></span><span>~/portfolio</span></header><div class=\"ds-terminal-body\"><p><span class=\"ds-prompt\">$</span> whoami <strong>Rifki Fajar Ramadhani</strong></p><p><span class=\"ds-prompt\">$</span> cat role.txt <span class=\"ds-ink\">Full-Stack Engineer</span></p><p><span class=\"ds-prompt\">$</span> echo <span class=\"ds-primary\">\"build things for the web.\"</span><i class=\"ds-caret\"></i></p></div></section>",
+      "css": ".ds-terminal{overflow:hidden;border:1px solid var(--hairline-strong);border-radius:0;background:var(--surface-1);color:var(--ink-subtle);font:400 14px/1.7 'JetBrains Mono',ui-monospace,monospace}.ds-terminal-bar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hairline);background:var(--surface-2);padding:8px 12px;color:var(--ink-tertiary);font-size:12px}.ds-terminal-lights{display:flex;gap:6px}.ds-light{width:10px;height:10px;border-radius:9999px}.ds-danger{background:var(--danger)}.ds-warning{background:var(--warning)}.ds-success{background:var(--success)}.ds-terminal-body{padding:24px}.ds-terminal-body p{margin:0 0 12px}.ds-terminal-body strong,.ds-ink{color:var(--ink)}.ds-prompt{color:var(--prompt)}.ds-primary{color:var(--primary)}.ds-caret{display:inline-block;width:.55ch;height:1.05em;margin-left:.15ch;vertical-align:-.12em;background:var(--primary)}"
+    },
+    {
+      "name": "Outlined Action",
+      "kind": "button",
+      "refersTo": "outlined-action",
+      "description": "Primary transparent action used for work, contact, resume, and return paths.",
+      "html": "<button class=\"ds-action\"><span>[</span> view work <span>]</span></button>",
+      "css": ".ds-action{border:1px solid var(--hairline-strong);border-radius:0;background:transparent;padding:8px 16px;color:var(--ink-subtle);font:400 14px/1.5 'JetBrains Mono',ui-monospace,monospace;transition:border-color 150ms,color 150ms}.ds-action:hover,.ds-action:focus-visible{border-color:var(--primary);color:var(--primary);outline:none}.ds-action:focus-visible{box-shadow:0 0 0 2px var(--canvas),0 0 0 3px var(--primary)}.ds-action:active{color:var(--primary-hover)}"
+    },
+    {
+      "name": "Bracket Link",
+      "kind": "button",
+      "refersTo": "bracket-link",
+      "description": "Borderless secondary path for profiles, project links, theme control, and mobile menu actions.",
+      "html": "<a class=\"ds-bracket-link\" href=\"#\"><span>[</span> github <span>]</span></a>",
+      "css": ".ds-bracket-link{color:var(--ink-subtle);font:400 14px/1.5 'JetBrains Mono',ui-monospace,monospace;text-decoration:none;transition:color 150ms}.ds-bracket-link:hover,.ds-bracket-link:focus-visible{color:var(--primary);outline:none}.ds-bracket-link:focus-visible{text-decoration:underline;text-underline-offset:4px}.ds-bracket-link:active{color:var(--primary-hover)}"
+    },
+    {
+      "name": "Project Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Flat tonal container for project evidence, experience entries, and skill tiles.",
+      "html": "<article class=\"ds-panel\"><small><span>[+]</span> project</small><h3>Production work</h3><p>Evidence-led description of shipped engineering work.</p></article>",
+      "css": ".ds-panel{border:1px solid var(--hairline);border-radius:0;background:var(--surface-1);padding:20px;color:var(--ink-muted);font:400 14px/1.7 'JetBrains Mono',ui-monospace,monospace;transition:border-color 150ms}.ds-panel small{color:var(--ink-tertiary)}.ds-panel small span{color:var(--prompt)}.ds-panel h3{margin:12px 0 8px;color:var(--ink);font-size:16px}.ds-panel p{margin:0}.ds-panel:hover,.ds-panel:focus-within{border-color:var(--primary)}"
+    },
+    {
+      "name": "Skill Tabs",
+      "kind": "button",
+      "refersTo": "skill-tab",
+      "description": "Keyboard-operable category switcher with command markers on the active state.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button class=\"ds-tab ds-tab-active\" role=\"tab\" aria-selected=\"true\">frontend</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">backend</button></div>",
+      "css": ".ds-tabs{display:flex;gap:8px;font:400 14px/1.5 'JetBrains Mono',ui-monospace,monospace}.ds-tab{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;padding:4px 8px;color:var(--ink-subtle);transition:border-color 150ms,color 150ms}.ds-tab:hover,.ds-tab:focus-visible{color:var(--ink);outline:none}.ds-tab:focus-visible{box-shadow:0 2px 0 var(--primary)}.ds-tab-active{border-color:var(--primary);color:var(--primary)}.ds-tab-active::before{content:'[_'}.ds-tab-active::after{content:'_]'}"
+    },
+    {
+      "name": "Command Navigation",
+      "kind": "nav",
+      "refersTo": "bracket-link",
+      "description": "Centered path navigation with a bracketed identity and command-path links.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-home\" href=\"#\">[rifki]</a><span class=\"ds-nav-links\"><a href=\"#\">~/about</a><a href=\"#\">~/work</a><a class=\"ds-nav-resume\" href=\"#\">~/resume.pdf</a></span></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hairline);background:color-mix(in srgb,var(--surface-1) 20%,transparent);padding:16px 24px;color:var(--ink-subtle);font:400 14px/1.5 'JetBrains Mono',ui-monospace,monospace;backdrop-filter:blur(16px)}.ds-nav a{color:inherit;text-decoration:none;transition:color 150ms,border-color 150ms}.ds-nav a:hover,.ds-nav a:focus-visible{color:var(--primary);outline:none}.ds-nav-home{color:var(--ink)!important;font-weight:700}.ds-nav-links{display:flex;align-items:center;gap:24px}.ds-nav-resume{border:1px solid var(--hairline-strong);padding:6px 12px}.ds-nav-resume:hover,.ds-nav-resume:focus-visible{border-color:var(--primary)}"
+    },
+    {
+      "name": "Operational Status Footer",
+      "kind": "custom",
+      "refersTo": "panel-dark",
+      "description": "Desktop status bar that closes the portfolio with mode, path, year, and health.",
+      "html": "<footer class=\"ds-status\"><strong>NORMAL</strong><span>~/rifki</span><span>© 2026&nbsp;&nbsp;<i></i> operational</span></footer>",
+      "css": ".ds-status{display:flex;align-items:center;border-top:1px solid var(--hairline);background:var(--surface-1);color:var(--ink-tertiary);font:400 12px/1 'JetBrains Mono',ui-monospace,monospace}.ds-status strong{align-self:stretch;display:flex;align-items:center;background:var(--primary);padding:0 12px;color:var(--primary-foreground)}.ds-status>span{padding:12px 16px}.ds-status>span:last-child{margin-left:auto}.ds-status i{display:inline-block;width:6px;height:6px;border-radius:9999px;background:var(--success);vertical-align:1px}.ds-status:focus-within{border-color:var(--primary)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Operational Console",
+    "overview": "The Operational Console treats the portfolio as a calm, production-minded workspace: direct commands establish structure, system states carry meaning, and shipped work remains the evidence. Its terminal language is precise and restrained rather than nostalgic or theatrical, giving technical hiring teams an interface they can scan quickly and trust.\n\nThe system stays spacious even though its controls are compact. Carbon and Paper surfaces support equal light and dark expressions, Operational Green marks the few moments that deserve attention, and square geometry keeps every interaction utilitarian and exact. Motion confirms state and sequence without becoming spectacle.",
+    "keyCharacteristics": [
+      "Monospaced, command-led hierarchy with plainspoken labels.",
+      "Warm near-black and off-white surfaces separated by hairlines and tonal steps.",
+      "Sparse green signals for commands, active states, focus, and healthy status.",
+      "Square panels and controls, with circles reserved for status indicators.",
+      "Quiet, reduced-motion-safe transitions that preserve reading flow."
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "Operational Green appears only on commands, interaction states, and healthy status; its rarity is what gives it authority.",
+        "section": "colors"
+      },
+      {
+        "name": "The Paired Surface Rule",
+        "body": "Every neutral role must have an equivalent light and dark expression before it is introduced into the system.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Typeface Rule",
+        "body": "Use JetBrains Mono for every visible text role; hierarchy comes from weight, scale, tracking, and color rather than a second family.",
+        "section": "typography"
+      },
+      {
+        "name": "The Command Leads Rule",
+        "body": "Section headings begin with a prompt or command phrase so the interface always explains what the following content represents.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-by-Default Rule",
+        "body": "Use borders and tonal layering for depth; reserve shadow for an overlay that must remain legible above scrolling content.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Workbench Rule",
+        "body": "Use square corners for every container and control; use a full circle only for a status light or terminal indicator.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do use Operational Green only for commands, active interaction states, focus, and healthy status.",
+      "Do preserve a centered 56rem reading column with 1.5rem inline gutters and generous section spacing.",
+      "Do use hairlines and tonal surface steps before introducing elevation.",
+      "Do keep every interaction keyboard-usable and collapse decorative motion for reduced-motion users.",
+      "Do write labels as concise commands, paths, filenames, or bracketed actions when the context supports them."
+    ],
+    "donts": [
+      "Don't round cards, buttons, inputs, image frames, or navigation controls.",
+      "Don't spread green across large backgrounds or use it as general decoration.",
+      "Don't add gradients, glass panels, or broad card shadows to create hierarchy.",
+      "Don't mix in a second display or body typeface.",
+      "Don't turn the terminal metaphor into fake shell complexity that obscures portfolio evidence."
+    ]
+  }
+}
