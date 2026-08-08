@@ -120,37 +120,6 @@ body::-webkit-scrollbar-thumb {
   }
 }
 
-.hero-enter {
-  animation: hero-enter 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes hero-enter {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.tagline {
-  transition:
-    opacity 350ms ease,
-    transform 350ms ease;
-}
-
-.tagline.is-leaving {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-
-.tagline.is-entering {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
 .js .reveal {
   opacity: 0;
   transform: translateY(12px);
@@ -175,9 +144,7 @@ body::-webkit-scrollbar-thumb {
   }
 
   .js .reveal,
-  .js .reveal.is-visible,
-  .hero-enter,
-  .tagline {
+  .js .reveal.is-visible {
     opacity: 1;
     transform: none;
   }
