@@ -19,16 +19,19 @@ const others = PROJECTS.filter((project) => !project.featured)
       featured.map((project, index) => {
         const previewHref =
           project.liveLink || (project.repoUrl !== '#' ? project.repoUrl : '')
+        const previewLabel = project.liveLink
+          ? `Open ${project.name} live site`
+          : `Open ${project.name} repository`
         return (
           <Reveal>
-            <article class="grid items-start gap-6 md:grid-cols-12 md:gap-8">
-              <div class:list={['md:col-span-7', index % 2 === 1 && 'md:order-2']}>
+            <article class="grid items-start gap-6 md:gap-8 lg:grid-cols-12 lg:items-center">
+              <div class:list={['lg:col-span-7', index % 2 === 1 && 'lg:order-2']}>
                 {previewHref ? (
                   <a
                     href={previewHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Open ${project.name} project`}
+                    aria-label={previewLabel}
                     class="block overflow-hidden border border-hairline-strong transition-colors duration-200 hover:border-primary focus-visible:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
                   >
                     <img
@@ -62,16 +65,16 @@ const others = PROJECTS.filter((project) => !project.featured)
                   </ul>
                 )}
               </div>
-              <div class:list={['md:col-span-5', index % 2 === 1 && 'md:order-1']}>
+              <div class:list={['lg:col-span-5', index % 2 === 1 && 'lg:order-1']}>
                 <p class="mb-2 font-mono text-xs text-primary">
                   <span class="text-prompt">[</span>featured<span class="text-prompt">
                     ]</span
                   >
                 </p>
                 <h3 class="mb-4 text-xl font-semibold text-ink">{project.name}</h3>
-                <div class="panel p-5 text-sm leading-[1.7] text-ink-muted">
+                <p class="panel p-5 text-sm leading-[1.7] text-ink-muted">
                   {project.description}
-                </div>
+                </p>
                 <div class="mt-4">
                   <ProjectLinks
                     projectName={project.name}
