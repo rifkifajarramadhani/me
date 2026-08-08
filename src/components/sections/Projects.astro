@@ -14,43 +14,46 @@ const others = PROJECTS.filter((project) => !project.featured)
     <SectionHeading command="ls projects/" kicker="work" />
   </Reveal>
 
-  <div class="flex flex-col gap-16">
+  <div class="flex flex-col gap-14 md:gap-16">
     {
       featured.map((project, index) => {
         const previewHref =
           project.liveLink || (project.repoUrl !== '#' ? project.repoUrl : '')
         return (
           <Reveal>
-            <div class="grid items-start gap-6 md:grid-cols-12">
+            <article class="grid items-start gap-6 md:grid-cols-12 md:gap-8">
               <div class:list={['md:col-span-7', index % 2 === 1 && 'md:order-2']}>
                 {previewHref ? (
                   <a
                     href={previewHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="group block overflow-hidden border border-hairline-strong"
+                    aria-label={`Open ${project.name} project`}
+                    class="block overflow-hidden border border-hairline-strong transition-colors duration-200 hover:border-primary focus-visible:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
                   >
                     <img
                       src={withBase(project.previewImage)}
-                      alt={project.name}
+                      alt={`${project.name} project interface preview`}
                       loading="lazy"
-                      class="aspect-video w-full object-cover object-top transition-opacity duration-300 group-hover:opacity-90"
+                      decoding="async"
+                      class="block aspect-video w-full object-cover object-top"
                     />
                   </a>
                 ) : (
-                  <div class="group block overflow-hidden border border-hairline-strong">
+                  <div class="block overflow-hidden border border-hairline-strong">
                     <img
                       src={withBase(project.previewImage)}
-                      alt={project.name}
+                      alt={`${project.name} project interface preview`}
                       loading="lazy"
-                      class="aspect-video w-full object-cover object-top transition-opacity duration-300 group-hover:opacity-90"
+                      decoding="async"
+                      class="block aspect-video w-full object-cover object-top"
                     />
                   </div>
                 )}
                 {project.tags && (
-                  <ul class="mt-4 flex flex-wrap gap-2 font-mono text-xs text-ink-subtle">
+                  <ul class="mt-4 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs leading-relaxed text-ink-subtle">
                     {project.tags.map((tag) => (
-                      <li>
+                      <li class="whitespace-nowrap">
                         <span class="text-prompt">[</span>
                         {tag}
                         <span class="text-prompt">]</span>
@@ -71,12 +74,13 @@ const others = PROJECTS.filter((project) => !project.featured)
                 </div>
                 <div class="mt-4">
                   <ProjectLinks
+                    projectName={project.name}
                     repoUrl={project.repoUrl}
                     liveLink={project.liveLink}
                   />
                 </div>
               </div>
-            </div>
+            </article>
           </Reveal>
         )
       })
@@ -88,20 +92,37 @@ const others = PROJECTS.filter((project) => !project.featured)
       <div class="mt-20 grid gap-4 sm:grid-cols-2">
         {others.map((project, index) => (
           <Reveal delay={0.05 * index}>
-            <div class="group panel flex h-full flex-col p-5 transition-colors hover:border-primary">
-              <div class="mb-4 flex items-center justify-between">
-                <span class="font-mono text-xs text-ink-tertiary">
-                  <span class="text-prompt">[+]</span> {project.name}
-                </span>
-                <ProjectLinks repoUrl={project.repoUrl} liveLink={project.liveLink} />
-              </div>
-              <h3 class="mb-2 text-base font-semibold text-ink transition-colors group-hover:text-primary">
+            <article class="group panel flex h-full flex-col p-5 transition-colors duration-200 hover:border-primary focus-within:border-primary">
+              <p class="mb-3 font-mono text-xs text-primary">
+                <span class="text-prompt">[</span>project<span class="text-prompt">
+                  ]</span
+                >
+              </p>
+              <h3 class="mb-3 text-base font-semibold text-ink transition-colors group-hover:text-primary">
                 {project.name}
               </h3>
               <p class="line-clamp-4 text-sm leading-[1.7] text-ink-muted">
                 {project.description}
               </p>
-            </div>
+              {project.tags && (
+                <ul class="mt-4 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs leading-relaxed text-ink-subtle">
+                  {project.tags.map((tag) => (
+                    <li class="whitespace-nowrap">
+                      <span class="text-prompt">[</span>
+                      {tag}
+                      <span class="text-prompt">]</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div class="mt-auto pt-4">
+                <ProjectLinks
+                  projectName={project.name}
+                  repoUrl={project.repoUrl}
+                  liveLink={project.liveLink}
+                />
+              </div>
+            </article>
           </Reveal>
         ))}
       </div>
