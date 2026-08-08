@@ -12,6 +12,13 @@ const techList = [
   'NestJS',
   'PostgreSQL',
 ]
+
+const profileFacts = [
+  { label: 'base', value: 'Indonesia' },
+  { label: 'since', value: '2018' },
+  { label: 'scope', value: 'full-stack' },
+  { label: 'delivery', value: 'end-to-end' },
+]
 ---
 
 <section id="about" class="mx-auto max-w-4xl px-6 py-24">
@@ -19,41 +26,61 @@ const techList = [
     <SectionHeading command="cat about.md" kicker="about" />
   </Reveal>
 
-  <div class="grid gap-10 md:grid-cols-3">
-    <Reveal class="panel space-y-4 p-6 text-ink-muted md:col-span-2">
-      <p class="leading-[1.7]">
-        Hello! I'm Rifki Fajar Ramadhani, a passionate full-stack web developer
-        based in Indonesia who has been building web applications since 2018. I
-        enjoy building products end-to-end — from designing clean, scalable
-        back-end architectures to shipping polished, responsive front-ends.
+  <div class="grid items-start gap-6 md:grid-cols-3 md:gap-10">
+    <Reveal class="panel p-5 text-ink-muted sm:p-6 md:col-span-2">
+      <p class="leading-[1.75] text-ink">
+        Full-stack engineer based in Indonesia, building web applications and
+        backend systems since 2018. I work across architecture, data modeling,
+        APIs, front-end delivery, performance, and production operations.
       </p>
-      <p class="leading-[1.7]">
-        My work spans e-commerce platforms, POS systems, fintech, and
-        content-heavy sites, where I focus on performance, maintainability, and a
-        seamless user experience. I care about clean code, thoughtful APIs, and
-        collaborating closely with cross-functional teams.
+      <p class="mt-5 leading-[1.75]">
+        My work spans e-commerce, retail and POS, fintech, cultural, automotive,
+        and developer-tool products. I focus on maintainable systems, responsive
+        interfaces, and close collaboration with product and engineering teams.
       </p>
-      <p>Here are a few technologies I've been working with recently:</p>
-      <ul class="grid max-w-md grid-cols-2 gap-2 font-mono text-sm">
-        {
-          techList.map((tech) => (
-            <li class="flex items-center gap-2">
-              <span class="text-prompt">[+]</span>
-              {tech}
-            </li>
-          ))
-        }
-      </ul>
     </Reveal>
 
-    <Reveal delay={0.15} class="flex justify-center md:justify-end">
-      <div class="panel flex h-56 w-56 items-center justify-center">
-        <span class="font-mono text-5xl text-ink-tertiary">
-          <span class="text-prompt">{'{'}</span>
-          <span class="text-primary"> </span>
-          <span class="text-prompt">{'}'}</span>
-        </span>
-      </div>
+    <Reveal delay={0.15}>
+      <aside class="grid gap-4" aria-label="Professional snapshot">
+        <div class="panel">
+          <div class="flex items-center justify-between border-b border-hairline px-4 py-3">
+            <h3 class="text-xs font-semibold text-ink">profile.json</h3>
+            <span class="text-xs text-prompt" aria-hidden="true">{'{ }'}</span>
+          </div>
+
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-4 p-4">
+            {
+              profileFacts.map((fact) => (
+                <div>
+                  <dt class="text-[0.6875rem] text-ink-subtle">
+                    <span aria-hidden="true" class="text-prompt">.</span>
+                    {fact.label}
+                  </dt>
+                  <dd class="mt-1 text-sm text-ink">{fact.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+
+        <div class="panel">
+          <div class="flex items-center justify-between border-b border-hairline px-4 py-3">
+            <h3 class="text-xs font-semibold text-ink">stack.recent[]</h3>
+            <span class="text-xs text-prompt" aria-hidden="true">8 items</span>
+          </div>
+
+          <ul class="grid grid-cols-2 gap-x-3 gap-y-2 p-4 text-xs text-ink-muted">
+            {
+              techList.map((tech) => (
+                <li class="flex min-w-0 items-center gap-2">
+                  <span class="shrink-0 text-prompt" aria-hidden="true">[+]</span>
+                  <span class="truncate" title={tech}>{tech}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </aside>
     </Reveal>
   </div>
 </section>
