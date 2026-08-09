@@ -1,5 +1,5 @@
 ---
-import { withBase } from '@/lib/with-base'
+import { createSitePublishing } from '@/lib/site-publishing'
 import { shortName } from '@/lib/site'
 import ThemeToggle from '@/components/ThemeToggle.astro'
 
@@ -10,6 +10,7 @@ const links = [
   { href: '#work', label: 'work' },
   { href: '#contact', label: 'contact' },
 ]
+const { assets } = createSitePublishing()
 ---
 
 <header
@@ -42,7 +43,7 @@ const links = [
       }
       <li>
         <a
-          href={withBase('resume.pdf')}
+          href={assets.resume}
           target="_blank"
           rel="noopener noreferrer"
           class="border border-hairline-strong px-3 py-1.5 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
@@ -91,7 +92,7 @@ const links = [
     }
     <li>
       <a
-        href={withBase('resume.pdf')}
+        href={assets.resume}
         target="_blank"
         rel="noopener noreferrer"
         data-mobile-menu-link

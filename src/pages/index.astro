@@ -1,16 +1,16 @@
 ---
 import Layout from '@/layouts/Layout.astro'
 import Portfolio from '@/components/Portfolio.astro'
+import { createSitePublishing } from '@/lib/site-publishing'
 import {
   alternateSiteNames,
-  name,
   jobTitle,
-  homePageUrl,
-  pageSeo,
+  name,
   socialLinks,
 } from '@/lib/site'
 
-const { title, description } = pageSeo.home
+const publishing = createSitePublishing()
+const homePageUrl = publishing.absoluteUrl()
 const websiteId = `${homePageUrl}#website`
 const personId = `${homePageUrl}#person`
 
@@ -37,7 +37,7 @@ const jsonLd = {
 }
 ---
 
-<Layout title={title} description={description}>
+<Layout>
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <Portfolio />
 </Layout>

@@ -8,7 +8,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "verify:publishing": "bun scripts/verify-publishing.ts",
+    "check": "bun run lint && bun run typecheck && bun test && bun run verify:publishing"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

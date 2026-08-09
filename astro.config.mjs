@@ -1,30 +1,14 @@
 import { defineConfig } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import sitemap from '@astrojs/sitemap'
+import { createSitePublishing } from './src/lib/site-publishing'
 
-const site = process.env.SITE_URL || 'https://rifkifajarramadhani.github.io'
-const base = process.env.BASE_PATH || '/me'
-const homeWithoutSlash = new URL(base === '/' ? '/' : base, site).href.replace(
-  /\/$/,
-  '',
-)
+const publishing = createSitePublishing()
 
 export default defineConfig({
-  site,
-  base,
-  trailingSlash: 'always',
+  ...publishing.astro,
   integrations: [
     tailwind({ applyBaseStyles: false }),
-    sitemap({
-      filter: (page) => !page.includes('/404'),
-      serialize(item) {
-        if (item.url === homeWithoutSlash) {
-          item.url = `${item.url}/`
-        }
-        item.changefreq = 'monthly'
-        item.priority = 1.0
-        return item
-      },
-    }),
+    sitemap(publishing.sitemap),
   ],
 })

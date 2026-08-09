@@ -38,6 +38,14 @@ bun preview
 bun run lint
 ```
 
+### Check
+
+Run linting, TypeScript, module tests, and artifact verification for both publishing profiles:
+
+```bash
+bun run check
+```
+
 ## Environment variables
 
 Copy `.env.example` and adjust values for your target environment:
@@ -48,11 +56,12 @@ cp .env.example .env
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `SITE_URL` | Canonical site URL used for SEO and sitemap | `https://rifkifajarramadhani.github.io` |
-| `BASE_PATH` | Astro base path | `/me` (GitHub Pages) |
+| `PUBLISHING_PROFILE` | Named publishing target: `apex` or `github-pages` | `apex` |
 | `DOMAIN` | Domain name (used in deployment config) | — |
 
-For local development on a custom domain, use `BASE_PATH=/`. For GitHub Pages, keep `BASE_PATH=/me`.
+An omitted `PUBLISHING_PROFILE` builds the apex site at `https://rifkiramadhani.my.id/`. Use `PUBLISHING_PROFILE=github-pages` to verify compatibility with `https://rifkifajarramadhani.github.io/me/`. Unknown names fail during Astro configuration.
+
+GitHub Pages is a build-compatibility target only; this repository does not deploy it.
 
 ## Docker
 
@@ -60,8 +69,7 @@ Build and run the production image locally:
 
 ```bash
 docker build \
-  --build-arg SITE_URL=https://rifkiramadhani.my.id \
-  --build-arg BASE_PATH=/ \
+  --build-arg PUBLISHING_PROFILE=apex \
   -t me .
 
 docker run -p 8080:80 me
@@ -73,9 +81,10 @@ The site will be available at `http://localhost:8080`.
 
 Production deploys automatically on push to `main` via [`.github/workflows/publish.yml`](.github/workflows/publish.yml):
 
-1. Builds the Astro site with Bun and verifies SEO artifacts
-2. Builds a Docker image and pushes it to GHCR (`ghcr.io/rifkifajarramadhani/me`)
-3. SSHes into the server and runs the deploy script
+1. Checks the code and verifies apex and GitHub Pages publishing artifacts
+2. Builds the explicit apex Astro artifact
+3. Builds a Docker image and pushes it to GHCR (`ghcr.io/rifkifajarramadhani/me`)
+4. SSHes into the server and runs the deploy script
 
 The container is served by nginx and routed through Traefik with TLS (Let's Encrypt). See [`docker-compose.yml`](docker-compose.yml) for Traefik labels and health check config.
 
@@ -83,7 +92,8 @@ The container is served by nginx and routed through Traefik with TLS (Let's Encr
 
 | What | File |
 |------|------|
-| Site metadata, name, social links | [`src/lib/site.ts`](src/lib/site.ts) |
+| Professional identity, SEO copy, social links | [`src/lib/site.ts`](src/lib/site.ts) |
+| Publishing profiles, URLs, and generated artifacts | [`src/lib/site-publishing.ts`](src/lib/site-publishing.ts) |
 | Work experience | [`src/data/experience.ts`](src/data/experience.ts) |
 | Projects | [`src/data/projects.ts`](src/data/projects.ts) |
 | Skills | [`src/data/skills.ts`](src/data/skills.ts) |
@@ -102,7 +112,7 @@ Place images in `public/` and reference them in [`src/data/projects.ts`](src/dat
 previewImage: 'my-project.png'
 ```
 
-Images are served with the Astro base path (`/me/` on GitHub Pages, `/` on a custom domain).
+Images are served through the selected publishing profile (`/me/` on GitHub Pages, `/` on the apex domain).
 
 ### Skills
 

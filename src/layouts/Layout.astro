@@ -1,14 +1,7 @@
 ---
 import '../styles/globals.css'
-import { withBase } from '@/lib/with-base'
-import {
-  defaultDescription,
-  defaultOgImage,
-  defaultSocialImageAlt,
-  defaultTitle,
-  defaultTwitterImage,
-  name,
-} from '@/lib/site'
+import { createSitePublishing } from '@/lib/site-publishing'
+import { name } from '@/lib/site'
 
 interface Props {
   title?: string
@@ -17,16 +10,12 @@ interface Props {
   noindex?: boolean
 }
 
-const {
-  title = defaultTitle,
-  description = defaultDescription,
-  image,
-  noindex = false,
-} = Astro.props
-
-const canonicalURL = new URL(Astro.url.pathname, Astro.site).href
-const ogImage = new URL(image ?? defaultOgImage, Astro.site).href
-const twitterImage = new URL(image ?? defaultTwitterImage, Astro.site).href
+const publishing = createSitePublishing()
+const metadata = publishing.resolveDocument({
+  pathname: Astro.url.pathname,
+  ...Astro.props,
+})
+const { assets } = publishing
 ---
 
 <!doctype html>
@@ -34,39 +23,35 @@ const twitterImage = new URL(image ?? defaultTwitterImage, Astro.site).href
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/png" sizes="96x96" href={withBase('favicon-96x96.png')} />
-    <link rel="icon" type="image/svg+xml" sizes="any" href={withBase('favicon.svg')} />
-    <link rel="icon" href={withBase('favicon.ico')} sizes="16x16 32x32 48x48" />
-    <link rel="icon" type="image/png" sizes="32x32" href={withBase('favicon-32x32.png')} />
-    <link rel="icon" type="image/png" sizes="16x16" href={withBase('favicon-16x16.png')} />
-    <link rel="apple-touch-icon" sizes="180x180" href={withBase('apple-touch-icon.png')} />
-    <link rel="manifest" href={withBase('site.webmanifest')} />
+    <link rel="icon" type="image/png" sizes="96x96" href={assets.favicon96} />
+    <link rel="icon" type="image/svg+xml" sizes="any" href={assets.faviconSvg} />
+    <link rel="icon" href={assets.faviconIco} sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" sizes="32x32" href={assets.favicon32} />
+    <link rel="icon" type="image/png" sizes="16x16" href={assets.favicon16} />
+    <link rel="apple-touch-icon" sizes="180x180" href={assets.appleTouchIcon} />
+    <link rel="manifest" href={assets.manifest} />
     <meta name="theme-color" content="#171514" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    {noindex ? (
-      <meta name="robots" content="noindex" />
-    ) : (
-      <meta name="robots" content="index, follow" />
-    )}
-    <link rel="canonical" href={canonicalURL} />
-    <link rel="sitemap" type="application/xml" href={withBase('sitemap-index.xml')} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonicalURL} />
+    <title>{metadata.title}</title>
+    <meta name="description" content={metadata.description} />
+    <meta name="robots" content={metadata.robots} />
+    <link rel="canonical" href={metadata.canonicalUrl} />
+    <link rel="sitemap" type="application/xml" href={assets.sitemap} />
+    <meta property="og:title" content={metadata.title} />
+    <meta property="og:description" content={metadata.description} />
+    <meta property="og:url" content={metadata.canonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={name} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={metadata.ogImageUrl} />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={defaultSocialImageAlt} />
+    <meta property="og:image:alt" content={metadata.socialImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={twitterImage} />
-    <meta name="twitter:image:alt" content={defaultSocialImageAlt} />
+    <meta name="twitter:title" content={metadata.title} />
+    <meta name="twitter:description" content={metadata.description} />
+    <meta name="twitter:image" content={metadata.twitterImageUrl} />
+    <meta name="twitter:image:alt" content={metadata.socialImageAlt} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

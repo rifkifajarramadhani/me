@@ -1,6 +1,8 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import { withBase } from '@/lib/with-base'
+import { createSitePublishing } from '@/lib/site-publishing'
+
+const publishing = createSitePublishing()
 ---
 
 <Layout title="Page Not Found | Rifki" description="The page you are looking for does not exist." noindex>
@@ -22,7 +24,7 @@ import { withBase } from '@/lib/with-base'
     </p>
     <a
       class="mt-8 border border-hairline-strong px-4 py-2 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
-      href={withBase()}
+      href={publishing.publicPath()}
     >
       <span class="text-prompt">[</span> back to home <span class="text-prompt">]</span>
     </a>

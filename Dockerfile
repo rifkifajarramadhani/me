@@ -2,11 +2,9 @@ FROM oven/bun:1.3.10 AS build
 
 WORKDIR /app
 
-ARG SITE_URL
-ARG BASE_PATH
+ARG PUBLISHING_PROFILE=apex
 
-ENV SITE_URL=${SITE_URL}
-ENV BASE_PATH=${BASE_PATH}
+ENV PUBLISHING_PROFILE=${PUBLISHING_PROFILE}
 
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile

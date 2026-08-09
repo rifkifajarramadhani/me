@@ -3,10 +3,11 @@ import PROJECTS from '@/data/projects'
 import Reveal from '@/components/Reveal.astro'
 import SectionHeading from '@/components/SectionHeading.astro'
 import ProjectLinks from '@/components/ProjectLinks.astro'
-import { withBase } from '@/lib/with-base'
+import { createSitePublishing } from '@/lib/site-publishing'
 
 const featured = PROJECTS.filter((project) => project.featured)
 const others = PROJECTS.filter((project) => !project.featured)
+const publishing = createSitePublishing()
 ---
 
 <section id="work" class="mx-auto max-w-4xl px-6 py-24">
@@ -35,7 +36,7 @@ const others = PROJECTS.filter((project) => !project.featured)
                     class="block overflow-hidden border border-hairline-strong transition-colors duration-200 hover:border-primary focus-visible:border-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
                   >
                     <img
-                      src={withBase(project.previewImage)}
+                      src={publishing.publicPath(project.previewImage)}
                       alt={`${project.name} project interface preview`}
                       loading="lazy"
                       decoding="async"
@@ -45,7 +46,7 @@ const others = PROJECTS.filter((project) => !project.featured)
                 ) : (
                   <div class="block overflow-hidden border border-hairline-strong">
                     <img
-                      src={withBase(project.previewImage)}
+                      src={publishing.publicPath(project.previewImage)}
                       alt={`${project.name} project interface preview`}
                       loading="lazy"
                       decoding="async"
