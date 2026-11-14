@@ -1,0 +1,246 @@
+---
+/**
+ * Ambient terminal session behind the hero window. Purely decorative: it is
+ * hidden from assistive technology, pauses off-screen and in background tabs,
+ * and renders as a static transcript for reduced motion or no JavaScript.
+ */
+
+type Line = { kind: 'cmd' | 'out' | 'ok'; text: string }
+
+const script: Line[] = [
+  { kind: 'cmd', text: 'git pull --rebase origin main' },
+  { kind: 'out', text: 'Already up to date.' },
+  { kind: 'cmd', text: 'bun run check' },
+  { kind: 'ok', text: 'lint ........ ok' },
+  { kind: 'ok', text: 'typecheck ... ok' },
+  { kind: 'ok', text: 'tests ....... ok' },
+  { kind: 'cmd', text: 'go test ./...' },
+  { kind: 'ok', text: 'ok    api/orders       0.42s' },
+  { kind: 'ok', text: 'ok    api/inventory    0.31s' },
+  { kind: 'cmd', text: 'php artisan migrate --force' },
+  { kind: 'out', text: 'Nothing to migrate.' },
+  { kind: 'cmd', text: 'docker compose up -d --build' },
+  { kind: 'ok', text: 'Container postgres   Healthy' },
+  { kind: 'ok', text: 'Container api        Started' },
+  { kind: 'ok', text: 'Container web        Started' },
+  { kind: 'cmd', text: 'curl -s localhost:8080/healthz' },
+  { kind: 'out', text: '{"status":"ok"}' },
+  { kind: 'cmd', text: 'bun run build' },
+  { kind: 'ok', text: 'built in 3.1s' },
+  { kind: 'cmd', text: 'git push origin main' },
+  { kind: 'out', text: 'main -> main' },
+  { kind: 'cmd', text: 'tail -f /var/log/nginx/access.log' },
+  { kind: 'out', text: 'GET /                200' },
+  { kind: 'out', text: 'GET /api/products    200' },
+  { kind: 'out', text: 'POST /api/orders     201' },
+  { kind: 'cmd', text: 'clear' },
+]
+---
+
+<div
+  class="term-backdrop"
+  aria-hidden="true"
+  data-term-backdrop
+  data-script={JSON.stringify(script)}
+>
+  <div class="term-backdrop__log" data-term-log>
+    {script.map((line) => (
+      <div class:list={['term-backdrop__line', `is-${line.kind}`]}>
+        {line.kind === 'cmd' && <span class="term-backdrop__prompt">$ </span>}
+        {line.text}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  .term-backdrop {
+    --term-opacity: 0.5;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+    opacity: var(--term-opacity);
+    transition: opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 22%,
+      #000 70%,
+      transparent 100%
+    );
+  }
+
+  .dark .term-backdrop {
+    --term-opacity: 0.55;
+  }
+
+  /* With JS and motion allowed, hold the static transcript back until the
+     script has cleared it, so the session appears to start fresh. */
+  @media (prefers-reduced-motion: no-preference) {
+    .js .term-backdrop:not([data-ready]) {
+      opacity: 0;
+      transition: none;
+    }
+  }
+
+  .term-backdrop__log {
+    position: absolute;
+    inset: 4.5rem 0 1rem;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.75;
+    color: var(--ink-tertiary);
+    white-space: pre;
+  }
+
+  .term-backdrop__line {
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .term-backdrop__line.is-cmd {
+    color: var(--ink-subtle);
+  }
+
+  .term-backdrop__prompt {
+    color: var(--primary);
+  }
+
+  .term-backdrop__line.is-ok::before {
+    content: '\2713  ';
+    color: var(--primary);
+  }
+
+  .term-backdrop__caret {
+    display: inline-block;
+    width: 0.55ch;
+    height: 1.05em;
+    margin-left: 0.15ch;
+    vertical-align: -0.16em;
+    background: var(--ink-subtle);
+    animation: command-caret-blink 1.05s steps(1) infinite;
+  }
+</style>
+
+<script>
+  type Line = { kind: 'cmd' | 'out' | 'ok'; text: string }
+
+  const root = document.querySelector<HTMLElement>('[data-term-backdrop]')
+  const log = root?.querySelector<HTMLElement>('[data-term-log]')
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+  if (root && log && !reducedMotion.matches) {
+    const script: Line[] = JSON.parse(root.dataset.script ?? '[]')
+    const caret = document.createElement('span')
+    caret.className = 'term-backdrop__caret'
+
+    let step = 0
+    let timer: number | undefined
+    let inView = true
+    let running = false
+
+    const lineHeight = () => parseFloat(getComputedStyle(log).lineHeight) || 22
+
+    const capacity = () =>
+      Math.max(1, Math.floor(log.clientHeight / lineHeight()))
+
+    const trim = () => {
+      const max = capacity()
+      while (log.childElementCount > max) log.firstElementChild?.remove()
+    }
+
+    const newLine = (line: Line) => {
+      const el = document.createElement('div')
+      el.className = `term-backdrop__line is-${line.kind}`
+      log.append(el)
+      trim()
+      return el
+    }
+
+    const schedule = (fn: () => void, ms: number) => {
+      timer = window.setTimeout(() => {
+        timer = undefined
+        if (running) fn()
+      }, ms)
+    }
+
+    const typeCommand = (el: HTMLElement, text: string, done: () => void) => {
+      const prompt = document.createElement('span')
+      prompt.className = 'term-backdrop__prompt'
+      prompt.textContent = '$ '
+      const node = document.createTextNode('')
+      el.append(prompt, node, caret)
+
+      let i = 0
+      const tick = () => {
+        i += 1
+        node.data = text.slice(0, i)
+        if (i < text.length) schedule(tick, 38 + Math.random() * 70)
+        else schedule(done, 380 + Math.random() * 320)
+      }
+      schedule(tick, 60)
+    }
+
+    const next = () => {
+      const line = script[step % script.length]
+      step += 1
+
+      if (line.kind === 'cmd') {
+        const wipe = line.text === 'clear'
+        typeCommand(newLine(line), line.text, () => {
+          if (!wipe) return next()
+          log.replaceChildren(caret)
+          schedule(next, 1100)
+        })
+        return
+      }
+
+      const el = newLine(line)
+      el.textContent = line.text
+      log.append(caret)
+      trim()
+      const nextIsCmd = script[step % script.length].kind === 'cmd'
+      schedule(
+        next,
+        nextIsCmd ? 700 + Math.random() * 900 : 120 + Math.random() * 180,
+      )
+    }
+
+    const start = () => {
+      if (running || !inView || document.visibilityState !== 'visible') return
+      running = true
+      if (!timer) schedule(next, 400)
+    }
+
+    const stop = () => {
+      running = false
+      if (timer) window.clearTimeout(timer)
+      timer = undefined
+    }
+
+    const sync = () => {
+      if (
+        inView &&
+        document.visibilityState === 'visible' &&
+        !reducedMotion.matches
+      )
+        start()
+      else stop()
+    }
+
+    log.replaceChildren(caret)
+    root.dataset.ready = ''
+
+    new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting
+      sync()
+    }).observe(root)
+
+    document.addEventListener('visibilitychange', sync)
+    reducedMotion.addEventListener('change', sync)
+  }
+</script>
