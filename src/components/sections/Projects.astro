@@ -68,9 +68,8 @@ const publishing = createSitePublishing()
               </div>
               <div class:list={['lg:col-span-5', index % 2 === 1 && 'lg:order-1']}>
                 <p class="mb-2 font-mono text-xs text-primary">
-                  <span class="text-prompt">[</span>featured<span class="text-prompt">
-                    ]</span
-                  >
+                  <span class="text-prompt">[</span> featured{' '}
+                  <span class="text-prompt">]</span>
                 </p>
                 <h3 class="mb-4 text-xl font-semibold text-ink">{project.name}</h3>
                 <p class="panel p-5 text-sm leading-[1.7] text-ink-muted">
@@ -98,9 +97,8 @@ const publishing = createSitePublishing()
           <Reveal delay={0.05 * index}>
             <article class="group panel flex h-full flex-col p-5 transition-colors duration-200 hover:border-primary focus-within:border-primary">
               <p class="mb-3 font-mono text-xs text-primary">
-                <span class="text-prompt">[</span>project<span class="text-prompt">
-                  ]</span
-                >
+                <span class="text-prompt">[</span> project{' '}
+                <span class="text-prompt">]</span>
               </p>
               <h3 class="mb-3 text-base font-semibold text-ink transition-colors group-hover:text-primary">
                 {project.name}
