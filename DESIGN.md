@@ -259,6 +259,10 @@ Components are utilitarian and exact: each one exposes its role through a border
 
 The signature container uses a strong outer hairline, a stepped title bar, three circular status lights, sequential command rows, a green caret, and a compact action row. It carries identity and role information without imitating a fully interactive shell.
 
+### Terminal Backdrop
+
+Behind the hero window, a faint full-bleed shell session types build, test, deploy, and access-log lines, then clears and repeats. It sits at roughly half opacity in tertiary ink with a vertical fade mask, keeps green to its prompts and `✓` marks, and uses a neutral caret so the hero's green caret remains the single active signal. It is decorative and `aria-hidden`, pauses off-screen and in background tabs, and renders as a still transcript under reduced motion or without JavaScript. Keep it to the hero; it is atmosphere, never content.
+
 ### Status Footer
 
 On desktop, the footer reads as a compact editor status bar: a solid green mode segment, project path, year, and healthy-state indicator. Mobile reduces this to the project path and year so it does not compete with the content.
