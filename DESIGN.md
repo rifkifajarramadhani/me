@@ -266,6 +266,7 @@ A faint shell session is pinned to the viewport behind the whole page, typing bu
 ### Section Headings
 
 Section commands sit in an opaque, square, one-pixel hairline strip on the canvas color, so they stay legible over the backdrop. The `[ kicker ]` label moves inside the strip, right-aligned, and is hidden below the small breakpoint where the command alone carries the section.
+
 ### Status Footer
 
 On desktop, the footer reads as a compact editor status bar: a solid green mode segment, project path, year, and healthy-state indicator. Mobile reduces this to the project path and year so it does not compete with the content.
