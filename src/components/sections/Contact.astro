@@ -4,20 +4,34 @@ import CommandHeading from '@/components/CommandHeading.astro'
 import { socialLinks } from '@/lib/site'
 
 const socials = [
-  { href: socialLinks.email, label: 'email' },
-  { href: socialLinks.github, label: 'github' },
-  { href: socialLinks.linkedin, label: 'linkedin' },
+  {
+    href: socialLinks.email,
+    label: 'email',
+    accessibleLabel: 'Email Rifki',
+    external: false,
+  },
+  {
+    href: socialLinks.github,
+    label: 'github',
+    accessibleLabel: 'GitHub profile (opens in a new tab)',
+    external: true,
+  },
+  {
+    href: socialLinks.linkedin,
+    label: 'linkedin',
+    accessibleLabel: 'LinkedIn profile (opens in a new tab)',
+    external: true,
+  },
 ]
 ---
 
 <section id="contact" class="mx-auto max-w-2xl px-6 py-32 text-center">
   <Reveal>
-    <p class="mb-2 font-mono text-[0.72rem] font-bold uppercase tracking-[0.14em] text-ink-subtle">
-      <span class="text-prompt">[</span>
-      contact
-      <span class="text-prompt">]</span>
-    </p>
-    <CommandHeading command="./contact.sh" class="mb-6 text-left sm:text-center" />
+    <CommandHeading
+      command="./contact.sh"
+      kicker="contact"
+      class="mb-6 text-left sm:text-center"
+    />
     <p class="mx-auto max-w-lg text-left leading-[1.7] text-ink-muted sm:text-center">
       I'm currently open to new opportunities and collaborations. Whether you
       have a question, a project in mind, or just want to say hi, my inbox is
@@ -25,26 +39,25 @@ const socials = [
     </p>
     <a
       href={socialLinks.email}
-      class="mt-10 inline-block border border-hairline-strong px-6 py-3 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
+      class="mt-10 inline-flex min-h-11 items-center border border-hairline-strong px-6 py-3 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
     >
-      <span class="text-prompt">[</span> say hello <span class="text-prompt">]</span>
+      <span class="text-prompt">[</span> say hello{' '}
+      <span class="text-prompt">]</span>
     </a>
 
-    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-      {
-        socials.map(({ href, label }) => (
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={label}
-            class="font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
-          >
-            <span class="text-prompt">[</span> {label}{' '}
-            <span class="text-prompt">]</span>
-          </a>
-        ))
-      }
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+      {socials.map(({ href, label, accessibleLabel, external }) => (
+        <a
+          href={href}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noopener noreferrer' : undefined}
+          aria-label={accessibleLabel}
+          class="inline-flex min-h-11 items-center px-1 font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+        >
+          <span class="text-prompt">[</span> {label}{' '}
+          <span class="text-prompt">]</span>
+        </a>
+      ))}
     </div>
   </Reveal>
 </section>
