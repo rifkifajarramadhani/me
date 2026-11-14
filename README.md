@@ -2,10 +2,10 @@
 
 A dark-themed personal portfolio with lightweight native scroll animations for [rifkiramadhani.my.id](https://rifkiramadhani.my.id).
 
-**Stack:** Astro 5, Tailwind CSS, TypeScript, Bun
+**Stack:** Astro 7, Tailwind CSS, TypeScript, Bun
 
 ## Get started
-
+This project uses [Bun](https://bun.sh) as its package manager and script runner. The Astro CLI runs on Node.js, which must be version 22.23.4 or newer (see [`.nvmrc`](.nvmrc)).
 This project uses [Bun](https://bun.sh) as its JavaScript runtime and package manager.
 
 ### Installation

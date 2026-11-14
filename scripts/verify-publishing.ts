@@ -1,12 +1,12 @@
 import { spawn } from 'node:child_process'
 import {
+  mkdir,
   mkdtemp,
   readFile,
   readdir,
   rm,
   stat,
 } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { PublishingProfileName } from '../src/lib/site-publishing'
@@ -209,7 +209,11 @@ async function verifyBuild(outDir: string, expected: ExpectedBuild) {
   await verifyNoObsoleteDomain(outDir)
 }
 
-const temporaryRoot = await mkdtemp(join(tmpdir(), 'site-publishing-'))
+// Astro moves build assets with rename(), which fails across filesystems, so
+// the output must live on the same device as the project, not the OS tmpdir.
+const temporaryParent = join(projectRoot, '.astro')
+await mkdir(temporaryParent, { recursive: true })
+const temporaryRoot = await mkdtemp(join(temporaryParent, 'site-publishing-'))
 
 try {
   for (const expected of expectedBuilds) {

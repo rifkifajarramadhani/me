@@ -3,7 +3,7 @@
 ## Project Overview
 
 Personal portfolio for [rifkiramadhani.my.id](https://rifkiramadhani.my.id),
-built with Astro 5, Tailwind CSS, TypeScript, and Bun. Pages are under
+built with Astro 7, Tailwind CSS, TypeScript, and Bun. Pages are under
 `src/pages/`, layouts under `src/layouts/`, components under
 `src/components/`, content data under `src/data/`, and shared logic under
 `src/lib/`. Static assets live in `public/`.

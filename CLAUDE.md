@@ -6,7 +6,7 @@ this repository.
 ## What this is
 
 Personal portfolio for [rifkiramadhani.my.id](https://rifkiramadhani.my.id),
-built with Astro 5, Tailwind CSS, TypeScript, and Bun. Read
+built with Astro 7, Tailwind CSS, TypeScript, and Bun. Read
 [AGENTS.md](AGENTS.md) for repository-wide engineering rules, plus
 [CONTEXT.md](CONTEXT.md), [PRODUCT.md](PRODUCT.md), and [DESIGN.md](DESIGN.md)
 before substantial work.
