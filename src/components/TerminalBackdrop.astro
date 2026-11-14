@@ -1,9 +1,11 @@
 ---
 /**
  * Ambient terminal session pinned behind the whole page. Purely decorative: it
- * is hidden from assistive technology, pauses in background tabs, dims once
- * the hero scrolls away (where it would sit under content), and renders as a
- * static transcript for reduced motion or no JavaScript.
+ * is hidden from assistive technology, pauses in background tabs, and renders
+ * as a static transcript for reduced motion or no JavaScript. It never sits
+ * under reading content: wide screens keep it in the left margin, and narrower
+ * screens show it only behind the hero, fading it out (and pausing it) once
+ * the hero scrolls away.
  */
 
 type Line = { kind: 'cmd' | 'out' | 'ok'; text: string }
@@ -79,9 +81,10 @@ const script: Line[] = [
     --term-opacity: 0.55;
   }
 
-  /* Past the hero the log runs under content, so it steps back. */
+  /* Past the hero the log would run under headings and copy, so on screens
+     without a usable margin it leaves entirely rather than adding noise. */
   .term-backdrop[data-dim] {
-    --term-dim: 0.3;
+    --term-dim: 0;
   }
 
   /* Wide screens: keep the session in the left margin, clear of the 56rem
@@ -154,6 +157,11 @@ const script: Line[] = [
   const root = document.querySelector<HTMLElement>('[data-term-backdrop]')
   const log = root?.querySelector<HTMLElement>('[data-term-log]')
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  // Matches the CSS breakpoint where the log moves into the left margin.
+  const wide = window.matchMedia('(min-width: 80rem)')
+  // True while the log is faded out, so typing can pause until it returns.
+  const isHidden = () =>
+    root?.hasAttribute('data-dim') === true && !wide.matches
 
   if (root && log && !reducedMotion.matches) {
     const script: Line[] = JSON.parse(root.dataset.script ?? '[]')
@@ -244,7 +252,11 @@ const script: Line[] = [
     }
 
     const sync = () => {
-      if (document.visibilityState === 'visible' && !reducedMotion.matches)
+      if (
+        document.visibilityState === 'visible' &&
+        !reducedMotion.matches &&
+        !isHidden()
+      )
         start()
       else stop()
     }
@@ -254,6 +266,8 @@ const script: Line[] = [
 
     document.addEventListener('visibilitychange', sync)
     reducedMotion.addEventListener('change', sync)
+    wide.addEventListener('change', sync)
+    root.addEventListener('term-backdrop:dim', sync)
     sync()
   }
 
@@ -262,7 +276,10 @@ const script: Line[] = [
   const hero = document.querySelector('#hero')
   if (root && hero && 'IntersectionObserver' in window) {
     new IntersectionObserver(
-      ([entry]) => root.toggleAttribute('data-dim', !entry.isIntersecting),
+      ([entry]) => {
+        root.toggleAttribute('data-dim', !entry.isIntersecting)
+        root.dispatchEvent(new Event('term-backdrop:dim'))
+      },
       { threshold: 0.35 },
     ).observe(hero)
   }
