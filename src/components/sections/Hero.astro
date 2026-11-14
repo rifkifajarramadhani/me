@@ -216,8 +216,11 @@ const socials = [
       row-gap: 0.2rem;
     }
 
+    /* Indent by the command row's "$ " width, measured in its own 0.875rem
+       type (JetBrains Mono advances 0.6em per glyph) so the larger h1 lines
+       up with the other outputs. */
     .hero-line > :not(.hero-command) {
-      padding-left: calc(1ch + 0.55ch);
+      padding-left: calc(1.55 * 0.6 * 0.875rem);
     }
   }
 
