@@ -170,7 +170,7 @@ The palette pairs Carbon and Paper neutrals across light and dark modes, using O
 
 ### Named Rules
 
-**The One Signal Rule.** Operational Green appears only on commands, interaction states, and healthy status; its rarity is what gives it authority. The single sanctioned exception is the ambient Signal Lines layer: thin traces at low alpha, confined to margins and empty hero space, always dimmer than any functional green so the hero caret stays the brightest signal on screen.
+**The One Signal Rule.** Operational Green appears only on commands, interaction states, and healthy status; its rarity is what gives it authority. The single sanctioned exception is the ambient Data Streams layer: one-pixel strokes at low alpha behind the whole page, dimmed by half over the reading column, always dimmer than any functional green so the hero caret stays the brightest signal on screen.
 
 **The Paired Surface Rule.** Every neutral role must have an equivalent light and dark expression before it is introduced into the system.
 
@@ -263,13 +263,13 @@ The signature container uses a strong outer hairline, a stepped title bar, three
 
 A faint shell session is pinned to the viewport behind the whole page, typing build, test, deploy, and access-log lines, then clearing and repeating. It sits at roughly half opacity in tertiary ink with a vertical fade mask, keeps green to its prompts and `✓` marks, and uses a neutral caret so the hero's green caret remains the single active signal. From 80rem up it is confined to the left margin beside the content column and stays at full strength on every section. That margin is only about 22 columns wide at 80rem, so the script is written to fit it and any longer line wraps with a hanging indent; lines are never clipped mid-word. Below that there is no usable margin, so it lives only behind the hero: once the hero scrolls away it fades out completely and stops typing, and it never sits under headings or copy. It is decorative and `aria-hidden`, pauses in background tabs, and renders as a still transcript under reduced motion or without JavaScript. It is atmosphere, never content.
 
-### Signal Lines
+### Data Streams
 
-Thin one-pixel Operational Green traces route orthogonally, like circuit or network paths, with an occasional pulse travelling along them and a small square node that brightens when a pulse arrives. They read as requests moving through a system, the visual counterpart to the backdrop's access-log lines. Guides sit at about 10% alpha on Carbon and 22% on Paper; pulses peak near 40–50%, always below functional green. From 80rem up a trunk and its branches fill the right margin beside the content column, balancing the terminal session on the left, pinned to the viewport and masked in under the navigation. Below 80rem they live only in the hero, in the bands above and below the terminal card, plugging into its top and bottom edges while staying clear of the session log and the scroll link, and they scroll away with it. They never enter the content column. The layer is a single `aria-hidden` canvas capped at 30fps that pauses in background tabs and off-screen, draws only the static guides under reduced motion, and renders nothing without JavaScript.
+A field of one-pixel Operational Green strokes draws down the monospace character grid behind the whole page, like output scrolling past in many terminals at once. Each stream has a fading tail and a small caret-like head that steps a whole text row at a time; some run off the bottom of the screen, others stop mid-screen and fade like truncated output. Occasional short horizontal scan strokes draw along a text row, hold, and fade, echoing a line feed. Between streams a very faint grid of one-pixel ticks keeps empty space textured. Tails sit near 46% alpha on Carbon and 42% on Paper, and heads peak near 70%, all below functional green. The canvas is pinned to the viewport at full strength in the margins and masked to half strength over the 56rem reading column. On wide screens streams thin out over the terminal session in the left margin so its log stays readable. The layer is a single `aria-hidden` canvas capped at 30fps that pauses in background tabs. Under reduced motion it shows only the static ticks and a few frozen strokes, and without JavaScript it renders nothing.
 
 ### Section Headings
 
-Section commands sit directly on the canvas with no frame: a bracketed `[ kicker ]` label above a bold prompt-led command and a green caret. They stay legible because the backdrop is kept clear of the reading column, not because the heading is boxed.
+Section commands sit directly on the canvas with no frame: a bracketed `[ kicker ]` label above a bold prompt-led command and a green caret. They stay legible because the backdrop is dimmed over the reading column and the terminal session stays in the margin, not because the heading is boxed.
 
 ### Status Footer
 
@@ -288,7 +288,7 @@ On desktop, the footer reads as a compact editor status bar: a solid green mode 
 ### Don't:
 
 - **Don't** round cards, buttons, inputs, image frames, or navigation controls.
-- **Don't** spread green across large backgrounds or use it as general decoration; the low-alpha Signal Lines in the margins are the only ambient green.
+- **Don't** spread green across large backgrounds or use it as general decoration; the low-alpha Data Streams backdrop is the only ambient green.
 - **Don't** add gradients, glass panels, or broad card shadows to create hierarchy.
 - **Don't** mix in a second display or body typeface.
 - **Don't** turn the terminal metaphor into fake shell complexity that obscures portfolio evidence.
