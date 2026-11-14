@@ -1,6 +1,37 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-ink-tertiary: var(--ink-tertiary);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-prompt: var(--prompt);
+  --color-mute: var(--mute);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+}
+
+@theme {
+  --font-sans: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --animate-command-caret: command-caret-blink 1.05s steps(1) infinite;
+  --animate-typing-caret: caret-blink 1s step-end infinite;
+  --animate-rise-in: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 
 :root {
   --canvas: #fdfcfc;
@@ -50,41 +81,49 @@
   --sb-thumb: #3fb950;
 }
 
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
+@layer base {
+  /* Tailwind v4 dropped the pointer cursor from buttons; keep the v3 behavior. */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
 
-html {
-  scroll-behavior: smooth;
-}
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
 
-section[id] {
-  scroll-margin-top: 6rem;
-}
+  html {
+    scroll-behavior: smooth;
+  }
 
-body {
-  background-color: var(--canvas);
-  color: var(--ink);
-}
+  section[id] {
+    scroll-margin-top: 6rem;
+  }
 
-body::-webkit-scrollbar {
-  width: 10px;
-}
-
-body::-webkit-scrollbar-track {
-  background: var(--sb-track);
-}
-
-body::-webkit-scrollbar-thumb {
-  background: var(--sb-thumb);
-  border-radius: 0;
-}
-
-@supports not selector(::-webkit-scrollbar) {
   body {
-    scrollbar-color: var(--sb-thumb) var(--sb-track);
+    background-color: var(--canvas);
+    color: var(--ink);
+  }
+
+  body::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: var(--sb-track);
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb);
+    border-radius: 0;
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    body {
+      scrollbar-color: var(--sb-thumb) var(--sb-track);
+    }
   }
 }
 
@@ -120,64 +159,66 @@ body::-webkit-scrollbar-thumb {
   }
 }
 
-.js .reveal {
-  opacity: 0;
-  transform: translateY(12px);
-  transition:
-    opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: var(--reveal-delay, 0s);
-}
-
-.js .reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+/* Reveal styles stay in the utilities layer so they keep overriding
+   utilities, as they did when they were emitted after them in v3. */
+@layer utilities {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0s);
   }
 
-  .js .reveal,
   .js .reveal.is-visible {
     opacity: 1;
-    transform: none;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .js .reveal,
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-@layer components {
-  .panel {
-    border: 1px solid var(--hairline);
-    background: var(--surface-1);
-    border-radius: 0;
-  }
+@utility panel {
+  border: 1px solid var(--hairline);
+  background: var(--surface-1);
+  border-radius: 0;
+}
 
-  .terminal-window {
-    border: 1px solid var(--hairline-strong);
-    background: var(--surface-1);
-    border-radius: 0;
-    overflow: hidden;
-  }
+@utility terminal-window {
+  border: 1px solid var(--hairline-strong);
+  background: var(--surface-1);
+  border-radius: 0;
+  overflow: hidden;
+}
 
-  .terminal-titlebar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--hairline);
-    background: var(--surface-2);
-    padding: 0.5rem 0.75rem;
-  }
+@utility terminal-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--surface-2);
+  padding: 0.5rem 0.75rem;
+}
 
-  .bracket-link {
-    @apply font-mono text-sm text-ink-subtle transition-colors hover:text-primary;
-  }
+@utility bracket-link {
+  @apply font-mono text-sm text-ink-subtle transition-colors hover:text-primary;
+}
 
-  .bracket-link-active {
-    @apply text-primary;
-  }
+@utility bracket-link-active {
+  @apply text-primary;
 }

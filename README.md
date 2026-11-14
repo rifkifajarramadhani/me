@@ -120,4 +120,4 @@ In [`src/data/skills.ts`](src/data/skills.ts), each object is a skill field with
 
 ## Styling
 
-Colors, fonts, and breakpoints live in [`tailwind.config.ts`](tailwind.config.ts). Global styles and scrollbar theming are in [`src/styles/globals.css`](src/styles/globals.css).
+Theme tokens (colors, fonts, animations), global styles, and scrollbar theming live in [`src/styles/globals.css`](src/styles/globals.css), using Tailwind CSS 4 `@theme` configuration.
