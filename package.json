@@ -22,9 +22,9 @@
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^8.72.2",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.2",
-    "eslint-plugin-astro": "^1.7.0",
+    "eslint": "^10",
+    "eslint-config-prettier": "^10",
+    "eslint-plugin-astro": "^3",
     "prettier": "^3.10.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.5.14",
