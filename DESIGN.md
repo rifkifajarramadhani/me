@@ -261,8 +261,11 @@ The signature container uses a strong outer hairline, a stepped title bar, three
 
 ### Terminal Backdrop
 
-Behind the hero window, a faint full-bleed shell session types build, test, deploy, and access-log lines, then clears and repeats. It sits at roughly half opacity in tertiary ink with a vertical fade mask, keeps green to its prompts and `✓` marks, and uses a neutral caret so the hero's green caret remains the single active signal. It is decorative and `aria-hidden`, pauses off-screen and in background tabs, and renders as a still transcript under reduced motion or without JavaScript. Keep it to the hero; it is atmosphere, never content.
+A faint shell session is pinned to the viewport behind the whole page, typing build, test, deploy, and access-log lines, then clearing and repeating. It sits at roughly half opacity in tertiary ink with a vertical fade mask, keeps green to its prompts and `✓` marks, and uses a neutral caret so the hero's green caret remains the single active signal. From 80rem up it is confined to the left margin beside the content column; below that it overlaps content, so it dims to about a third of its strength once the hero scrolls away. It is decorative and `aria-hidden`, pauses in background tabs, and renders as a still transcript under reduced motion or without JavaScript. It is atmosphere, never content.
 
+### Section Headings
+
+Section commands sit in an opaque, square, one-pixel hairline strip on the canvas color, so they stay legible over the backdrop. The `[ kicker ]` label moves inside the strip, right-aligned, and is hidden below the small breakpoint where the command alone carries the section.
 ### Status Footer
 
 On desktop, the footer reads as a compact editor status bar: a solid green mode segment, project path, year, and healthy-state indicator. Mobile reduces this to the project path and year so it does not compete with the content.
