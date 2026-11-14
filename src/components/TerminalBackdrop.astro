@@ -1,8 +1,9 @@
 ---
 /**
- * Ambient terminal session behind the hero window. Purely decorative: it is
- * hidden from assistive technology, pauses off-screen and in background tabs,
- * and renders as a static transcript for reduced motion or no JavaScript.
+ * Ambient terminal session pinned behind the whole page. Purely decorative: it
+ * is hidden from assistive technology, pauses in background tabs, dims once
+ * the hero scrolls away (where it would sit under content), and renders as a
+ * static transcript for reduced motion or no JavaScript.
  */
 
 type Line = { kind: 'cmd' | 'out' | 'ok'; text: string }
@@ -56,25 +57,46 @@ const script: Line[] = [
 <style is:global>
   .term-backdrop {
     --term-opacity: 0.5;
-    position: absolute;
+    --term-dim: 1;
+    position: fixed;
     inset: 0;
     z-index: 0;
     overflow: hidden;
     pointer-events: none;
     user-select: none;
-    opacity: var(--term-opacity);
-    transition: opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: calc(var(--term-opacity) * var(--term-dim));
+    transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1);
     mask-image: linear-gradient(
       to bottom,
       transparent 0,
-      #000 22%,
-      #000 70%,
+      #000 18%,
+      #000 78%,
       transparent 100%
     );
   }
 
   .dark .term-backdrop {
     --term-opacity: 0.55;
+  }
+
+  /* Past the hero the log runs under content, so it steps back. */
+  .term-backdrop[data-dim] {
+    --term-dim: 0.45;
+  }
+
+  /* Wide screens: keep the session in the left margin, clear of the 56rem
+     content column, so it can stay at full strength on every section. */
+  @media (min-width: 80rem) {
+    .term-backdrop[data-dim] {
+      --term-dim: 1;
+    }
+
+    .term-backdrop__log {
+      right: auto;
+      width: calc((100% - 56rem) / 2);
+      padding-right: 0;
+      mask-image: linear-gradient(to right, #000 82%, transparent);
+    }
   }
 
   /* With JS and motion allowed, hold the static transcript back until the
@@ -140,7 +162,6 @@ const script: Line[] = [
 
     let step = 0
     let timer: number | undefined
-    let inView = true
     let running = false
 
     const lineHeight = () => parseFloat(getComputedStyle(log).lineHeight) || 22
@@ -211,7 +232,7 @@ const script: Line[] = [
     }
 
     const start = () => {
-      if (running || !inView || document.visibilityState !== 'visible') return
+      if (running || document.visibilityState !== 'visible') return
       running = true
       if (!timer) schedule(next, 400)
     }
@@ -223,11 +244,7 @@ const script: Line[] = [
     }
 
     const sync = () => {
-      if (
-        inView &&
-        document.visibilityState === 'visible' &&
-        !reducedMotion.matches
-      )
+      if (document.visibilityState === 'visible' && !reducedMotion.matches)
         start()
       else stop()
     }
@@ -235,12 +252,18 @@ const script: Line[] = [
     log.replaceChildren(caret)
     root.dataset.ready = ''
 
-    new IntersectionObserver(([entry]) => {
-      inView = entry.isIntersecting
-      sync()
-    }).observe(root)
-
     document.addEventListener('visibilitychange', sync)
     reducedMotion.addEventListener('change', sync)
+    sync()
+  }
+
+  // Dimming applies to the static transcript too, so it sits outside the
+  // motion guard above.
+  const hero = document.querySelector('#hero')
+  if (root && hero && 'IntersectionObserver' in window) {
+    new IntersectionObserver(
+      ([entry]) => root.toggleAttribute('data-dim', !entry.isIntersecting),
+      { threshold: 0.35 },
+    ).observe(hero)
   }
 </script>

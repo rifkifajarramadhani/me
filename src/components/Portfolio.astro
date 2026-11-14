@@ -6,13 +6,15 @@ import Skills from '@/components/sections/Skills.astro'
 import Experience from '@/components/sections/Experience.astro'
 import Projects from '@/components/sections/Projects.astro'
 import Contact from '@/components/sections/Contact.astro'
+import TerminalBackdrop from '@/components/TerminalBackdrop.astro'
 import { shortName } from '@/lib/site'
 
 const year = new Date().getFullYear()
 ---
 
 <Nav />
-<main>
+<TerminalBackdrop />
+<main class="relative z-[1]">
   <Hero />
   <About />
   <Skills />
@@ -20,7 +22,7 @@ const year = new Date().getFullYear()
   <Projects />
   <Contact />
 </main>
-<footer class="hidden h-9 items-stretch border-t border-hairline bg-surface-1 font-mono text-xs text-ink-tertiary md:flex">
+<footer class="relative z-[1] hidden h-9 items-stretch border-t border-hairline bg-surface-1 font-mono text-xs text-ink-tertiary md:flex">
   <span class="flex h-full items-center bg-primary px-3 font-bold text-primary-foreground">
     NORMAL
   </span>
@@ -35,7 +37,7 @@ const year = new Date().getFullYear()
     </span>
   </div>
 </footer>
-<footer class="border-t border-hairline bg-surface-1 py-4 text-center font-mono text-xs text-ink-tertiary md:hidden">
+<footer class="relative z-[1] border-t border-hairline bg-surface-1 py-4 text-center font-mono text-xs text-ink-tertiary md:hidden">
   <span class="text-ink-subtle">~/{shortName.toLowerCase()}</span>
   <span class="mx-2 text-prompt">·</span>
   <span>© {year}</span>

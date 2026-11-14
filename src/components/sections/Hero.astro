@@ -1,6 +1,5 @@
 ---
 import { name, jobTitle, socialLinks } from '@/lib/site'
-import TerminalBackdrop from '@/components/TerminalBackdrop.astro'
 
 const taglines = ['build things for the web.', 'build digital experiences.']
 const socials = [
@@ -25,9 +24,7 @@ const socials = [
 ]
 ---
 
-<section id="hero" class="hero-section relative isolate overflow-hidden">
-  <TerminalBackdrop />
-
+<section id="hero" class="hero-section relative">
   <div class="hero-content relative z-10 mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-5 pt-24 pb-24 sm:px-6 sm:pt-28 sm:pb-28">
     <div class="terminal-window hero-enter">
       <div class="terminal-titlebar">
