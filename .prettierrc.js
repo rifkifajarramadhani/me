@@ -1,8 +1,7 @@
-module.exports = {
-  plugins: {
-    'prettier-plugin-astro': {},
-    'prettier-plugin-tailwindcss': {},
-  },
+export default {
+  semi: false,
+  singleQuote: true,
+  plugins: ['prettier-plugin-astro', 'prettier-plugin-tailwindcss'],
   overrides: [
     {
       files: '*.astro',
