@@ -1,27 +1,27 @@
 ---
-import { name, jobTitle, socialLinks } from "@/lib/site";
+import { name, jobTitle, socialLinks } from '@/lib/site'
 
-const taglines = ["build things for the web.", "build digital experiences."];
+const taglines = ['build things for the web.', 'build digital experiences.']
 const socials = [
   {
     href: socialLinks.github,
-    label: "github",
-    accessibleLabel: "GitHub profile (opens in a new tab)",
+    label: 'github',
+    accessibleLabel: 'GitHub profile (opens in a new tab)',
     external: true,
   },
   {
     href: socialLinks.email,
-    label: "email",
-    accessibleLabel: "Email Rifki",
+    label: 'email',
+    accessibleLabel: 'Email Rifki',
     external: false,
   },
   {
     href: socialLinks.linkedin,
-    label: "linkedin",
-    accessibleLabel: "LinkedIn profile (opens in a new tab)",
+    label: 'linkedin',
+    accessibleLabel: 'LinkedIn profile (opens in a new tab)',
     external: true,
   },
-];
+]
 ---
 
 <section
@@ -35,9 +35,9 @@ const socials = [
         <span class="size-[0.62rem] rounded-full bg-warning"></span>
         <span class="size-[0.62rem] rounded-full bg-success"></span>
       </div>
-      <span class="font-mono text-xs text-ink-subtle" aria-hidden="true"
-        >~/portfolio</span
-      >
+      <span class="font-mono text-xs text-ink-subtle" aria-hidden="true">
+        ~/portfolio
+      </span>
     </div>
 
     <div class="p-6 sm:p-8">
@@ -47,9 +47,7 @@ const socials = [
             <span class="text-prompt">$</span>
             <span class="text-ink-subtle">whoami</span>
           </p>
-          <h1
-            class="font-mono text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink"
-          >
+          <h1 class="font-mono text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink">
             {name}
           </h1>
         </div>
@@ -60,7 +58,8 @@ const socials = [
             <span class="text-ink-subtle">cat role.txt</span>
           </p>
           <p class="font-mono text-sm leading-relaxed text-ink sm:text-base">
-            <span class="sr-only">Role: </span>{jobTitle}
+            <span class="sr-only">Role: </span>
+            {jobTitle}
           </p>
         </div>
 
@@ -73,53 +72,45 @@ const socials = [
             <span class="text-prompt">$</span>
             <span class="text-ink-subtle">echo</span>
           </p>
-          <p
-            class="flex min-w-0 items-baseline font-mono text-sm leading-relaxed sm:text-base"
-          >
-            <span data-tagline class="tagline text-primary"
-              >&quot;{taglines[0]}&quot;</span
-            >
+          <p class="flex min-w-0 items-baseline font-mono text-sm leading-relaxed sm:text-base">
+            <span data-tagline class="tagline text-primary">
+              &quot;{taglines[0]}&quot;
+            </span>
             <span
               class="ml-[0.55ch] inline-block h-[1.05em] w-[0.55ch] shrink-0 translate-y-[0.12em] animate-command-caret bg-primary motion-reduce:animate-none"
-              aria-hidden="true"></span>
+              aria-hidden="true"
+            ></span>
           </p>
         </div>
       </div>
 
-      <p
-        class="mt-6 max-w-[68ch] font-mono text-sm leading-[1.75] text-ink-muted sm:text-[0.9375rem]"
-      >
+      <p class="mt-6 max-w-[68ch] font-mono text-sm leading-[1.75] text-ink-muted sm:text-[0.9375rem]">
         Full-stack software engineer based in Indonesia, building web
         applications since 2018 with TypeScript, Golang, PHP, React, Vue, and
         Tailwind CSS.
       </p>
 
-      <div
-        class="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
-      >
+      <div class="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
         <a
           href="#work"
           class="hero-primary-action inline-flex min-h-11 items-center border border-hairline-strong px-4 py-2 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
         >
-          <span class="text-prompt">[</span> view work <span class="text-prompt"
-            >]</span
-          >
+          <span class="text-prompt">[</span> view work{' '}
+          <span class="text-prompt">]</span>
         </a>
         <div class="flex flex-wrap items-center gap-x-1 gap-y-1 sm:gap-x-2">
-          {
-            socials.map(({ href, label, accessibleLabel, external }) => (
-              <a
-                href={href}
-                target={external ? "_blank" : undefined}
-                rel={external ? "noopener noreferrer" : undefined}
-                aria-label={accessibleLabel}
-                class="hero-secondary-action inline-flex min-h-11 items-center px-1 font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
-              >
-                <span class="text-prompt">[</span> {label}{" "}
-                <span class="text-prompt">]</span>
-              </a>
-            ))
-          }
+          {socials.map(({ href, label, accessibleLabel, external }) => (
+            <a
+              href={href}
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener noreferrer' : undefined}
+              aria-label={accessibleLabel}
+              class="hero-secondary-action inline-flex min-h-11 items-center px-1 font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+            >
+              <span class="text-prompt">[</span> {label}{' '}
+              <span class="text-prompt">]</span>
+            </a>
+          ))}
         </div>
       </div>
     </div>
@@ -251,78 +242,78 @@ const socials = [
 </style>
 
 <script>
-  const rotator = document.querySelector("#tagline-rotator");
-  const tagline = rotator?.querySelector("[data-tagline]");
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const rotator = document.querySelector('#tagline-rotator')
+  const tagline = rotator?.querySelector('[data-tagline]')
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 
   if (rotator && tagline) {
-    const taglines = JSON.parse(rotator.dataset.taglines ?? "[]");
-    let index = 0;
-    let intervalId;
-    let transitionId;
+    const taglines = JSON.parse(rotator.dataset.taglines ?? '[]')
+    let index = 0
+    let intervalId
+    let transitionId
 
     const stop = () => {
-      if (intervalId) window.clearInterval(intervalId);
-      if (transitionId) window.clearTimeout(transitionId);
-      intervalId = undefined;
-      transitionId = undefined;
-      tagline.classList.remove("is-leaving", "is-entering");
-    };
+      if (intervalId) window.clearInterval(intervalId)
+      if (transitionId) window.clearTimeout(transitionId)
+      intervalId = undefined
+      transitionId = undefined
+      tagline.classList.remove('is-leaving', 'is-entering')
+    }
 
     const rotate = () => {
-      if (document.visibilityState !== "visible" || reducedMotion.matches)
-        return;
+      if (document.visibilityState !== 'visible' || reducedMotion.matches)
+        return
 
-      tagline.classList.add("is-leaving");
+      tagline.classList.add('is-leaving')
       transitionId = window.setTimeout(() => {
-        index = (index + 1) % taglines.length;
-        tagline.textContent = `"${taglines[index]}"`;
-        tagline.classList.remove("is-leaving");
-        tagline.classList.add("is-entering");
-        requestAnimationFrame(() => tagline.classList.remove("is-entering"));
-        transitionId = undefined;
-      }, 300);
-    };
+        index = (index + 1) % taglines.length
+        tagline.textContent = `"${taglines[index]}"`
+        tagline.classList.remove('is-leaving')
+        tagline.classList.add('is-entering')
+        requestAnimationFrame(() => tagline.classList.remove('is-entering'))
+        transitionId = undefined
+      }, 300)
+    }
 
     const start = () => {
-      if (taglines.length < 2 || intervalId || reducedMotion.matches) return;
-      intervalId = window.setInterval(rotate, 3500);
-    };
+      if (taglines.length < 2 || intervalId || reducedMotion.matches) return
+      intervalId = window.setInterval(rotate, 3500)
+    }
 
     const sync = () => {
-      if (document.visibilityState === "visible" && !reducedMotion.matches) {
-        start();
+      if (document.visibilityState === 'visible' && !reducedMotion.matches) {
+        start()
       } else {
-        stop();
+        stop()
       }
-    };
+    }
 
     const cleanup = () => {
-      stop();
-      document.removeEventListener("visibilitychange", sync);
-      reducedMotion.removeEventListener("change", sync);
-      window.removeEventListener("pagehide", handlePageHide);
-      window.removeEventListener("pageshow", handlePageShow);
-    };
+      stop()
+      document.removeEventListener('visibilitychange', sync)
+      reducedMotion.removeEventListener('change', sync)
+      window.removeEventListener('pagehide', handlePageHide)
+      window.removeEventListener('pageshow', handlePageShow)
+    }
 
     const handlePageHide = (event) => {
       if (event.persisted) {
-        stop();
+        stop()
       } else {
-        cleanup();
+        cleanup()
       }
-    };
+    }
 
     const handlePageShow = (event) => {
-      if (event.persisted) sync();
-    };
+      if (event.persisted) sync()
+    }
 
     if (taglines.length > 1) {
-      document.addEventListener("visibilitychange", sync);
-      reducedMotion.addEventListener("change", sync);
-      window.addEventListener("pagehide", handlePageHide);
-      window.addEventListener("pageshow", handlePageShow);
-      start();
+      document.addEventListener('visibilitychange', sync)
+      reducedMotion.addEventListener('change', sync)
+      window.addEventListener('pagehide', handlePageHide)
+      window.addEventListener('pageshow', handlePageShow)
+      start()
     }
   }
 </script>
