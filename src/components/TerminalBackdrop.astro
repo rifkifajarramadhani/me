@@ -11,31 +11,31 @@
 type Line = { kind: 'cmd' | 'out' | 'ok'; text: string }
 
 const script: Line[] = [
-  { kind: 'cmd', text: 'git pull --rebase origin main' },
+  { kind: 'cmd', text: 'git pull --rebase' },
   { kind: 'out', text: 'Already up to date.' },
   { kind: 'cmd', text: 'bun run check' },
-  { kind: 'ok', text: 'lint ........ ok' },
-  { kind: 'ok', text: 'typecheck ... ok' },
-  { kind: 'ok', text: 'tests ....... ok' },
+  { kind: 'ok', text: 'lint ...... ok' },
+  { kind: 'ok', text: 'typecheck . ok' },
+  { kind: 'ok', text: 'tests ..... ok' },
   { kind: 'cmd', text: 'go test ./...' },
-  { kind: 'ok', text: 'ok    api/orders       0.42s' },
-  { kind: 'ok', text: 'ok    api/inventory    0.31s' },
-  { kind: 'cmd', text: 'php artisan migrate --force' },
+  { kind: 'ok', text: 'api/orders   0.42s' },
+  { kind: 'ok', text: 'api/stock    0.31s' },
+  { kind: 'cmd', text: 'php artisan migrate' },
   { kind: 'out', text: 'Nothing to migrate.' },
-  { kind: 'cmd', text: 'docker compose up -d --build' },
-  { kind: 'ok', text: 'Container postgres   Healthy' },
-  { kind: 'ok', text: 'Container api        Started' },
-  { kind: 'ok', text: 'Container web        Started' },
-  { kind: 'cmd', text: 'curl -s localhost:8080/healthz' },
+  { kind: 'cmd', text: 'docker compose up' },
+  { kind: 'ok', text: 'postgres  healthy' },
+  { kind: 'ok', text: 'api       started' },
+  { kind: 'ok', text: 'web       started' },
+  { kind: 'cmd', text: 'curl :8080/healthz' },
   { kind: 'out', text: '{"status":"ok"}' },
   { kind: 'cmd', text: 'bun run build' },
   { kind: 'ok', text: 'built in 3.1s' },
-  { kind: 'cmd', text: 'git push origin main' },
+  { kind: 'cmd', text: 'git push' },
   { kind: 'out', text: 'main -> main' },
-  { kind: 'cmd', text: 'tail -f /var/log/nginx/access.log' },
-  { kind: 'out', text: 'GET /                200' },
-  { kind: 'out', text: 'GET /api/products    200' },
-  { kind: 'out', text: 'POST /api/orders     201' },
+  { kind: 'cmd', text: 'tail -f access.log' },
+  { kind: 'out', text: 'GET /             200' },
+  { kind: 'out', text: 'GET /api/products 200' },
+  { kind: 'out', text: 'POST /api/orders  201' },
   { kind: 'cmd', text: 'clear' },
 ]
 ---
@@ -94,11 +94,12 @@ const script: Line[] = [
       --term-dim: 1;
     }
 
-    .term-backdrop__log {
+    /* The margin is only ~22 columns wide at 80rem, so the script is
+       written to fit and anything longer wraps instead of being clipped. */
+    .term-backdrop .term-backdrop__log {
       right: auto;
       width: calc((100% - 56rem) / 2);
-      padding-right: 0;
-      mask-image: linear-gradient(to right, #000 82%, transparent);
+      padding-inline: 1.5rem 0.5rem;
     }
   }
 
@@ -119,12 +120,15 @@ const script: Line[] = [
     font-size: 0.75rem;
     line-height: 1.75;
     color: var(--ink-tertiary);
-    white-space: pre;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 
+  /* Hanging indent: a wrapped line continues under its text, not its
+     prompt, so it still reads as one line of output. */
   .term-backdrop__line {
-    overflow: hidden;
-    text-overflow: clip;
+    padding-left: 2ch;
+    text-indent: -2ch;
   }
 
   .term-backdrop__line.is-cmd {
@@ -172,14 +176,10 @@ const script: Line[] = [
     let timer: number | undefined
     let running = false
 
-    const lineHeight = () => parseFloat(getComputedStyle(log).lineHeight) || 22
-
-    const capacity = () =>
-      Math.max(1, Math.floor(log.clientHeight / lineHeight()))
-
+    // Lines can wrap, so trim by measured overflow rather than line count.
     const trim = () => {
-      const max = capacity()
-      while (log.childElementCount > max) log.firstElementChild?.remove()
+      while (log.scrollHeight > log.clientHeight && log.childElementCount > 1)
+        log.firstElementChild?.remove()
     }
 
     const newLine = (line: Line) => {
