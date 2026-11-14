@@ -5,13 +5,11 @@ interface Props {
   class?: string
 }
 
+// Framed like a single-line prompt so the heading stays legible over the
+// page-wide terminal backdrop. The kicker reads as the strip's path label.
 const { command, kicker, class: className } = Astro.props
 ---
 
-<!--
-  Framed like a single-line prompt so the heading stays legible over the
-  page-wide terminal backdrop. The kicker reads as the strip's path label.
--->
 <div class={className}>
   <div class="flex items-center justify-between gap-4 border border-hairline bg-canvas px-4 py-3 text-left sm:px-5 sm:py-4">
     <h2 class="animate-rise-in text-2xl font-bold tracking-[-0.03em] text-ink motion-reduce:animate-none sm:text-3xl">
