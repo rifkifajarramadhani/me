@@ -21,7 +21,7 @@
     "@astrojs/sitemap": "^3.7.5",
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.4.12",
-    "simple-icons": "9.7.0"
+    "simple-icons": "16.37.0"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^8.72.2",

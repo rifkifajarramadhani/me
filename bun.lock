@@ -8,7 +8,7 @@
         "@astrojs/sitemap": "^3.7.5",
         "@tailwindcss/vite": "^4.3.5",
         "astro": "^7.4.12",
-        "simple-icons": "9.7.0",
+        "simple-icons": "16.37.0",
       },
       "devDependencies": {
         "@typescript-eslint/parser": "^8.72.2",
@@ -690,7 +690,7 @@
 
     "shiki": ["shiki@4.6.0", "", { "dependencies": { "@shikijs/core": "4.6.0", "@shikijs/engine-javascript": "4.6.0", "@shikijs/engine-oniguruma": "4.6.0", "@shikijs/langs": "4.6.0", "@shikijs/themes": "4.6.0", "@shikijs/types": "4.6.0", "@shikijs/vscode-textmate": "^10.1.0", "@types/hast": "^3.0.5" } }, "sha512-imjLsVHgPuWhvpU3P+zOekvMYqnel7QmKsFC4Sn0fCuAvaaalBsxwKEsrU8Ko5BdFnZA6Go/8a0RzahS634UgA=="],
 
-    "simple-icons": ["simple-icons@9.7.0", "", {}, "sha512-dKDsHP5NjNYTYUW5LxpJuAUm5Wlzy8pxVdbPB8sbev//tcSgvdUYSymS5K2Q9qyz6o2eSl70iGA6kHcMmlaC9w=="],
+    "simple-icons": ["simple-icons@16.37.0", "", {}, "sha512-8mCJIhpMYOL9g13GW59EiL3sVXJnTEKGCTZFaekl9UQ3Qo0SwVjnLaJ82QiaH8BKBdouEDzrHMXIWh8cBIy48A=="],
 
     "sisteransi": ["sisteransi@2.0.0", "", {}, "sha512-2WCqLdt12eN6ehLI50S2/ZxoowXU3DD1KVPRyVP0WEsFahrGZZmCdq1K59qjJljMRIDTwx1D9YaRK+hDneBUMg=="],
 
