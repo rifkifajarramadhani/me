@@ -21,7 +21,7 @@
 <style is:global>
   .data-streams {
     --stream-column: 28rem;
-    --stream-dim: rgb(0 0 0 / 40%);
+    --stream-dim: rgb(0 0 0 / 50%);
     position: fixed;
     inset: 0;
     z-index: 0;
@@ -78,7 +78,7 @@
     let scans: Scan[] = []
     let field: HTMLCanvasElement | null = null
     let color = '63, 185, 80'
-    let alpha = { tick: 0.07, tail: 0.22, head: 0.45, scan: 0.2 }
+    let alpha = { tick: 0.13, tail: 0.46, head: 0.7, scan: 0.36 }
     let dpr = 1
     let width = 0
     let height = 0
@@ -91,7 +91,7 @@
     let nextScan = 0
 
     const rand = (min: number, max: number) => min + Math.random() * (max - min)
-    const maxStreams = () => Math.max(4, Math.min(18, Math.round(width / 90)))
+    const maxStreams = () => Math.max(6, Math.min(28, Math.round(width / 52)))
 
     const readTheme = () => {
       const root = document.documentElement
@@ -104,8 +104,8 @@
           .join(', ')
       // Paper needs a touch more alpha for the same presence as Carbon.
       alpha = root.classList.contains('dark')
-        ? { tick: 0.07, tail: 0.22, head: 0.45, scan: 0.2 }
-        : { tick: 0.12, tail: 0.3, head: 0.55, scan: 0.28 }
+        ? { tick: 0.13, tail: 0.46, head: 0.7, scan: 0.36 }
+        : { tick: 0.16, tail: 0.42, head: 0.68, scan: 0.34 }
     }
 
     // Measure the real monospace cell so strokes sit on the text grid.
@@ -130,7 +130,7 @@
       for (let attempt = 0; attempt < 8; attempt += 1) {
         const x = snapX(rand(0, width))
         if (wide.matches && x < marginLeft && Math.random() < 0.75) continue
-        if (streams.some((stream) => Math.abs(stream.x - x) < cell * 3)) continue
+        if (streams.some((stream) => Math.abs(stream.x - x) < cell * 2)) continue
         return x
       }
       return null
@@ -139,7 +139,7 @@
     const makeStream = (seeded: boolean): Stream | null => {
       const x = pickColumn()
       if (x === null) return null
-      const tail = rand(80, 240)
+      const tail = rand(120, 340)
       // Some streams stop mid-screen, like truncated output.
       const stopAt =
         Math.random() < 0.45 ? rand(height * 0.35, height * 0.9) : height + tail
@@ -241,11 +241,11 @@
       if (now >= nextStream && streams.length < maxStreams()) {
         const stream = makeStream(false)
         if (stream) streams.push(stream)
-        nextStream = now + rand(250, 900)
+        nextStream = now + rand(120, 500)
       }
-      if (now >= nextScan && scans.length < 3) {
+      if (now >= nextScan && scans.length < 4) {
         spawnScan()
-        nextScan = now + rand(1500, 4000)
+        nextScan = now + rand(900, 2600)
       }
 
       for (const stream of streams) {
@@ -302,7 +302,7 @@
       streams = []
       scans = []
       if (!reducedMotion.matches)
-        for (let i = 0; i < Math.round(maxStreams() * 0.6); i += 1) {
+        for (let i = 0; i < Math.round(maxStreams() * 0.75); i += 1) {
           const stream = makeStream(true)
           if (stream) streams.push(stream)
         }
