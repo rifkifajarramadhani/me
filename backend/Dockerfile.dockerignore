@@ -1,0 +1,10 @@
+*
+!backend/
+!backend/package.json
+!backend/bun.lock
+!backend/tsconfig.json
+!backend/src/
+!backend/src/**
+!src/
+!src/styles/
+!src/styles/tokens.css

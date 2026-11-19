@@ -102,10 +102,19 @@ Production deploys automatically on push to `main` via [`.github/workflows/publi
 
 1. Checks the code and verifies apex and GitHub Pages publishing artifacts
 2. Builds the explicit apex Astro artifact
-3. Builds a Docker image and pushes it to GHCR (`ghcr.io/rifkifajarramadhani/me`)
-4. SSHes into the server and runs the deploy script
+3. Tests the CMS and publishes both Docker images to GHCR under the same commit SHA
+4. SSHes into the server, runs `~/deploy-me.sh` for the portfolio, and updates the CMS if enabled
 
 The container is served by nginx and routed through Traefik with TLS (Let's Encrypt). See [`docker-compose.yml`](docker-compose.yml) for Traefik labels and health check config.
+
+### Enable the CMS in production
+
+1. Register a GitHub OAuth app with the exact callback URL `https://rifkiramadhani.my.id/admin/auth/github/callback`. Keep wildcard matching disabled.
+2. Confirm the VPS can pull `ghcr.io/rifkifajarramadhani/me-cms` and that the existing `~/deploy-me.sh` still deploys the portfolio on the shared `edge` network. The deploy job manages the CMS in its own `me-cms` Compose project.
+3. On the VPS, create `~/.config/me-cms/.env` with file permissions `0600`. Set `CMS_GITHUB_CLIENT_ID`, `CMS_GITHUB_CLIENT_SECRET`, and `CMS_GITHUB_OWNER_ID` (`157324525` for the portfolio owner). Compose sets the production origin. The deploy job enables the `cms` profile when this file is readable.
+4. After the next deploy, check the portfolio home page. Visit `/admin/`, sign in as the owner, and sign out. Use `docker ps --filter label=com.docker.compose.project=me-cms` on the VPS to check the CMS container's health.
+
+To disable the CMS, move the VPS env file to a private backup path to prevent future deploys from starting the service. Stop the container with `docker stop me-cms-cms-1`. The portfolio has its own container and router.
 
 ## Content customization
 

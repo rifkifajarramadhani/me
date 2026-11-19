@@ -40,6 +40,44 @@ services:
       retries: 5
     restart: unless-stopped
 
+  cms:
+    profiles: [cms]
+    image: ghcr.io/rifkifajarramadhani/me-cms:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      CMS_ORIGIN: https://rifkiramadhani.my.id
+      CMS_GITHUB_CLIENT_ID: ${CMS_GITHUB_CLIENT_ID:-}
+      CMS_GITHUB_CLIENT_SECRET: ${CMS_GITHUB_CLIENT_SECRET:-}
+      CMS_GITHUB_OWNER_ID: ${CMS_GITHUB_OWNER_ID:-}
+    expose:
+      - "3000"
+    networks:
+      - edge
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=edge
+      - "traefik.http.routers.me-cms.rule=Host(`rifkiramadhani.my.id`) && (Path(`/admin`) || PathPrefix(`/admin/`))"
+      - traefik.http.routers.me-cms.priority=100
+      - traefik.http.routers.me-cms.entrypoints=websecure
+      - traefik.http.routers.me-cms.tls=true
+      - traefik.http.routers.me-cms.tls.certresolver=letsencrypt
+      - traefik.http.routers.me-cms.service=me-cms
+      - traefik.http.services.me-cms.loadbalancer.server.port=3000
+      # OAuth callback query strings contain short-lived authorization codes.
+      - traefik.http.routers.me-cms.observability.accesslogs=false
+      - traefik.http.routers.me-cms.middlewares=me-cms-ratelimit
+      - traefik.http.middlewares.me-cms-ratelimit.ratelimit.average=5
+      - traefik.http.middlewares.me-cms-ratelimit.ratelimit.burst=10
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/healthz').then(r => { if (!r.ok) process.exitCode = 1 }).catch(() => { process.exitCode = 1 })"]
+      interval: 10s
+      timeout: 3s
+      start_period: 10s
+      retries: 5
+    restart: unless-stopped
+
 networks:
   edge:
     name: edge
