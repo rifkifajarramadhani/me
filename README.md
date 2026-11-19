@@ -48,15 +48,18 @@ bun run check
 
 ## CMS backend
 
-The NestJS service is a separate package under `backend/`. Use Node.js 24 and Bun to run it locally.
+The NestJS service is a separate package under `backend/`. Use Node.js 24 and Bun to run it locally. Register a GitHub OAuth app with the callback URL `http://127.0.0.1:3000/admin/auth/github/callback` and leave wildcard matching disabled. Set the app credentials in `backend/.env`.
 
 ```bash
+cp .env.example backend/.env
 cd backend
 bun install --frozen-lockfile
 bun run dev
 ```
 
-The service listens on `http://127.0.0.1:3000` by default. Check `/healthz` for readiness. Run `bun run test` from `backend/` to build and test the service.
+Open `http://127.0.0.1:3000/admin/` to sign in. The backend accepts only `CMS_GITHUB_OWNER_ID`, the numeric account ID returned by GitHub. Sessions expire after eight hours or when the service restarts.
+
+Check `/healthz` for readiness. Run `bun run test` from `backend/` to build and test the service with a simulated GitHub provider.
 
 ## Environment variables
 
@@ -70,6 +73,10 @@ cp .env.example .env
 |----------|-------------|---------|
 | `PUBLISHING_PROFILE` | Named publishing target: `apex` or `github-pages` | `apex` |
 | `DOMAIN` | Domain name (used in deployment config) | — |
+| `CMS_ORIGIN` | Origin used for CMS cookies, callback URL, and request origin checks | — |
+| `CMS_GITHUB_CLIENT_ID` | Client ID of the GitHub OAuth app | — |
+| `CMS_GITHUB_CLIENT_SECRET` | Client secret of the GitHub OAuth app | — |
+| `CMS_GITHUB_OWNER_ID` | Numeric ID of the single GitHub account allowed to sign in | — |
 
 An omitted `PUBLISHING_PROFILE` builds the apex site at `https://rifkiramadhani.my.id/`. Use `PUBLISHING_PROFILE=github-pages` to verify compatibility with `https://rifkifajarramadhani.github.io/me/`. Unknown names fail during Astro configuration.
 
@@ -132,4 +139,4 @@ In [`src/data/skills.ts`](src/data/skills.ts), each object is a skill field with
 
 ## Styling
 
-Theme tokens (colors, fonts, animations), global styles, and scrollbar theming live in [`src/styles/globals.css`](src/styles/globals.css), using Tailwind CSS 4 `@theme` configuration.
+Astro and the CMS share the color variables in [`src/styles/tokens.css`](src/styles/tokens.css). Tailwind theme bindings, typography, animation, and global styles live in [`src/styles/globals.css`](src/styles/globals.css).

@@ -2,11 +2,14 @@ require('reflect-metadata')
 
 const assert = require('node:assert/strict')
 const { test } = require('node:test')
-const { NestFactory } = require('@nestjs/core')
-const { AppModule } = require('../dist/app.module')
+const { createApp } = require('../dist/app')
 
 test('serves a health check over HTTP', async (t) => {
-  const app = await NestFactory.create(AppModule, { logger: false })
+  process.env.CMS_ORIGIN = 'https://cms.example.test'
+  process.env.CMS_GITHUB_CLIENT_ID = 'test-client'
+  process.env.CMS_GITHUB_CLIENT_SECRET = 'test-secret'
+  process.env.CMS_GITHUB_OWNER_ID = '157324525'
+  const app = await createApp(false)
   t.after(() => app.close())
   await app.listen(0, '127.0.0.1')
 
