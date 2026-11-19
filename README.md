@@ -46,6 +46,18 @@ Run linting, TypeScript, module tests, and artifact verification for both publis
 bun run check
 ```
 
+## CMS backend
+
+The NestJS service is a separate package under `backend/`. Use Node.js 24 and Bun to run it locally.
+
+```bash
+cd backend
+bun install --frozen-lockfile
+bun run dev
+```
+
+The service listens on `http://127.0.0.1:3000` by default. Check `/healthz` for readiness. Run `bun run test` from `backend/` to build and test the service.
+
 ## Environment variables
 
 Copy `.env.example` and adjust values for your target environment:
