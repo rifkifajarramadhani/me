@@ -60,22 +60,35 @@
     color: var(--ink);
   }
 
-  body::-webkit-scrollbar {
+  ::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
   }
 
-  body::-webkit-scrollbar-track {
+  ::-webkit-scrollbar-track {
     background: var(--sb-track);
   }
 
-  body::-webkit-scrollbar-thumb {
+  ::-webkit-scrollbar-thumb {
     background: var(--sb-thumb);
     border-radius: 0;
   }
 
-  @supports not selector(::-webkit-scrollbar) {
-    body {
+  ::-webkit-scrollbar-thumb:hover,
+  ::-webkit-scrollbar-thumb:active {
+    background: var(--primary-hover);
+  }
+
+  @supports (scrollbar-color: auto) {
+    html {
       scrollbar-color: var(--sb-thumb) var(--sb-track);
+      scrollbar-width: auto;
+    }
+  }
+
+  @media (forced-colors: active) {
+    html {
+      scrollbar-color: auto;
     }
   }
 }

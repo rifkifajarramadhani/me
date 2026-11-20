@@ -212,6 +212,27 @@ async function verifyBuild(outDir: string, expected: ExpectedBuild) {
     `${profile} homepage has the wrong h1 identity`,
   )
 
+  const activityStart = home.indexOf('id="github-activity"')
+  assert(
+    activityStart > home.indexOf('id="work"') &&
+      activityStart < home.indexOf('id="contact"'),
+    `${profile} GitHub activity must appear between work and contact`,
+  )
+  const activity = home.slice(
+    activityStart,
+    home.indexOf('</section>', activityStart),
+  )
+  assertIncludes(
+    activity,
+    'href="https://github.com/rifkifajarramadhani"',
+    `${profile} GitHub activity`,
+  )
+  assert(
+    activity.includes('data-github-activity="/api/github/contributions"') ===
+      (profile === 'apex'),
+    `${profile} GitHub activity has the wrong API configuration`,
+  )
+
   assertIncludes(
     notFound,
     `<link rel="canonical" href="${canonical404}">`,
