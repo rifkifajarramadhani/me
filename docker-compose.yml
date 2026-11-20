@@ -12,17 +12,12 @@ services:
       CMS_API_TARGET: http://api-dev:3000
     ports:
       - "127.0.0.1:4321:4321"
+    volumes:
+      - ./web/src:/app/web/src:ro
+      - ./web/public:/app/web/public:ro
+      - ./shared:/app/shared:ro
     develop:
       watch:
-        - action: sync
-          path: ./web/src
-          target: /app/web/src
-        - action: sync
-          path: ./web/public
-          target: /app/web/public
-        - action: sync
-          path: ./shared/tokens.css
-          target: /app/shared/tokens.css
         - action: sync+restart
           path: ./web/astro.config.mjs
           target: /app/web/astro.config.mjs

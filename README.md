@@ -101,10 +101,14 @@ docker compose --profile dev up --build --watch
 ```
 
 Open Astro at `http://127.0.0.1:4321/` and the CMS at
-`http://127.0.0.1:4321/admin/`. Compose Watch syncs Astro source and public
-assets for live reload and rebuilds the API when its source changes. Both
-services use the project's default Docker network. Restart the command after
-editing `.env`.
+`http://127.0.0.1:4321/admin/`. The dev container mounts `web/src`, `web/public`,
+and `shared` from your checkout so Astro updates the browser when you save a
+frontend edit. Frontend live reload also works with
+`docker compose --profile dev up -d --build`.
+
+Compose Watch rebuilds the API when its source changes, restarts Astro for web
+config changes, and rebuilds images after dependency changes. Both services use
+the project's default Docker network. Restart the command after editing `.env`.
 
 ### Build production images locally
 
