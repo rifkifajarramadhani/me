@@ -213,6 +213,22 @@ test('an accepted OAuth state is single-use and the resulting session expires', 
   assert.equal((await request('/admin/session', { cookie })).status, 401)
 })
 
+test('consumes the pending sign-in when the callback is missing a code', async (t) => {
+  const provider = t.mock.method(globalThis, 'fetch', () => {
+    assert.fail('An incomplete callback must not contact GitHub')
+  })
+  const flow = await beginSignIn()
+  const query = new URLSearchParams({
+    state: flow.authorization.searchParams.get('state'),
+  })
+  const result = await request(`/admin/auth/github/callback?${query}`, {
+    cookie: flow.cookie,
+  })
+  assertSignInFailure(result, 'incomplete')
+  assertSignInFailure(await callback(flow), 'incomplete')
+  assert.equal(provider.mock.callCount(), 0)
+})
+
 test('reports a provider failure without issuing a session', async (t) => {
   const flow = await beginSignIn()
   t.mock.method(

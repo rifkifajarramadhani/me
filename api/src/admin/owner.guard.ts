@@ -8,9 +8,10 @@ import {
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import type { Request } from 'express'
+import { readCookie, SESSION_COOKIE } from './admin-cookies'
 import { CmsConfig } from './cms-config'
 import type { GithubAccount } from './github-oauth'
-import { readCookie, SESSION_COOKIE, Sessions } from './sessions'
+import { OwnerAuth } from './owner-auth'
 
 const PUBLIC_ROUTE = Symbol('public route')
 const READ_METHODS = ['GET', 'HEAD', 'OPTIONS']
@@ -25,7 +26,7 @@ export interface OwnerRequest extends Request {
 export class OwnerGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly sessions: Sessions,
+    private readonly auth: OwnerAuth,
     private readonly config: CmsConfig,
   ) {}
 
@@ -34,10 +35,10 @@ export class OwnerGuard implements CanActivate {
       return true
 
     const request = context.switchToHttp().getRequest<OwnerRequest>()
-    const account = this.sessions.find(
+    const account = this.auth.findOwner(
       readCookie(request.headers.cookie, SESSION_COOKIE),
     )
-    if (account?.id !== this.config.ownerId) throw new UnauthorizedException()
+    if (!account) throw new UnauthorizedException()
 
     if (
       !READ_METHODS.includes(request.method) &&

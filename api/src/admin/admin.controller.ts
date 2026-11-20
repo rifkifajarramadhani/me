@@ -1,19 +1,9 @@
 import { Controller, Get, Post, Query, Req, Res } from '@nestjs/common'
 import type { CookieOptions, Request, Response } from 'express'
+import { FLOW_COOKIE, readCookie, SESSION_COOKIE } from './admin-cookies'
 import { CmsConfig } from './cms-config'
-import { GithubOAuth, type GithubAccount } from './github-oauth'
+import { OwnerAuth, type SignInError } from './owner-auth'
 import { PublicRoute, type OwnerRequest } from './owner.guard'
-import {
-  FLOW_COOKIE,
-  FLOW_LIFETIME,
-  readCookie,
-  SESSION_COOKIE,
-  SESSION_LIFETIME,
-  Sessions,
-} from './sessions'
-
-type SignInError =
-  'busy' | 'incomplete' | 'provider-unavailable' | 'access-denied'
 
 function redirect(response: Response, location: string) {
   response.status(303).location(location).end()
@@ -27,8 +17,7 @@ function signInFailed(response: Response, error: SignInError) {
 export class AdminController {
   constructor(
     private readonly config: CmsConfig,
-    private readonly oauth: GithubOAuth,
-    private readonly sessions: Sessions,
+    private readonly auth: OwnerAuth,
   ) {}
 
   private get cookieOptions(): CookieOptions {
@@ -48,19 +37,19 @@ export class AdminController {
   @Get('auth/github')
   @PublicRoute()
   begin(@Req() request: Request, @Res() response: Response) {
-    const flow = this.sessions.startSignIn(
+    const result = this.auth.beginSignIn(
       readCookie(request.headers.cookie, FLOW_COOKIE),
     )
-    if (!flow) {
-      signInFailed(response, 'busy')
+    if (result.status !== 'started') {
+      signInFailed(response, result.status)
       return
     }
 
-    response.cookie(FLOW_COOKIE, flow.id, {
+    response.cookie(FLOW_COOKIE, result.flowId, {
       ...this.cookieOptions,
-      maxAge: FLOW_LIFETIME,
+      maxAge: result.maxAge,
     })
-    redirect(response, this.oauth.authorize(flow.state, flow.verifier))
+    redirect(response, result.authorizationUrl)
   }
 
   @Get('auth/github/callback')
@@ -73,41 +62,27 @@ export class AdminController {
   ) {
     response.set('Referrer-Policy', 'no-referrer')
     response.clearCookie(FLOW_COOKIE, this.cookieOptions)
-    const verifier = this.sessions.finishSignIn(
-      readCookie(request.headers.cookie, FLOW_COOKIE),
+    const result = await this.auth.completeSignIn({
+      flowId: readCookie(request.headers.cookie, FLOW_COOKIE),
       state,
-    )
-    if (!verifier || typeof code !== 'string' || !code || code.length > 1024) {
-      signInFailed(response, 'incomplete')
+      code,
+      previousSessionId: readCookie(request.headers.cookie, SESSION_COOKIE),
+    })
+    if (result.status !== 'signed-in') {
+      signInFailed(response, result.status)
       return
     }
 
-    let account: GithubAccount
-    try {
-      account = await this.oauth.identify(code, verifier)
-    } catch {
-      signInFailed(response, 'provider-unavailable')
-      return
-    }
-    if (account.id !== this.config.ownerId) {
-      signInFailed(response, 'access-denied')
-      return
-    }
-
-    const session = this.sessions.create(
-      account,
-      readCookie(request.headers.cookie, SESSION_COOKIE),
-    )
-    response.cookie(SESSION_COOKIE, session, {
+    response.cookie(SESSION_COOKIE, result.sessionId, {
       ...this.cookieOptions,
-      maxAge: SESSION_LIFETIME,
+      maxAge: result.maxAge,
     })
     redirect(response, '/admin/')
   }
 
   @Post('logout')
   logout(@Req() request: OwnerRequest, @Res() response: Response) {
-    this.sessions.revoke(readCookie(request.headers.cookie, SESSION_COOKIE))
+    this.auth.signOut(readCookie(request.headers.cookie, SESSION_COOKIE))
     response.clearCookie(SESSION_COOKIE, this.cookieOptions)
     response.status(204).end()
   }
