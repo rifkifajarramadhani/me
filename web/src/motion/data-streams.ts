@@ -23,12 +23,15 @@ export function mountDataStreams(canvas: HTMLCanvasElement) {
   const SCAN_FADE = 0.9
 
   const wide = window.matchMedia('(min-width: 80rem)')
+  const root = document.documentElement
+  const field = document.createElement('canvas')
+  const fieldContext = field.getContext('2d')
 
   let motion = { visible: false, reducedMotion: false }
   let initialized = false
   let streams: Stream[] = []
   let scans: Scan[] = []
-  let field: HTMLCanvasElement | null = null
+  let dark = root.classList.contains('dark')
   let color = '63, 185, 80'
   let alpha = { tick: 0.13, tail: 0.46, head: 0.7, scan: 0.36 }
   let dpr = 1
@@ -46,7 +49,6 @@ export function mountDataStreams(canvas: HTMLCanvasElement) {
   const maxStreams = () => Math.max(6, Math.min(28, Math.round(width / 52)))
 
   const readTheme = () => {
-    const root = document.documentElement
     const hex = getComputedStyle(root).getPropertyValue('--primary').trim()
     const match = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex)
     if (match)
@@ -54,8 +56,8 @@ export function mountDataStreams(canvas: HTMLCanvasElement) {
         .slice(1)
         .map((part) => parseInt(part, 16))
         .join(', ')
-    // Paper needs a touch more alpha for the same presence as Carbon.
-    alpha = root.classList.contains('dark')
+    dark = root.classList.contains('dark')
+    alpha = dark
       ? { tick: 0.13, tail: 0.46, head: 0.7, scan: 0.36 }
       : { tick: 0.16, tail: 0.42, head: 0.68, scan: 0.34 }
   }
@@ -106,34 +108,39 @@ export function mountDataStreams(canvas: HTMLCanvasElement) {
   }
 
   const paintField = () => {
-    field = document.createElement('canvas')
-    field.width = canvas.width
-    field.height = canvas.height
-    const f = field.getContext('2d')
-    if (!f) return
-    f.setTransform(dpr, 0, 0, dpr, 0, 0)
-    f.fillStyle = `rgba(${color}, ${alpha.tick})`
+    if (!fieldContext) return
+    if (field.width !== canvas.width) field.width = canvas.width
+    if (field.height !== canvas.height) field.height = canvas.height
+    fieldContext.resetTransform()
+    fieldContext.clearRect(0, 0, field.width, field.height)
+    fieldContext.setTransform(dpr, 0, 0, dpr, 0, 0)
+    fieldContext.fillStyle = `rgba(${color}, ${alpha.tick})`
     const stepX = cell * 4
     const stepY = row * 2
     for (let y = stepY; y < height; y += stepY)
       for (let x = stepX; x < width; x += stepX)
-        f.fillRect(Math.round(x), Math.round(y), 1, 1)
+        fieldContext.fillRect(Math.round(x), Math.round(y), 1, 1)
 
     // Reduced motion: a few frozen, already-faded strokes for texture.
     if (motion.reducedMotion) {
-      f.lineWidth = 1
+      fieldContext.lineWidth = 1
       for (let i = 0; i < Math.round(maxStreams() / 2); i += 1) {
         const stream = makeStream(true)
         if (!stream) continue
         const head = Math.min(stream.y, stream.stopAt)
-        const gradient = f.createLinearGradient(0, head - stream.tail, 0, head)
+        const gradient = fieldContext.createLinearGradient(
+          0,
+          head - stream.tail,
+          0,
+          head,
+        )
         gradient.addColorStop(0, `rgba(${color}, 0)`)
         gradient.addColorStop(1, `rgba(${color}, ${alpha.tail * 0.6})`)
-        f.strokeStyle = gradient
-        f.beginPath()
-        f.moveTo(stream.x, head - stream.tail)
-        f.lineTo(stream.x, head)
-        f.stroke()
+        fieldContext.strokeStyle = gradient
+        fieldContext.beginPath()
+        fieldContext.moveTo(stream.x, head - stream.tail)
+        fieldContext.lineTo(stream.x, head)
+        fieldContext.stroke()
       }
     }
   }
@@ -141,7 +148,7 @@ export function mountDataStreams(canvas: HTMLCanvasElement) {
   const draw = () => {
     ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    if (field) ctx.drawImage(field, 0, 0)
+    if (fieldContext) ctx.drawImage(field, 0, 0)
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.lineWidth = 1
 
@@ -218,13 +225,13 @@ export function mountDataStreams(canvas: HTMLCanvasElement) {
   }
 
   const stop = () => {
-    if (frame) window.cancelAnimationFrame(frame)
+    if (frame !== undefined) window.cancelAnimationFrame(frame)
     frame = undefined
     last = 0
   }
 
   const start = () => {
-    if (frame) return
+    if (frame !== undefined) return
     nextScan = performance.now() + 1200
     frame = window.requestAnimationFrame(tick)
   }
@@ -232,21 +239,19 @@ export function mountDataStreams(canvas: HTMLCanvasElement) {
   const sync = () => {
     if (motion.visible && !motion.reducedMotion) start()
     else stop()
-    if (motion.reducedMotion) {
-      streams = []
-      scans = []
-      paintField()
-      draw()
-    }
   }
 
+  const measureDpr = () => Math.min(window.devicePixelRatio || 1, 2)
+
   const layout = () => {
-    dpr = Math.min(window.devicePixelRatio || 1, 2)
-    width = document.documentElement.clientWidth
+    dpr = measureDpr()
+    width = root.clientWidth
     height = window.innerHeight
-    canvas.width = Math.round(width * dpr)
-    canvas.height = Math.round(height * dpr)
-    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize)
+    const pixelWidth = Math.round(width * dpr)
+    const pixelHeight = Math.round(height * dpr)
+    if (canvas.width !== pixelWidth) canvas.width = pixelWidth
+    if (canvas.height !== pixelHeight) canvas.height = pixelHeight
+    const rem = parseFloat(getComputedStyle(root).fontSize)
     marginLeft = Math.max(0, (width - COLUMN * rem) / 2)
     measure()
     readTheme()
@@ -264,24 +269,27 @@ export function mountDataStreams(canvas: HTMLCanvasElement) {
   }
 
   let resizeTimer: number | undefined
-  let lastWidth = 0
   window.addEventListener('resize', () => {
+    if (!initialized) return
     // Mobile URL bars change the height while scrolling; only re-route
     // when the width changes or the height grows past the canvas.
-    if (document.documentElement.clientWidth === lastWidth && window.innerHeight <= height)
+    if (
+      root.clientWidth === width &&
+      window.innerHeight <= height &&
+      measureDpr() === dpr
+    ) {
       return
+    }
     window.clearTimeout(resizeTimer)
-    resizeTimer = window.setTimeout(() => {
-      lastWidth = document.documentElement.clientWidth
-      layout()
-    }, 150)
+    resizeTimer = window.setTimeout(layout, 150)
   })
 
   new MutationObserver(() => {
+    if (!initialized || root.classList.contains('dark') === dark) return
     readTheme()
     paintField()
     draw()
-  }).observe(document.documentElement, {
+  }).observe(root, {
     attributes: true,
     attributeFilter: ['class'],
   })
@@ -294,7 +302,6 @@ export function mountDataStreams(canvas: HTMLCanvasElement) {
   })
 
   Promise.resolve(document.fonts?.ready).then(() => {
-    lastWidth = document.documentElement.clientWidth
     initialized = true
     layout()
     canvas.dataset.ready = ''
