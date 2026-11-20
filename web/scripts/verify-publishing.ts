@@ -85,6 +85,34 @@ async function verifyNoObsoleteDomain(path: string): Promise<void> {
   )
 }
 
+async function verifyAdmin(outDir: string, profile: PublishingProfileName) {
+  if (profile === 'github-pages') {
+    assert(
+      !(await readdir(outDir)).includes('admin'),
+      'GitHub Pages contains admin pages',
+    )
+    return
+  }
+
+  for (const [file, title] of [
+    ['admin/index.html', 'Portfolio admin'],
+    ['admin/login/index.html', 'Admin sign-in'],
+  ]) {
+    const html = await readRequired(join(outDir, file))
+    assertIncludes(html, `<title>${title}</title>`, file)
+    assertIncludes(html, '<meta name="robots" content="noindex">', file)
+    const stylesheet = html.match(
+      /<link rel="stylesheet" href="\/(_astro\/[^"]+\.css)">/,
+    )?.[1]
+    const script = html.match(
+      /<script type="module" src="\/(_astro\/[^"]+\.js)">/,
+    )?.[1]
+    assert(stylesheet && script, `${file} is missing its external CSS or JavaScript`)
+    assertIncludes(await readRequired(join(outDir, stylesheet)), '--canvas:', stylesheet)
+    assertIncludes(await readRequired(join(outDir, script)), '/admin/session', script)
+  }
+}
+
 async function verifyBuild(outDir: string, expected: ExpectedBuild) {
   const { base, homeUrl, profile } = expected
   const asset = (path: string) => `${base}${path}`
@@ -193,6 +221,7 @@ async function verifyBuild(outDir: string, expected: ExpectedBuild) {
   assertIncludes(sitemap, `<loc>${homeUrl}</loc>`, `${profile} sitemap`)
   assertIncludes(sitemap, '<changefreq>monthly</changefreq>', `${profile} sitemap`)
   assert(!sitemap.includes('/404'), `${profile} sitemap contains the 404 page`)
+  assert(!sitemap.includes('/admin'), `${profile} sitemap contains admin pages`)
 
   assert(
     robots === `User-agent: *\nAllow: ${base}\n\nSitemap: ${sitemapUrl}\n`,
@@ -206,6 +235,7 @@ async function verifyBuild(outDir: string, expected: ExpectedBuild) {
     `${profile} manifest icon escaped its publishing base`,
   )
 
+  await verifyAdmin(outDir, profile)
   await verifyNoObsoleteDomain(outDir)
 }
 

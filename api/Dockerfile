@@ -11,7 +11,6 @@ FROM dependencies AS development
 RUN bun install --frozen-lockfile --filter me-cms
 COPY api/tsconfig.json ./api/
 COPY api/src ./api/src
-COPY shared/tokens.css ./shared/
 RUN bun run --cwd api build
 ENV HOST=0.0.0.0
 CMD ["node", "api/dist/main.js"]

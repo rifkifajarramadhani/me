@@ -9,6 +9,7 @@ services:
       target: development
     environment:
       PUBLISHING_PROFILE: ${PUBLISHING_PROFILE:-apex}
+      CMS_API_TARGET: http://api-dev:3000
     ports:
       - "127.0.0.1:4321:4321"
     develop:
@@ -47,7 +48,7 @@ services:
       - path: .env
         required: false
     environment:
-      CMS_ORIGIN: http://127.0.0.1:3000
+      CMS_ORIGIN: http://127.0.0.1:4321
       NODE_ENV: development
     ports:
       - "127.0.0.1:3000:3000"
@@ -55,8 +56,6 @@ services:
       watch:
         - action: rebuild
           path: ./api/src
-        - action: rebuild
-          path: ./shared/tokens.css
         - action: rebuild
           path: ./api/Dockerfile
         - action: rebuild
@@ -129,7 +128,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=edge
-      - "traefik.http.routers.me-cms.rule=Host(`rifkiramadhani.my.id`) && (Path(`/admin`) || PathPrefix(`/admin/`))"
+      - "traefik.http.routers.me-cms.rule=Host(`rifkiramadhani.my.id`) && (Path(`/admin/auth/github`) || Path(`/admin/auth/github/callback`) || Path(`/admin/session`) || Path(`/admin/logout`))"
       - traefik.http.routers.me-cms.priority=100
       - traefik.http.routers.me-cms.entrypoints=websecure
       - traefik.http.routers.me-cms.tls=true

@@ -1,0 +1,30 @@
+---
+import AdminLayout from './AdminLayout.astro'
+---
+
+<AdminLayout title="Portfolio admin">
+  <p id="checking-session" role="status" hidden>
+    Checking your session…
+  </p>
+  <div id="session-unavailable" hidden>
+    <p role="alert">Could not verify your session.</p>
+    <button id="retry-session" type="button">
+      Try again
+    </button>
+  </div>
+  <div id="owner-panel" hidden>
+    <p>
+      Signed in as @<span id="owner-login"></span>.
+    </p>
+    <form id="sign-out" method="post" action="/admin/logout">
+      <p id="sign-out-error" role="alert" hidden>
+        Could not sign out. Try again.
+      </p>
+      <button type="submit">Sign out</button>
+    </form>
+  </div>
+  <noscript>
+    <p>Enable JavaScript to open the portfolio admin.</p>
+    <a href="/admin/login/">Go to sign-in</a>
+  </noscript>
+</AdminLayout>

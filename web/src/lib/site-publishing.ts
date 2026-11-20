@@ -202,7 +202,11 @@ export function createSitePublishing(
   const sitemap: Exclude<SitemapOptions, undefined> = {
     filter: (page) => {
       const pathname = new URL(page).pathname.replace(/\/$/, '')
-      return !pathname.endsWith('/404')
+      return (
+        !pathname.endsWith('/404') &&
+        pathname !== publicPath('admin') &&
+        !pathname.startsWith(publicPath('admin/'))
+      )
     },
     serialize: (item) => ({
       ...item,

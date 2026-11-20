@@ -1,18 +1,5 @@
-import {
-  Catch,
-  Controller,
-  Get,
-  Post,
-  Query,
-  Req,
-  Res,
-  UnauthorizedException,
-  UseFilters,
-  type ArgumentsHost,
-  type ExceptionFilter,
-} from '@nestjs/common'
+import { Controller, Get, Post, Query, Req, Res } from '@nestjs/common'
 import type { CookieOptions, Request, Response } from 'express'
-import { sendAdminPage } from './admin-view'
 import { CmsConfig } from './cms-config'
 import { GithubOAuth, type GithubAccount } from './github-oauth'
 import { PublicRoute, type OwnerRequest } from './owner.guard'
@@ -25,11 +12,15 @@ import {
   Sessions,
 } from './sessions'
 
-@Catch(UnauthorizedException)
-class RedirectToSignIn implements ExceptionFilter {
-  catch(_exception: UnauthorizedException, host: ArgumentsHost) {
-    host.switchToHttp().getResponse<Response>().redirect(303, '/admin/login')
-  }
+type SignInError =
+  'busy' | 'incomplete' | 'provider-unavailable' | 'access-denied'
+
+function redirect(response: Response, location: string) {
+  response.status(303).location(location).end()
+}
+
+function signInFailed(response: Response, error: SignInError) {
+  redirect(response, `/admin/login/?error=${error}`)
 }
 
 @Controller('admin')
@@ -49,28 +40,9 @@ export class AdminController {
     }
   }
 
-  @Get()
-  @UseFilters(RedirectToSignIn)
-  landing(@Req() request: OwnerRequest, @Res() response: Response) {
-    sendAdminPage(
-      response,
-      200,
-      'Portfolio admin',
-      `Signed in as @${request.owner.login}.`,
-      'sign-out',
-    )
-  }
-
-  @Get('login')
-  @PublicRoute()
-  login(@Res() response: Response) {
-    sendAdminPage(
-      response,
-      200,
-      'Admin sign-in',
-      'Sign in with the portfolio owner’s GitHub account.',
-      'sign-in',
-    )
+  @Get('session')
+  session(@Req() request: OwnerRequest) {
+    return { login: request.owner.login }
   }
 
   @Get('auth/github')
@@ -80,13 +52,7 @@ export class AdminController {
       readCookie(request.headers.cookie, FLOW_COOKIE),
     )
     if (!flow) {
-      sendAdminPage(
-        response,
-        503,
-        'Sign-in unavailable',
-        'Too many sign-ins are in progress. Try again in a few minutes.',
-        'sign-in',
-      )
+      signInFailed(response, 'busy')
       return
     }
 
@@ -94,7 +60,7 @@ export class AdminController {
       ...this.cookieOptions,
       maxAge: FLOW_LIFETIME,
     })
-    response.redirect(303, this.oauth.authorize(flow.state, flow.verifier))
+    redirect(response, this.oauth.authorize(flow.state, flow.verifier))
   }
 
   @Get('auth/github/callback')
@@ -112,13 +78,7 @@ export class AdminController {
       state,
     )
     if (!verifier || typeof code !== 'string' || !code || code.length > 1024) {
-      sendAdminPage(
-        response,
-        400,
-        'Sign-in incomplete',
-        'The sign-in request expired or was cancelled. Start a new sign-in.',
-        'sign-in',
-      )
+      signInFailed(response, 'incomplete')
       return
     }
 
@@ -126,23 +86,11 @@ export class AdminController {
     try {
       account = await this.oauth.identify(code, verifier)
     } catch {
-      sendAdminPage(
-        response,
-        502,
-        'GitHub sign-in unavailable',
-        'The CMS could not verify your GitHub account. Try again.',
-        'sign-in',
-      )
+      signInFailed(response, 'provider-unavailable')
       return
     }
     if (account.id !== this.config.ownerId) {
-      sendAdminPage(
-        response,
-        403,
-        'Access denied',
-        'Switch to the portfolio owner’s GitHub account and try again.',
-        'sign-in',
-      )
+      signInFailed(response, 'access-denied')
       return
     }
 
@@ -154,13 +102,13 @@ export class AdminController {
       ...this.cookieOptions,
       maxAge: SESSION_LIFETIME,
     })
-    response.redirect(303, '/admin/')
+    redirect(response, '/admin/')
   }
 
   @Post('logout')
   logout(@Req() request: OwnerRequest, @Res() response: Response) {
     this.sessions.revoke(readCookie(request.headers.cookie, SESSION_COOKIE))
     response.clearCookie(SESSION_COOKIE, this.cookieOptions)
-    response.redirect(303, '/admin/login')
+    response.status(204).end()
   }
 }

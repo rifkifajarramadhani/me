@@ -4,7 +4,8 @@
 
 Personal portfolio for [rifkiramadhani.my.id](https://rifkiramadhani.my.id),
 built with Astro 7, Tailwind CSS, TypeScript, and Bun. The Astro app is in
-`web/`, the NestJS CMS is in `api/`, and both use `shared/tokens.css`.
+`web/` and includes the admin UI. The NestJS CMS API is in `api/`.
+The portfolio and admin UI use `shared/tokens.css`.
 Astro pages, layouts, components, and content live under `web/src/`. Static
 assets live in `web/public/`.
 

@@ -2,7 +2,8 @@
 
 A dark-themed personal portfolio with lightweight native scroll animations for [rifkiramadhani.my.id](https://rifkiramadhani.my.id).
 
-Astro and Tailwind CSS are in `web/`. The NestJS CMS is in `api/`. Both use
+Astro and Tailwind CSS serve the portfolio and admin UI from `web/`. The
+NestJS API in `api/` handles CMS authentication and sessions. Both apps use
 TypeScript and install through the root Bun workspace.
 
 ## Get started
@@ -46,16 +47,22 @@ Run linting, TypeScript checks, web tests, API integration tests, and artifact v
 bun run check
 ```
 
-## CMS API
+## CMS admin
 
-Register a GitHub OAuth app with the callback URL `http://127.0.0.1:3000/admin/auth/github/callback` and leave wildcard matching disabled. Set the app credentials in the root `.env`.
+Register a local GitHub OAuth app with the callback URL
+`http://127.0.0.1:4321/admin/auth/github/callback` and leave wildcard matching
+disabled. Set the app credentials in the root `.env`.
 
 ```bash
 cp .env.example .env
 bun run dev:api
 ```
 
-Open `http://127.0.0.1:3000/admin/` to sign in. The backend accepts only `CMS_GITHUB_OWNER_ID`, the numeric account ID returned by GitHub. Sessions expire after eight hours or when the service restarts.
+Run `bun dev` in a second terminal. Open `http://127.0.0.1:4321/admin/` to
+sign in. Astro serves the admin pages and proxies authentication and session
+requests to NestJS. NestJS accepts only `CMS_GITHUB_OWNER_ID`, the numeric
+account ID returned by GitHub. Sessions expire after eight hours or when the
+API restarts.
 
 Check `/healthz` for readiness. Run `bun run --cwd api test` to build and test the service with a simulated GitHub provider.
 
@@ -75,6 +82,7 @@ cp .env.example .env
 | `CMS_GITHUB_CLIENT_ID` | Client ID of the GitHub OAuth app | — |
 | `CMS_GITHUB_CLIENT_SECRET` | Client secret of the GitHub OAuth app | — |
 | `CMS_GITHUB_OWNER_ID` | Numeric ID of the single GitHub account allowed to sign in | — |
+| `CMS_API_TARGET` | Internal API origin for the Astro development proxy | `http://127.0.0.1:3000` |
 
 An omitted `PUBLISHING_PROFILE` builds the apex site at `https://rifkiramadhani.my.id/`. Use `PUBLISHING_PROFILE=github-pages` to verify compatibility with `https://rifkifajarramadhani.github.io/me/`. Unknown names fail during Astro configuration.
 
@@ -93,7 +101,7 @@ docker compose --profile dev up --build --watch
 ```
 
 Open Astro at `http://127.0.0.1:4321/` and the CMS at
-`http://127.0.0.1:3000/admin/`. Compose Watch syncs Astro source and public
+`http://127.0.0.1:4321/admin/`. Compose Watch syncs Astro source and public
 assets for live reload and rebuilds the API when its source changes. Both
 services use the project's default Docker network. Restart the command after
 editing `.env`.
@@ -149,7 +157,7 @@ legacy CMS if it was running.
 ### Roll back by SHA
 
 Use a known-good commit SHA published for both images. On the VPS, run the
-following from a checkout with the unified Compose file and deploy script.
+following from that revision's checkout so the Compose routes match the images.
 
 ```bash
 ./scripts/deploy.sh <commit-sha>
@@ -191,4 +199,4 @@ In [`web/src/data/skills.ts`](web/src/data/skills.ts), each object is a skill fi
 
 ## Styling
 
-Astro and the CMS share the color variables in [`shared/tokens.css`](shared/tokens.css). Tailwind theme bindings, typography, animation, and global styles live in [`web/src/styles/globals.css`](web/src/styles/globals.css).
+The portfolio and admin UI use the color variables in [`shared/tokens.css`](shared/tokens.css). Portfolio styles live in [`web/src/styles/globals.css`](web/src/styles/globals.css) and admin styles live in [`web/src/admin/admin.css`](web/src/admin/admin.css).

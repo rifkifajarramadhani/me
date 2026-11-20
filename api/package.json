@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "bun run build && node --env-file-if-exists=../.env dist/main.js",
-    "build": "tsc -p tsconfig.json && cp ../shared/tokens.css dist/tokens.css",
+    "build": "tsc -p tsconfig.json",
     "start": "node dist/main.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "bun run build && node --test test/*.integration.cjs"
