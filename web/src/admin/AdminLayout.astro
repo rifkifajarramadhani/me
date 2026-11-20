@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { title } = Astro.props
+const workspace = Astro.slots.has('workspace')
 ---
 
 <!doctype html>
@@ -19,15 +20,19 @@ const { title } = Astro.props
     <link rel="stylesheet" href={stylesheet} />
     <script is:inline type="module" src={script}></script>
   </head>
-  <body>
-    <main>
-      <header>~/portfolio/admin</header>
-      <section aria-labelledby="page-title">
-        <h1 id="page-title">
-          <span aria-hidden="true">&gt;</span> {title}
-        </h1>
-        <slot />
-      </section>
-    </main>
+  <body class:list={[{ 'admin-workspace-page': workspace }]}>
+    {workspace ? (
+      <slot name="workspace" />
+    ) : (
+      <main class="sign-in-panel">
+        <header>~/portfolio/admin</header>
+        <section aria-labelledby="page-title">
+          <h1 id="page-title">
+            <span aria-hidden="true">&gt;</span> {title}
+          </h1>
+          <slot />
+        </section>
+      </main>
+    )}
   </body>
 </html>

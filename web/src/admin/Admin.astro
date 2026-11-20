@@ -1,30 +1,68 @@
 ---
+import { Menu, ShieldCheck } from 'lucide-react'
+import AdminIcon from './AdminIcon.astro'
 import AdminLayout from './AdminLayout.astro'
+import AdminSidebar from './AdminSidebar.astro'
 ---
 
 <AdminLayout title="Portfolio admin">
-  <p id="checking-session" role="status" hidden>
-    Checking your session…
-  </p>
-  <div id="session-unavailable" hidden>
-    <p role="alert">Could not verify your session.</p>
-    <button id="retry-session" type="button">
-      Try again
-    </button>
-  </div>
-  <div id="owner-panel" hidden>
-    <p>
-      Signed in as @<span id="owner-login"></span>.
-    </p>
-    <form id="sign-out" method="post" action="/admin/logout">
-      <p id="sign-out-error" role="alert" hidden>
-        Could not sign out. Try again.
+  <Fragment slot="workspace">
+    <header class="admin-topbar">
+      <button
+        class="admin-icon-button admin-menu-button"
+        id="open-navigation"
+        type="button"
+        aria-label="Open navigation"
+        aria-controls="mobile-navigation"
+        aria-expanded="false"
+        hidden
+      >
+        <AdminIcon icon={Menu} size={20} />
+      </button>
+      <span>~/portfolio/admin</span>
+    </header>
+
+    <div id="desktop-navigation">
+      <AdminSidebar />
+    </div>
+    <dialog
+      id="mobile-navigation"
+      class="admin-drawer"
+      aria-label="Admin navigation"
+    ></dialog>
+
+    <main class="admin-workspace" aria-labelledby="page-title">
+      <h1 id="page-title">
+        <span aria-hidden="true">&gt;</span> Dashboard
+      </h1>
+      <p id="checking-session" role="status" hidden>
+        Checking your session…
       </p>
-      <button type="submit">Sign out</button>
-    </form>
-  </div>
-  <noscript>
-    <p>Enable JavaScript to open the portfolio admin.</p>
-    <a href="/admin/login/">Go to sign-in</a>
-  </noscript>
+      <div id="session-unavailable" hidden>
+        <p role="alert">Could not verify your session.</p>
+        <button id="retry-session" type="button">
+          Try again
+        </button>
+      </div>
+      <section
+        id="owner-panel"
+        class="admin-session"
+        aria-labelledby="session-title"
+        hidden
+      >
+        <span class="admin-session-icon">
+          <AdminIcon icon={ShieldCheck} size={22} />
+        </span>
+        <div>
+          <h2 id="session-title">GitHub session</h2>
+          <p>Signed in to the portfolio admin.</p>
+        </div>
+        <span class="admin-session-state">Active</span>
+      </section>
+      <noscript>
+        <p>Enable JavaScript to open the portfolio admin.</p>
+        <a href="/admin/login/">Go to sign-in</a>
+      </noscript>
+    </main>
+  </Fragment>
 </AdminLayout>

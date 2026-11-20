@@ -34,14 +34,70 @@ if (signOut) {
   const retry = document.getElementById('retry-session')
   const ownerPanel = document.getElementById('owner-panel')
   const ownerLogin = document.getElementById('owner-login')
+  const ownerAvatar = document.getElementById('owner-avatar')
+  const sidebar = document.getElementById('admin-sidebar')
+  const desktopNavigation = document.getElementById('desktop-navigation')
+  const drawer = document.getElementById('mobile-navigation')
+  const openNavigation = document.getElementById('open-navigation')
+  const closeNavigation = document.getElementById('close-navigation')
+  const profile = document.getElementById('admin-profile')
+  const profileTrigger = profile.querySelector('summary')
+  const desktop = matchMedia('(min-width: 48rem)')
   const signOutError = document.getElementById('sign-out-error')
   const signOutButton = signOut.querySelector('button')
+  const signOutLabel = document.getElementById('sign-out-label')
+
+  function closeDrawer() {
+    drawer.close()
+    profile.open = false
+    desktopNavigation.append(sidebar)
+    openNavigation.setAttribute('aria-expanded', 'false')
+  }
+
+  openNavigation.addEventListener('click', () => {
+    drawer.append(sidebar)
+    drawer.showModal()
+    openNavigation.setAttribute('aria-expanded', 'true')
+  })
+  closeNavigation.addEventListener('click', closeDrawer)
+  drawer.addEventListener('click', (event) => {
+    if (event.target === drawer) closeDrawer()
+  })
+  drawer.addEventListener('cancel', (event) => {
+    event.preventDefault()
+    closeDrawer()
+  })
+  desktop.addEventListener('change', () => {
+    profile.open = false
+    if (desktop.matches && drawer.open) {
+      closeDrawer()
+      sidebar.querySelector('[aria-current="page"]').focus()
+    }
+  })
+
+  document.addEventListener('click', (event) => {
+    if (profile.open && !profile.contains(event.target)) profile.open = false
+  })
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && profile.open) {
+      event.preventDefault()
+      profile.open = false
+      profileTrigger.focus()
+    }
+  })
 
   function show(panel) {
     checking.hidden = panel !== checking
     unavailable.hidden = panel !== unavailable
     ownerPanel.hidden = panel !== ownerPanel
-    if (ownerPanel.hidden) ownerLogin.textContent = ''
+    sidebar.hidden = ownerPanel.hidden
+    openNavigation.hidden = ownerPanel.hidden
+    if (ownerPanel.hidden) {
+      if (drawer.open) closeDrawer()
+      profile.open = false
+      ownerLogin.textContent = ''
+      ownerAvatar.textContent = ''
+    }
   }
 
   async function checkSession() {
@@ -59,7 +115,8 @@ if (signOut) {
       const { login } = await response.json()
       if (typeof login !== 'string' || !login)
         throw new Error('Invalid session')
-      ownerLogin.textContent = login
+      ownerLogin.textContent = `@${login}`
+      ownerAvatar.textContent = login.slice(0, 2).toUpperCase()
       show(ownerPanel)
     } catch {
       show(unavailable)
@@ -75,8 +132,10 @@ if (signOut) {
   })
   signOut.addEventListener('submit', async (event) => {
     event.preventDefault()
+    if (signOutButton.disabled) return
     signOutError.hidden = true
     signOutButton.disabled = true
+    signOutLabel.textContent = 'Signing out…'
     try {
       const response = await fetch(signOut.action, {
         method: 'POST',
@@ -89,7 +148,12 @@ if (signOut) {
       location.replace(signInUrl)
     } catch {
       signOutError.hidden = false
+      if (profile.open && document.activeElement === document.body) {
+        profileTrigger.focus()
+      }
+    } finally {
       signOutButton.disabled = false
+      signOutLabel.textContent = 'Sign out'
     }
   })
 

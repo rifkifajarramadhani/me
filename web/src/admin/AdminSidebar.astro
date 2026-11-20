@@ -1,0 +1,75 @@
+---
+import { ChevronDown, Globe, LayoutDashboard, LogOut, X } from 'lucide-react'
+import AdminIcon from './AdminIcon.astro'
+
+const links = [
+  { href: '/admin/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/', label: 'View portfolio', icon: Globe },
+]
+const pathname = Astro.url.pathname.replace(/\/?$/, '/')
+---
+
+<aside
+  id="admin-sidebar"
+  class="admin-sidebar"
+  aria-label="Portfolio admin"
+  hidden
+>
+  <div class="admin-brand">
+    <img src="/logo-mark.svg" alt="" width="40" height="40" />
+    <span>Portfolio admin</span>
+    <button
+      class="admin-icon-button admin-close-button"
+      id="close-navigation"
+      type="button"
+      aria-label="Close navigation"
+      autofocus
+    >
+      <AdminIcon icon={X} size={20} />
+    </button>
+  </div>
+
+  <nav class="admin-nav" aria-label="Admin">
+    <ul>
+      {links.map(({ href, label, icon }) => (
+        <li>
+          <a
+            class="admin-nav-link"
+            href={href}
+            aria-current={pathname === href ? 'page' : undefined}
+          >
+            <AdminIcon icon={icon} />
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="admin-account">
+    <details id="admin-profile" class="admin-profile">
+      <summary class="admin-profile-trigger">
+        <span id="owner-avatar" class="admin-avatar" aria-hidden="true"></span>
+        <span class="admin-profile-identity">
+          <span id="owner-login" class="admin-profile-login"></span>
+          <span class="admin-profile-role">Portfolio owner</span>
+        </span>
+        <AdminIcon icon={ChevronDown} size={16} />
+      </summary>
+      <form
+        id="sign-out"
+        class="admin-profile-dropdown"
+        method="post"
+        action="/admin/logout"
+      >
+        <p id="sign-out-error" role="alert" hidden>
+          Could not sign out. Try again.
+        </p>
+        <button class="admin-sign-out" type="submit">
+          <AdminIcon icon={LogOut} size={16} />
+          <span id="sign-out-label">Sign out</span>
+        </button>
+      </form>
+    </details>
+  </div>
+</aside>

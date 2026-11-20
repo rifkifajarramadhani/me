@@ -1,0 +1,17 @@
+---
+import type { LucideIcon } from 'lucide-react'
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+
+interface Props {
+  icon: LucideIcon
+  size?: number
+}
+
+const { icon, size = 18 } = Astro.props
+const svg = renderToStaticMarkup(
+  createElement(icon, { size, strokeWidth: 1.75, 'aria-hidden': true }),
+)
+---
+
+<Fragment set:html={svg} />
