@@ -13,6 +13,8 @@ before substantial work.
 
 ## Commands
 
+Follow the [JavaScript runtime rule](AGENTS.md#javascript-runtime).
+
 `bun dev` starts Astro in `web/` and `bun run dev:api` starts NestJS in `api/`.
 `bun run build` builds both apps. `bun run check` runs linting, type checks,
 tests for both apps, and publishing verification.

@@ -15,6 +15,12 @@ Before substantial work, read:
 - [PRODUCT.md](PRODUCT.md): product positioning and principles.
 - [DESIGN.md](DESIGN.md): visual language and design tokens.
 
+## JavaScript runtime
+
+Use Bun 1.4.4 or later for workspace commands and for running the CMS. Use
+`bun run --bun` for local tools with Node.js shebangs, such as Astro, TypeScript,
+and ESLint.
+
 ## Build, Test, and Development Commands
 
 - `bun install` installs dependencies.

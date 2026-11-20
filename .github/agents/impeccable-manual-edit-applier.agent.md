@@ -67,7 +67,7 @@ In repair mode, source-verification failures mean the current source does not ye
 
 ## Checks
 
-After editing, inspect touched files for obvious syntax damage and leftover Impeccable runtime markers. For plain `.js`, `.mjs`, and `.cjs` files, run `node --check` on touched files when practical. Keep checks narrow; do not run the full suite.
+After editing, inspect touched files for obvious syntax damage and leftover Impeccable runtime markers. For plain `.js`, `.mjs`, and `.cjs` files, run `bun run --bun eslint path/to/file.js` with the touched file paths when practical. Keep checks narrow. Do not run the full suite.
 
 ## Output Contract
 
