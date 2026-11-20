@@ -5,9 +5,8 @@ import typescriptParser from '@typescript-eslint/parser'
 export default [
   {
     ignores: [
-      'dist/',
-      'backend/dist/',
-      '.astro/',
+      '**/dist/',
+      '**/.astro/',
       '.agents/',
       '.claude/',
       '.codex/',
@@ -17,7 +16,7 @@ export default [
   },
   ...astro.configs.recommended,
   {
-    files: ['backend/src/**/*.ts'],
+    files: ['api/src/**/*.ts'],
     languageOptions: { parser: typescriptParser },
     rules: {
       'no-debugger': 'error',

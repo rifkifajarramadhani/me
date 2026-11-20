@@ -3,10 +3,10 @@
 ## Project Overview
 
 Personal portfolio for [rifkiramadhani.my.id](https://rifkiramadhani.my.id),
-built with Astro 7, Tailwind CSS, TypeScript, and Bun. Pages are under
-`src/pages/`, layouts under `src/layouts/`, components under
-`src/components/`, content data under `src/data/`, and shared logic under
-`src/lib/`. Static assets live in `public/`.
+built with Astro 7, Tailwind CSS, TypeScript, and Bun. The Astro app is in
+`web/`, the NestJS CMS is in `api/`, and both use `shared/tokens.css`.
+Astro pages, layouts, components, and content live under `web/src/`. Static
+assets live in `web/public/`.
 
 Before substantial work, read:
 
@@ -17,9 +17,9 @@ Before substantial work, read:
 ## Build, Test, and Development Commands
 
 - `bun install` installs dependencies.
-- `bun dev` starts the Astro dev server.
-- `bun run build` creates a production build.
-- `bun run lint`, `bun run typecheck`, and `bun test` run the focused checks.
+- `bun dev` starts Astro. `bun run dev:api` starts the CMS.
+- `bun run build` builds both apps.
+- `bun run lint`, `bun run typecheck`, and `bun run test` check both apps.
 - `bun run verify:publishing` verifies publishing profile output.
 - `bun run check` runs the full gate (lint, typecheck, tests, publishing).
 
@@ -55,8 +55,8 @@ For each checkpoint, in order:
 
 1. Implement one logical change with its required tests and documentation.
 2. Run the focused checks for that change and fix any failures: `bun run lint`
-   and `bun run typecheck`, plus `bun test` when logic in `src/lib/` or
-   `scripts/` changed. Do not hold a commit back for the full gate; run
+   and `bun run typecheck`, plus `bun run test` when API logic, `web/src/lib/`,
+   or `web/scripts/` changed. Do not hold a commit back for the full gate; run
    `bun run check` and `bun run build` at the end and commit any fixes they
    require separately.
 3. Stage only that checkpoint's files or hunks with `git add <paths>` or

@@ -13,8 +13,9 @@ before substantial work.
 
 ## Commands
 
-`bun dev` starts the dev server, `bun run build` builds, and `bun run check`
-runs the full gate (lint, typecheck, tests, publishing verification).
+`bun dev` starts Astro in `web/` and `bun run dev:api` starts NestJS in `api/`.
+`bun run build` builds both apps. `bun run check` runs linting, type checks,
+tests for both apps, and publishing verification.
 
 ## Commit conventions
 

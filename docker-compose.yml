@@ -3,6 +3,7 @@ services:
     image: ghcr.io/rifkifajarramadhani/me:${IMAGE_TAG:-latest}
     build:
       context: .
+      dockerfile: web/Dockerfile
       args:
         PUBLISHING_PROFILE: ${PUBLISHING_PROFILE:-apex}
     expose:
@@ -45,7 +46,7 @@ services:
     image: ghcr.io/rifkifajarramadhani/me-cms:${IMAGE_TAG:-latest}
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: api/Dockerfile
     environment:
       CMS_ORIGIN: https://rifkiramadhani.my.id
       CMS_GITHUB_CLIENT_ID: ${CMS_GITHUB_CLIENT_ID:-}

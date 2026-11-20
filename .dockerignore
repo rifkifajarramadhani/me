@@ -1,8 +1,7 @@
-node_modules
-dist
-backend
+**/node_modules
+**/dist
+**/.astro
 .git
 .github
-.env
-.env.*
-!.env.example
+**/.env
+**/.env.*

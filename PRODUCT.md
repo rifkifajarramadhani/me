@@ -34,16 +34,16 @@ Visitors typically scan the introduction, skills, work history, and selected pro
 
 - Use the professional name `Rifki Fajar Ramadhani` and role `Full-Stack Engineer`.
 - Keep the voice direct, technically credible, collaborative, and grounded in shipped work rather than promotional claims.
-- Treat the RF mark and lockup under `public/logo-mark.*` and `public/logo-lockup.*` as approved identity assets. Their visual treatment remains a design-system decision, not product truth.
-- Preserve the current GitHub, LinkedIn, and email identities defined in `src/lib/site.ts` unless Rifki explicitly updates them.
+- Treat the RF mark and lockup under `web/public/logo-mark.*` and `web/public/logo-lockup.*` as approved identity assets. Their visual treatment remains a design-system decision, not product truth.
+- Preserve the current GitHub, LinkedIn, and email identities defined in `web/src/lib/site.ts` unless Rifki explicitly updates them.
 
 ## Evidence on Hand
 
-- `public/resume.pdf` and `resume/resume.html` contain the detailed employment record and documented impact claims.
-- `src/data/experience.ts` records roles across Indonesia, Singapore, and South Africa, including a documented improvement of data-loading performance by up to 50% at AutoWealth.
-- `src/data/projects.ts` contains selected project descriptions, technology tags, live links, and repository links where public.
-- Project screenshots under `public/` provide visual evidence for Typefn, Sportsmans Warehouse, Outdoor Warehouse, Shelflife, Museum MACAN, Woermann Fresh, Hey Halfway, Comprimage, and aibar.
-- `src/data/skills.ts` records the current frontend and backend technology set.
+- `web/public/resume.pdf` and `web/resume/resume.html` contain the detailed employment record and documented impact claims.
+- `web/src/data/experience.ts` records roles across Indonesia, Singapore, and South Africa, including a documented improvement of data-loading performance by up to 50% at AutoWealth.
+- `web/src/data/projects.ts` contains selected project descriptions, technology tags, live links, and repository links where public.
+- Project screenshots under `web/public/` provide visual evidence for Typefn, Sportsmans Warehouse, Outdoor Warehouse, Shelflife, Museum MACAN, Woermann Fresh, Hey Halfway, Comprimage, and aibar.
+- `web/src/data/skills.ts` records the current frontend and backend technology set.
 - No testimonials, customer endorsements, awards, or independent case-study documents are currently on hand; future work must not fabricate them.
 
 ## Product Principles

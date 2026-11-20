@@ -2,11 +2,11 @@
 
 A dark-themed personal portfolio with lightweight native scroll animations for [rifkiramadhani.my.id](https://rifkiramadhani.my.id).
 
-**Stack:** Astro 7, Tailwind CSS, TypeScript, Bun
+Astro and Tailwind CSS are in `web/`. The NestJS CMS is in `api/`. Both use
+TypeScript and install through the root Bun workspace.
 
 ## Get started
-This project uses [Bun](https://bun.sh) as its package manager and script runner. The Astro CLI runs on Node.js, which must be version 22.23.4 or newer (see [`.nvmrc`](.nvmrc)).
-This project uses [Bun](https://bun.sh) as its JavaScript runtime and package manager.
+Use [Bun](https://bun.sh) 1.4.4 and Node.js 24, as specified in [`.nvmrc`](.nvmrc). Run the following commands from the repository root.
 
 ### Installation
 
@@ -40,7 +40,7 @@ bun run lint
 
 ### Check
 
-Run linting, TypeScript, module tests, and artifact verification for both publishing profiles:
+Run linting, TypeScript checks, web tests, API integration tests, and artifact verification for both publishing profiles.
 
 ```bash
 bun run check
@@ -48,18 +48,16 @@ bun run check
 
 ## CMS backend
 
-The NestJS service is a separate package under `backend/`. Use Node.js 24 and Bun to run it locally. Register a GitHub OAuth app with the callback URL `http://127.0.0.1:3000/admin/auth/github/callback` and leave wildcard matching disabled. Set the app credentials in `backend/.env`.
+Register a GitHub OAuth app with the callback URL `http://127.0.0.1:3000/admin/auth/github/callback` and leave wildcard matching disabled. Set the app credentials in the root `.env`.
 
 ```bash
-cp .env.example backend/.env
-cd backend
-bun install --frozen-lockfile
-bun run dev
+cp .env.example .env
+bun run dev:api
 ```
 
 Open `http://127.0.0.1:3000/admin/` to sign in. The backend accepts only `CMS_GITHUB_OWNER_ID`, the numeric account ID returned by GitHub. Sessions expire after eight hours or when the service restarts.
 
-Check `/healthz` for readiness. Run `bun run test` from `backend/` to build and test the service with a simulated GitHub provider.
+Check `/healthz` for readiness. Run `bun run --cwd api test` to build and test the service with a simulated GitHub provider.
 
 ## Environment variables
 
@@ -87,22 +85,22 @@ GitHub Pages is a build-compatibility target only; this repository does not depl
 Build and run the production image locally:
 
 ```bash
-docker build \
+docker build -f web/Dockerfile \
   --build-arg PUBLISHING_PROFILE=apex \
   -t me .
 
 docker run -p 8080:80 me
 ```
 
-The site will be available at `http://localhost:8080`.
+The site will be available at `http://localhost:8080`. Build the CMS image from the same workspace with `docker build -f api/Dockerfile -t me-cms .`.
 
 ## Deployment
 
 Production deploys automatically on push to `main` via [`.github/workflows/publish.yml`](.github/workflows/publish.yml):
 
 1. Checks the code and verifies apex and GitHub Pages publishing artifacts
-2. Builds the explicit apex Astro artifact
-3. Tests the CMS and publishes both Docker images to GHCR under the same commit SHA
+2. Builds the apex Astro artifact and the CMS
+3. Publishes both Docker images to GHCR under the same commit SHA
 4. SSHes into the server, runs `~/deploy-me.sh` for the portfolio, and updates the CMS if enabled
 
 The container is served by nginx and routed through Traefik with TLS (Let's Encrypt). See [`docker-compose.yml`](docker-compose.yml) for Traefik labels and health check config.
@@ -120,21 +118,21 @@ To disable the CMS, move the VPS env file to a private backup path to prevent fu
 
 | What | File |
 |------|------|
-| Professional identity, SEO copy, social links | [`src/lib/site.ts`](src/lib/site.ts) |
-| Publishing profiles, URLs, and generated artifacts | [`src/lib/site-publishing.ts`](src/lib/site-publishing.ts) |
-| Work experience | [`src/data/experience.ts`](src/data/experience.ts) |
-| Projects | [`src/data/projects.ts`](src/data/projects.ts) |
-| Skills | [`src/data/skills.ts`](src/data/skills.ts) |
-| Project preview images | `public/{project-name}/` |
-| Favicon / OG image | `public/` |
+| Professional identity, SEO copy, social links | [`web/src/lib/site.ts`](web/src/lib/site.ts) |
+| Publishing profiles, URLs, and generated artifacts | [`web/src/lib/site-publishing.ts`](web/src/lib/site-publishing.ts) |
+| Work experience | [`web/src/data/experience.ts`](web/src/data/experience.ts) |
+| Projects | [`web/src/data/projects.ts`](web/src/data/projects.ts) |
+| Skills | [`web/src/data/skills.ts`](web/src/data/skills.ts) |
+| Project preview images | `web/public/{project-name}/` |
+| Favicon / OG image | `web/public/` |
 
 ### Social links
 
-Edit `socialLinks` in [`src/lib/site.ts`](src/lib/site.ts). Skill icons in the UI use [`simple-icons`](https://simpleicons.org/).
+Edit `socialLinks` in [`web/src/lib/site.ts`](web/src/lib/site.ts). Skill icons in the UI use [`simple-icons`](https://simpleicons.org/).
 
 ### Project preview images
 
-Place images in `public/` and reference them in [`src/data/projects.ts`](src/data/projects.ts):
+Place images in `web/public/` and reference them in [`web/src/data/projects.ts`](web/src/data/projects.ts):
 
 ```ts
 previewImage: 'my-project.png'
@@ -144,8 +142,8 @@ Images are served through the selected publishing profile (`/me/` on GitHub Page
 
 ### Skills
 
-In [`src/data/skills.ts`](src/data/skills.ts), each object is a skill field with a `field` name and `skills` array. Each skill has a `skill` label (tooltip text) and `icon` component.
+In [`web/src/data/skills.ts`](web/src/data/skills.ts), each object is a skill field with a `field` name and `skills` array. Each skill has a `skill` label (tooltip text) and `icon` component.
 
 ## Styling
 
-Astro and the CMS share the color variables in [`src/styles/tokens.css`](src/styles/tokens.css). Tailwind theme bindings, typography, animation, and global styles live in [`src/styles/globals.css`](src/styles/globals.css).
+Astro and the CMS share the color variables in [`shared/tokens.css`](shared/tokens.css). Tailwind theme bindings, typography, animation, and global styles live in [`web/src/styles/globals.css`](web/src/styles/globals.css).
