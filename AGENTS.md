@@ -25,6 +25,15 @@ Before substantial work, read:
 - `bun run verify:publishing` verifies publishing profile output.
 - `bun run check` runs the full gate (lint, typecheck, tests, publishing).
 
+### Playwright artifact cleanup
+
+After browser verification and before the final reply, remove temporary
+Playwright artifacts created during the task, including screenshots, traces,
+logs, and reports under `.playwright-mcp/` or other Playwright output folders.
+Save requested deliverables and screenshots needed for pull requests to their
+intended destinations before cleanup. Preserve pre-existing files and check
+`git status --short` for leftover Playwright output.
+
 ## Commit & Pull Request Guidelines
 
 Use concise, imperative Conventional Commit subjects in the form
