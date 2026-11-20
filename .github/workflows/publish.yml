@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Bun - Install dependencies
-        uses: ./.github/workflows/setup-bun
+        uses: ./.github/actions/setup-bun
 
       - name: Check code and both publishing profiles
         run: bun run check
@@ -69,10 +69,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Prepare CMS Compose configuration
+      - name: Bundle production deployment files
+        shell: bash
         run: |
-          compose_b64=$(base64 -w 0 docker-compose.yml)
-          printf 'ME_COMPOSE_B64=%s\n' "$compose_b64" >> "$GITHUB_ENV"
+          deploy_b64=$(tar -czf - docker-compose.yml scripts/deploy.sh | base64 -w 0)
+          printf 'ME_DEPLOY_B64=%s\n' "$deploy_b64" >> "$GITHUB_ENV"
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1
@@ -82,17 +83,10 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          envs: ME_IMAGE_TAG,ME_COMPOSE_B64
+          envs: ME_IMAGE_TAG,ME_DEPLOY_B64
           script: |
             set -eu
-            "$HOME/deploy-me.sh" "$ME_IMAGE_TAG"
-            cms_env="$HOME/.config/me-cms/.env"
-            if [ -r "$cms_env" ]; then
-              export IMAGE_TAG="$ME_IMAGE_TAG"
-              deploy_cms() {
-                printf '%s' "$ME_COMPOSE_B64" | base64 -d |
-                  docker compose --project-name me-cms --env-file "$cms_env" --profile cms -f - "$@"
-              }
-              deploy_cms pull cms
-              deploy_cms up -d --no-deps --no-build --wait cms
-            fi
+            deploy_dir=$(mktemp -d)
+            trap 'rm -rf "$deploy_dir"' EXIT
+            printf '%s' "$ME_DEPLOY_B64" | base64 -d | tar -xzf - -C "$deploy_dir"
+            "$deploy_dir/scripts/deploy.sh" "$ME_IMAGE_TAG"

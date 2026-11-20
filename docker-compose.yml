@@ -1,5 +1,8 @@
+name: me
+
 services:
   web:
+    profiles: [prod]
     image: ghcr.io/rifkifajarramadhani/me:${IMAGE_TAG:-latest}
     build:
       context: .
@@ -41,17 +44,17 @@ services:
       retries: 5
     restart: unless-stopped
 
-  cms:
-    profiles: [cms]
+  api:
+    profiles: [prod]
     image: ghcr.io/rifkifajarramadhani/me-cms:${IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: api/Dockerfile
+    env_file:
+      - path: ${CMS_ENV_FILE:-.env}
+        required: false
     environment:
       CMS_ORIGIN: https://rifkiramadhani.my.id
-      CMS_GITHUB_CLIENT_ID: ${CMS_GITHUB_CLIENT_ID:-}
-      CMS_GITHUB_CLIENT_SECRET: ${CMS_GITHUB_CLIENT_SECRET:-}
-      CMS_GITHUB_OWNER_ID: ${CMS_GITHUB_OWNER_ID:-}
     expose:
       - "3000"
     networks:

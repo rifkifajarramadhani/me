@@ -96,23 +96,50 @@ The site will be available at `http://localhost:8080`. Build the CMS image from 
 
 ## Deployment
 
-Production deploys automatically on push to `main` via [`.github/workflows/publish.yml`](.github/workflows/publish.yml):
+On pushes to `main`, the [GitHub Actions workflow](.github/workflows/publish.yml)
+runs the root checks and builds, publishes both GHCR images with the same commit
+SHA, then sends the Compose file and [deploy script](scripts/deploy.sh) to the
+VPS over SSH.
 
-1. Checks the code and verifies apex and GitHub Pages publishing artifacts
-2. Builds the apex Astro artifact and the CMS
-3. Publishes both Docker images to GHCR under the same commit SHA
-4. SSHes into the server, runs `~/deploy-me.sh` for the portfolio, and updates the CMS if enabled
+The script uses the `prod` profile in [`docker-compose.yml`](docker-compose.yml).
+It reuses the portfolio web container's Compose project name, or uses `me` on a
+fresh VPS. It pulls both SHA-tagged images and runs the API's configuration
+check before stopping any running services. It then stops the legacy `cms`
+service in the `me-cms` project, if active, and waits for both new health checks.
+If startup fails during migration, the script stops the new API and restarts the
+legacy CMS if it was running.
 
-The container is served by nginx and routed through Traefik with TLS (Let's Encrypt). See [`docker-compose.yml`](docker-compose.yml) for Traefik labels and health check config.
+### First production deploy
 
-### Enable the CMS in production
+1. Confirm that the GitHub Actions secrets `SSH_HOST`, `SSH_USER`, and `SSH_KEY`
+   connect to the VPS. The SSH user needs Docker access, Compose 2.24 or newer,
+   Bash, and `flock`. Confirm that it can pull both
+   `ghcr.io/rifkifajarramadhani/me` and `ghcr.io/rifkifajarramadhani/me-cms`.
+2. Confirm that Traefik is running on the external Docker network `edge` with
+   the `websecure` entry point and the `letsencrypt` certificate resolver.
+3. Register a GitHub OAuth app with the exact callback URL
+   `https://rifkiramadhani.my.id/admin/auth/github/callback` and keep wildcard
+   matching disabled. Confirm that `~/.config/me-cms/.env` is readable by the
+   SSH user and has mode `0600`. It needs `CMS_GITHUB_CLIENT_ID`,
+   `CMS_GITHUB_CLIENT_SECRET`, and `CMS_GITHUB_OWNER_ID` (`157324525` for the
+   portfolio owner). Compose sets the production origin.
+4. After deployment, confirm both containers are healthy with
+   `docker ps --filter label=com.docker.compose.project=<project>`.
+   Open the portfolio home page, then visit `/admin/` and sign in and out as the
+   owner to verify the production OAuth app.
 
-1. Register a GitHub OAuth app with the exact callback URL `https://rifkiramadhani.my.id/admin/auth/github/callback`. Keep wildcard matching disabled.
-2. Confirm the VPS can pull `ghcr.io/rifkifajarramadhani/me-cms` and that the existing `~/deploy-me.sh` still deploys the portfolio on the shared `edge` network. The deploy job manages the CMS in its own `me-cms` Compose project.
-3. On the VPS, create `~/.config/me-cms/.env` with file permissions `0600`. Set `CMS_GITHUB_CLIENT_ID`, `CMS_GITHUB_CLIENT_SECRET`, and `CMS_GITHUB_OWNER_ID` (`157324525` for the portfolio owner). Compose sets the production origin. The deploy job enables the `cms` profile when this file is readable.
-4. After the next deploy, check the portfolio home page. Visit `/admin/`, sign in as the owner, and sign out. Use `docker ps --filter label=com.docker.compose.project=me-cms` on the VPS to check the CMS container's health.
+### Roll back by SHA
 
-To disable the CMS, move the VPS env file to a private backup path to prevent future deploys from starting the service. Stop the container with `docker stop me-cms-cms-1`. The portfolio has its own container and router.
+Use a known-good commit SHA published for both images. On the VPS, run the
+following from a checkout with the unified Compose file and deploy script.
+
+```bash
+./scripts/deploy.sh <commit-sha>
+```
+
+The script uses the same VPS credentials for the rollback and waits for both
+services to pass their health checks. Verify the home page and owner sign-in
+again after rollback.
 
 ## Content customization
 

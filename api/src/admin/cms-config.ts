@@ -6,6 +6,14 @@ function required(name: string) {
   return value
 }
 
+function readCredential(name: string) {
+  const value = required(name)
+  if (/[\s\p{Cc}]/u.test(value)) {
+    throw new Error(`${name} must be a single GitHub OAuth credential.`)
+  }
+  return value
+}
+
 function readOrigin() {
   const value = required('CMS_ORIGIN')
   const origin = URL.parse(value)
@@ -38,7 +46,7 @@ export class CmsConfig {
   readonly origin = this.url.origin
   readonly secureCookies = this.url.protocol === 'https:'
   readonly callbackUrl = new URL('/admin/auth/github/callback', this.url).href
-  readonly clientId = required('CMS_GITHUB_CLIENT_ID')
-  readonly clientSecret = required('CMS_GITHUB_CLIENT_SECRET')
+  readonly clientId = readCredential('CMS_GITHUB_CLIENT_ID')
+  readonly clientSecret = readCredential('CMS_GITHUB_CLIENT_SECRET')
   readonly ownerId = readOwnerId()
 }
