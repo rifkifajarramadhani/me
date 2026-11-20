@@ -244,78 +244,8 @@ const socials = [
 </style>
 
 <script>
-  const rotator = document.querySelector('#tagline-rotator')
-  const tagline = rotator?.querySelector('[data-tagline]')
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  import { mountTaglineRotator } from '@/motion/tagline-rotator'
 
-  if (rotator && tagline) {
-    const taglines = JSON.parse(rotator.dataset.taglines ?? '[]')
-    let index = 0
-    let intervalId
-    let transitionId
-
-    const stop = () => {
-      if (intervalId) window.clearInterval(intervalId)
-      if (transitionId) window.clearTimeout(transitionId)
-      intervalId = undefined
-      transitionId = undefined
-      tagline.classList.remove('is-leaving', 'is-entering')
-    }
-
-    const rotate = () => {
-      if (document.visibilityState !== 'visible' || reducedMotion.matches)
-        return
-
-      tagline.classList.add('is-leaving')
-      transitionId = window.setTimeout(() => {
-        index = (index + 1) % taglines.length
-        tagline.textContent = `"${taglines[index]}"`
-        tagline.classList.remove('is-leaving')
-        tagline.classList.add('is-entering')
-        requestAnimationFrame(() => tagline.classList.remove('is-entering'))
-        transitionId = undefined
-      }, 300)
-    }
-
-    const start = () => {
-      if (taglines.length < 2 || intervalId || reducedMotion.matches) return
-      intervalId = window.setInterval(rotate, 3500)
-    }
-
-    const sync = () => {
-      if (document.visibilityState === 'visible' && !reducedMotion.matches) {
-        start()
-      } else {
-        stop()
-      }
-    }
-
-    const cleanup = () => {
-      stop()
-      document.removeEventListener('visibilitychange', sync)
-      reducedMotion.removeEventListener('change', sync)
-      window.removeEventListener('pagehide', handlePageHide)
-      window.removeEventListener('pageshow', handlePageShow)
-    }
-
-    const handlePageHide = (event) => {
-      if (event.persisted) {
-        stop()
-      } else {
-        cleanup()
-      }
-    }
-
-    const handlePageShow = (event) => {
-      if (event.persisted) sync()
-    }
-
-    if (taglines.length > 1) {
-      document.addEventListener('visibilitychange', sync)
-      reducedMotion.addEventListener('change', sync)
-      window.addEventListener('pagehide', handlePageHide)
-      window.addEventListener('pageshow', handlePageShow)
-      start()
-    }
-  }
+  const rotator = document.querySelector<HTMLElement>('#tagline-rotator')
+  if (rotator) mountTaglineRotator(rotator)
 </script>
