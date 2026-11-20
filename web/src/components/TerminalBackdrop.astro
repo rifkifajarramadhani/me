@@ -154,11 +154,3 @@ const script: TerminalLine[] = [
     animation: command-caret-blink 1.05s steps(1) infinite;
   }
 </style>
-
-<script>
-  import { mountTerminalBackdrop } from '@/motion/terminal-backdrop'
-
-  const root = document.querySelector<HTMLElement>('[data-term-backdrop]')
-  const hero = document.querySelector<HTMLElement>('#hero')
-  if (root) mountTerminalBackdrop(root, hero)
-</script>

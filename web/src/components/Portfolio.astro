@@ -44,3 +44,19 @@ const year = new Date().getFullYear()
   <span class="mx-2 text-prompt">·</span>
   <span>© {year}</span>
 </footer>
+
+<script>
+  import { mountDataStreams } from '@/motion/data-streams'
+  import { mountTaglineRotator } from '@/motion/tagline-rotator'
+  import { mountTerminalBackdrop } from '@/motion/terminal-backdrop'
+
+  const terminal = document.querySelector<HTMLElement>('[data-term-backdrop]')
+  const hero = document.querySelector<HTMLElement>('#hero')
+  if (terminal) mountTerminalBackdrop(terminal, hero)
+
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-data-streams]')
+  if (canvas) mountDataStreams(canvas)
+
+  const rotator = document.querySelector<HTMLElement>('#tagline-rotator')
+  if (rotator) mountTaglineRotator(rotator)
+</script>
