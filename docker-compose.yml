@@ -112,7 +112,7 @@ services:
       context: .
       dockerfile: api/Dockerfile
     env_file:
-      - path: ${CMS_ENV_FILE:-.env}
+      - path: .env
         required: false
     environment:
       CMS_ORIGIN: https://rifkiramadhani.my.id

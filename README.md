@@ -150,10 +150,13 @@ legacy CMS if it was running.
    the `websecure` entry point and the `letsencrypt` certificate resolver.
 3. Register a GitHub OAuth app with the exact callback URL
    `https://rifkiramadhani.my.id/admin/auth/github/callback` and keep wildcard
-   matching disabled. Confirm that `~/.config/me-cms/.env` is readable by the
-   SSH user and has mode `0600`. It needs `CMS_GITHUB_CLIENT_ID`,
+   matching disabled. Put the production `CMS_GITHUB_CLIENT_ID`,
    `CMS_GITHUB_CLIENT_SECRET`, and `CMS_GITHUB_OWNER_ID` (`157324525` for the
-   portfolio owner). Compose sets the production origin.
+   portfolio owner) in the project root's `.env` on the VPS. Compose sets
+   the production origin. Keep the file readable by the SSH user with mode
+   `0600`. The workflow uses `~/me/.env` by default. If your project directory
+   is elsewhere, set the GitHub Actions repository variable `ME_PROJECT_DIR`
+   to its absolute path on the VPS.
 4. After deployment, confirm both containers are healthy with
    `docker ps --filter label=com.docker.compose.project=<project>`.
    Open the portfolio home page, then visit `/admin/` and sign in and out as the
@@ -162,9 +165,9 @@ legacy CMS if it was running.
 ### Roll back by SHA
 
 Use a known-good commit SHA published for both images. On the VPS, run the
-following from a clone that contains that SHA. Extract the Compose file and
-deploy script from the same commit as the image tags so the runtime and health
-checks match.
+following from the project root that contains the production `.env` and has
+the target commit available. Extract the Compose file and deploy script from
+the same commit as the image tags so the runtime and health checks match.
 
 ```bash
 (
@@ -173,7 +176,7 @@ checks match.
   deploy_dir=$(mktemp -d)
   trap 'rm -rf "$deploy_dir"' EXIT
   git archive "$sha" docker-compose.yml scripts/deploy.sh | tar -xf - -C "$deploy_dir"
-  "$deploy_dir/scripts/deploy.sh" "$sha"
+  ME_PROJECT_DIR="$PWD" "$deploy_dir/scripts/deploy.sh" "$sha"
 )
 ```
 

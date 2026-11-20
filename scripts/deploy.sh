@@ -10,14 +10,14 @@ if [[ $# -ne 1 || ! $1 =~ ^[0-9a-f]{40}$ ]]; then
   fail "Usage: $0 <40-character commit SHA>"
 fi
 
-repo=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+release_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+project_dir=${ME_PROJECT_DIR:-$release_dir}
 export IMAGE_TAG=$1
-export CMS_ENV_FILE="$HOME/.config/me-cms/.env"
-[[ -f "$CMS_ENV_FILE" && -r "$CMS_ENV_FILE" ]] ||
-  fail "Missing or unreadable CMS credentials file: $CMS_ENV_FILE"
+[[ -f "$project_dir/.env" && -r "$project_dir/.env" ]] ||
+  fail "Missing or unreadable project .env: $project_dir/.env"
 
 umask 077
-exec 9>"${CMS_ENV_FILE%/*}/deploy.lock"
+exec 9>"$project_dir/.deploy.lock"
 flock 9
 
 # The previous web deploy could use a project name derived from its checkout path.
@@ -31,7 +31,7 @@ project=${web_projects:-me}
 
 compose() {
   docker compose --env-file /dev/null --project-name "$project" \
-    --file "$repo/docker-compose.yml" --profile prod "$@"
+    --project-directory "$project_dir" --file "$release_dir/docker-compose.yml" --profile prod "$@"
 }
 
 compose config --quiet 2>/dev/null ||

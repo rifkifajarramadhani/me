@@ -79,14 +79,15 @@ jobs:
         uses: appleboy/ssh-action@v1
         env:
           ME_IMAGE_TAG: ${{ github.sha }}
+          ME_PROJECT_DIR: ${{ vars.ME_PROJECT_DIR }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          envs: ME_IMAGE_TAG,ME_DEPLOY_B64
+          envs: ME_IMAGE_TAG,ME_DEPLOY_B64,ME_PROJECT_DIR
           script: |
             set -eu
             deploy_dir=$(mktemp -d)
             trap 'rm -rf "$deploy_dir"' EXIT
             printf '%s' "$ME_DEPLOY_B64" | base64 -d | tar -xzf - -C "$deploy_dir"
-            "$deploy_dir/scripts/deploy.sh" "$ME_IMAGE_TAG"
+            ME_PROJECT_DIR="${ME_PROJECT_DIR:-$HOME/me}" "$deploy_dir/scripts/deploy.sh" "$ME_IMAGE_TAG"
