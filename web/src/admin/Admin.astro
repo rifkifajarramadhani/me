@@ -3,9 +3,10 @@ import { Menu, ShieldCheck } from 'lucide-react'
 import AdminIcon from './AdminIcon.astro'
 import AdminLayout from './AdminLayout.astro'
 import AdminSidebar from './AdminSidebar.astro'
+import scriptUrl from './dashboard.js?url&no-inline'
 ---
 
-<AdminLayout title="Portfolio admin">
+<AdminLayout title="Portfolio admin" scriptUrl={scriptUrl}>
   <Fragment slot="workspace">
     <header class="admin-topbar">
       <button

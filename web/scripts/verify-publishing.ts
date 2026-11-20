@@ -94,9 +94,10 @@ async function verifyAdmin(outDir: string, profile: PublishingProfileName) {
     return
   }
 
-  for (const [file, title] of [
-    ['admin/index.html', 'Portfolio admin'],
-    ['admin/login/index.html', 'Admin sign-in'],
+  const scripts = new Set<string>()
+  for (const [file, title, scriptMarker] of [
+    ['admin/index.html', 'Portfolio admin', '/admin/session'],
+    ['admin/login/index.html', 'Admin sign-in', 'sign-in-error'],
   ]) {
     const html = await readRequired(join(outDir, file))
     assertIncludes(html, `<title>${title}</title>`, file)
@@ -108,8 +109,14 @@ async function verifyAdmin(outDir: string, profile: PublishingProfileName) {
       /<script type="module" src="\/(_astro\/[^"]+\.js)">/,
     )?.[1]
     assert(stylesheet && script, `${file} is missing its external CSS or JavaScript`)
+    assert(!scripts.has(script), `${file} shares its script with another admin page`)
+    scripts.add(script)
     assertIncludes(await readRequired(join(outDir, stylesheet)), '--canvas:', stylesheet)
-    assertIncludes(await readRequired(join(outDir, script)), '/admin/session', script)
+    const source = await readRequired(join(outDir, script))
+    assertIncludes(source, scriptMarker, script)
+    if (file === 'admin/login/index.html') {
+      assert(!source.includes('/admin/session'), `${file} includes dashboard session logic`)
+    }
   }
 }
 

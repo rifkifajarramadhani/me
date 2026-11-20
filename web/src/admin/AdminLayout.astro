@@ -1,12 +1,12 @@
 ---
-import script from './admin.js?url&no-inline'
 import stylesheet from './admin.css?url'
 
 interface Props {
   title: string
+  scriptUrl: string
 }
 
-const { title } = Astro.props
+const { title, scriptUrl } = Astro.props
 const workspace = Astro.slots.has('workspace')
 ---
 
@@ -18,7 +18,7 @@ const workspace = Astro.slots.has('workspace')
     <meta name="robots" content="noindex" />
     <title>{title}</title>
     <link rel="stylesheet" href={stylesheet} />
-    <script is:inline type="module" src={script}></script>
+    <script is:inline type="module" src={scriptUrl}></script>
   </head>
   <body class:list={[{ 'admin-workspace-page': workspace }]}>
     {workspace ? (
