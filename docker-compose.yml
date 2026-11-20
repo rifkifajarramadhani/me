@@ -135,6 +135,13 @@ services:
       - traefik.http.routers.me-cms.middlewares=me-cms-ratelimit
       - traefik.http.middlewares.me-cms-ratelimit.ratelimit.average=5
       - traefik.http.middlewares.me-cms-ratelimit.ratelimit.burst=10
+      # Public commit activity uses the site's rate limit, separate from CMS sign-in.
+      - "traefik.http.routers.me-contributions.rule=Host(`rifkiramadhani.my.id`) && Path(`/api/github/contributions`)"
+      - traefik.http.routers.me-contributions.entrypoints=websecure
+      - traefik.http.routers.me-contributions.tls=true
+      - traefik.http.routers.me-contributions.tls.certresolver=letsencrypt
+      - traefik.http.routers.me-contributions.service=me-cms
+      - traefik.http.routers.me-contributions.middlewares=me-ratelimit
     healthcheck:
       test: ["CMD", "bun", "-e", "fetch('http://127.0.0.1:3000/healthz').then(r => { if (!r.ok) process.exitCode = 1 }).catch(() => { process.exitCode = 1 })"]
       interval: 10s

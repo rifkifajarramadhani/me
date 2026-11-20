@@ -41,6 +41,8 @@ export default defineConfig({
           ? {
               '^/admin/(?:auth/github(?:/callback)?|session|logout)(?:\\?|$)':
                 process.env.CMS_API_TARGET ?? 'http://127.0.0.1:3000',
+              '^/api/github/contributions(?:\\?|$)':
+                process.env.CMS_API_TARGET ?? 'http://127.0.0.1:3000',
             }
           : undefined,
     },
