@@ -11,7 +11,7 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
   aria-label="GitHub activity"
   class="mx-auto max-w-4xl px-6 py-24"
 >
-  <SectionHeading command="git log --stat" />
+  <SectionHeading command="gh api graphql" />
 
   <div
     class="panel"
@@ -20,9 +20,7 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
     }
   >
     <div class="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 border-b border-hairline bg-surface-2 px-4 py-2 sm:px-5">
-      <p class="text-xs text-ink-subtle">
-        Public GitHub commits · Last 365 days
-      </p>
+      <p class="text-xs text-ink-subtle">GitHub contributions · Last year</p>
       <a
         class="bracket-link inline-flex min-h-11 items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         href={socialLinks.github}
@@ -32,19 +30,23 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
     </div>
 
     {hasActivityApi && (
-      <div class="commit-body p-4 sm:p-5">
-        <p data-commit-status role="status" class="text-sm text-ink-subtle">
-          View commit activity on GitHub.
+      <div class="contribution-body p-4 sm:p-5">
+        <p
+          data-contribution-status
+          role="status"
+          class="text-sm text-ink-subtle"
+        >
+          View contributions on GitHub.
         </p>
-        <div hidden data-commit-content>
+        <div hidden data-contribution-content>
           <dl
             class="mb-5 grid grid-cols-3 gap-2 pb-5 sm:gap-5"
-            aria-label="Commit statistics for the last 365 days"
+            aria-label="Contribution statistics for the last year"
           >
             <div>
-              <dt class="text-xs text-ink-subtle">Commits</dt>
+              <dt class="text-xs text-ink-subtle">Total</dt>
               <dd
-                data-total-commits
+                data-total-contributions
                 class="mt-1 text-2xl font-semibold tabular-nums text-ink"
               ></dd>
             </div>
@@ -74,48 +76,48 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
             </div>
           </dl>
 
-          <div class="commit-scroll" data-commit-scroll>
+          <div class="contribution-scroll" data-contribution-scroll>
             <div
-              class="commit-calendar"
-              data-commit-calendar
+              class="contribution-calendar"
+              data-contribution-calendar
               role="grid"
-              aria-label="Daily public commits in UTC"
-              aria-describedby="commit-calendar-help"
+              aria-label="Daily GitHub contributions"
+              aria-describedby="contribution-calendar-help"
             ></div>
           </div>
-          <p id="commit-calendar-help" class="sr-only">
+          <p id="contribution-calendar-help" class="sr-only">
             Use arrow keys to move between days and weeks.
           </p>
 
           <div class="mt-3 flex min-h-8 flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs text-ink-subtle">
-            <p data-commit-detail aria-hidden="true"></p>
+            <p data-contribution-detail aria-hidden="true"></p>
             <div
               class="flex items-center gap-1.5"
-              aria-label="Color scale from fewer to more commits"
+              aria-label="Color scale from fewer to more contributions"
             >
               <span>Less</span>
               <span
-                class="commit-swatch"
+                class="contribution-swatch"
                 data-level="0"
                 aria-hidden="true"
               ></span>
               <span
-                class="commit-swatch"
+                class="contribution-swatch"
                 data-level="1"
                 aria-hidden="true"
               ></span>
               <span
-                class="commit-swatch"
+                class="contribution-swatch"
                 data-level="2"
                 aria-hidden="true"
               ></span>
               <span
-                class="commit-swatch"
+                class="contribution-swatch"
                 data-level="3"
                 aria-hidden="true"
               ></span>
               <span
-                class="commit-swatch"
+                class="contribution-swatch"
                 data-level="4"
                 aria-hidden="true"
               ></span>
@@ -124,8 +126,8 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
           </div>
 
           <p class="mt-2 border-t border-hairline pt-3 text-xs text-ink-subtle">
-            <span data-commit-freshness>Updated</span>{' '}
-            <time data-commit-updated></time> <span>UTC</span>
+            <span data-contribution-freshness>Updated</span>{' '}
+            <time data-contribution-updated></time> <span>UTC</span>
           </p>
         </div>
       </div>
@@ -135,24 +137,24 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
 
 <style>
   [data-github-activity] {
-    --commit-0: var(--surface-3);
-    --commit-1: color-mix(in srgb, var(--ink) 30%, var(--surface-1));
-    --commit-2: color-mix(in srgb, var(--ink) 48%, var(--surface-1));
-    --commit-3: color-mix(in srgb, var(--ink) 69%, var(--surface-1));
-    --commit-4: var(--ink);
+    --contribution-0: var(--surface-3);
+    --contribution-1: color-mix(in srgb, var(--ink) 30%, var(--surface-1));
+    --contribution-2: color-mix(in srgb, var(--ink) 48%, var(--surface-1));
+    --contribution-3: color-mix(in srgb, var(--ink) 69%, var(--surface-1));
+    --contribution-4: var(--ink);
   }
 
-  .commit-body {
+  .contribution-body {
     min-block-size: 21rem;
   }
 
-  [data-commit-status]:not([hidden]) {
+  [data-contribution-status]:not([hidden]) {
     display: grid;
     min-block-size: 18rem;
     align-content: center;
   }
 
-  .commit-scroll {
+  .contribution-scroll {
     --day-size: 0.6875rem;
     --day-gap: 0.1875rem;
     --weekday: 2.25rem;
@@ -160,10 +162,10 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
     scroll-padding-inline-start: calc(var(--weekday) + var(--day-gap));
   }
 
-  .commit-calendar {
+  .contribution-calendar {
     display: grid;
     min-inline-size: calc(
-      var(--weekday) + 53 * (var(--day-size) + var(--day-gap))
+      var(--weekday) + var(--weeks) * (var(--day-size) + var(--day-gap))
     );
     gap: var(--day-gap);
     padding-block: 0.125rem;
@@ -172,20 +174,20 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
     line-height: 1;
   }
 
-  .commit-calendar :global(.commit-row) {
+  .contribution-calendar :global(.contribution-row) {
     display: grid;
-    grid-template-columns: var(--weekday) repeat(53, minmax(0, 1fr));
+    grid-template-columns: var(--weekday) repeat(var(--weeks), minmax(0, 1fr));
     align-items: center;
     column-gap: var(--day-gap);
     min-block-size: var(--day-size);
   }
 
-  .commit-calendar :global(.commit-month) {
+  .contribution-calendar :global(.contribution-month) {
     min-block-size: 1rem;
     grid-row: 1;
   }
 
-  .commit-calendar :global(.commit-weekday) {
+  .contribution-calendar :global(.contribution-weekday) {
     position: sticky;
     z-index: 1;
     inset-inline-start: 0;
@@ -195,7 +197,7 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
     background: var(--surface-1);
   }
 
-  .commit-calendar :global(.commit-months)::before {
+  .contribution-calendar :global(.contribution-months)::before {
     position: sticky;
     z-index: 1;
     grid-area: 1 / 1;
@@ -205,82 +207,82 @@ const hasActivityApi = createSitePublishing().profile === 'apex'
     content: '';
   }
 
-  .commit-calendar :global(.commit-day) {
+  .contribution-calendar :global(.contribution-day) {
     display: block;
     inline-size: 100%;
     block-size: var(--day-size);
     outline-offset: -1px;
   }
 
-  .commit-calendar :global(.commit-day:hover),
-  .commit-calendar :global(.commit-day:focus-visible),
-  .commit-calendar :global(.commit-day[aria-pressed='true']) {
+  .contribution-calendar :global(.contribution-day:hover),
+  .contribution-calendar :global(.contribution-day:focus-visible),
+  .contribution-calendar :global(.contribution-day[aria-pressed='true']) {
     outline: 2px solid var(--primary);
   }
 
-  .commit-calendar :global(.commit-day)::before,
-  .commit-swatch {
+  .contribution-calendar :global(.contribution-day)::before,
+  .contribution-swatch {
     display: block;
-    background: var(--commit-level, var(--commit-0));
+    background: var(--contribution-level, var(--contribution-0));
   }
 
-  .commit-calendar :global(.commit-day)::before {
+  .contribution-calendar :global(.contribution-day)::before {
     content: '';
     block-size: 100%;
   }
 
-  .commit-swatch {
+  .contribution-swatch {
     inline-size: 0.625rem;
     block-size: 0.625rem;
   }
 
   [data-github-activity] :global([data-level='1']) {
-    --commit-level: var(--commit-1);
+    --contribution-level: var(--contribution-1);
   }
   [data-github-activity] :global([data-level='2']) {
-    --commit-level: var(--commit-2);
+    --contribution-level: var(--contribution-2);
   }
   [data-github-activity] :global([data-level='3']) {
-    --commit-level: var(--commit-3);
+    --contribution-level: var(--contribution-3);
   }
   [data-github-activity] :global([data-level='4']) {
-    --commit-level: var(--commit-4);
+    --contribution-level: var(--contribution-4);
   }
 
   @media (max-width: 40rem), (pointer: coarse) {
-    .commit-body dt {
+    .contribution-body dt {
       min-block-size: 2rem;
     }
 
-    .commit-scroll {
+    .contribution-scroll {
       --day-size: 1.5rem;
     }
-    .commit-calendar :global(.commit-day)::before {
+    .contribution-calendar :global(.contribution-day)::before {
       box-sizing: border-box;
       border: 0.125rem solid var(--surface-1);
     }
-    .commit-body {
+    .contribution-body {
       min-block-size: 27rem;
     }
-    [data-commit-status]:not([hidden]) {
+    [data-contribution-status]:not([hidden]) {
       min-block-size: 24rem;
     }
   }
 
   @media (forced-colors: active) {
     [data-github-activity] {
-      --commit-0: Canvas;
-      --commit-1: GrayText;
-      --commit-2: GrayText;
-      --commit-3: CanvasText;
-      --commit-4: CanvasText;
+      --contribution-0: Canvas;
+      --contribution-1: GrayText;
+      --contribution-2: GrayText;
+      --contribution-3: CanvasText;
+      --contribution-4: CanvasText;
     }
-    .commit-calendar :global(.commit-day)::before,
-    .commit-swatch {
+    .contribution-calendar :global(.contribution-day)::before,
+    .contribution-swatch {
       border: 1px solid CanvasText;
       forced-color-adjust: none;
     }
-    .commit-calendar :global(.commit-day:focus-visible) {
+    .contribution-calendar :global(.contribution-day:focus-visible) {
       outline-color: Highlight;
     }
   }

@@ -1,20 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { fetchGitHubCommits, GitHubRateLimit } from './github-commits'
+import { fetchGitHubCalendar, GitHubRateLimit } from './github-calendar'
 
 const HOUR = 3_600_000
 const MAX_AGE = 24 * HOUR
 
 type Snapshot = Omit<
-  Awaited<ReturnType<typeof fetchGitHubCommits>>,
+  Awaited<ReturnType<typeof fetchGitHubCalendar>>,
   'retryAt'
 > & {
   updatedAt: string
 }
 
 @Injectable()
-export class CommitActivity {
+export class GitHubActivity {
   private readonly token = process.env.GITHUB_CONTRIBUTIONS_TOKEN?.trim()
-  private readonly logger = new Logger(CommitActivity.name)
+  private readonly logger = new Logger(GitHubActivity.name)
   private snapshot?: Snapshot
   private savedAt = 0
   private nextRefresh = 0
@@ -25,7 +25,7 @@ export class CommitActivity {
 
     const now = Date.now()
     if (!this.refreshing && now >= this.nextRefresh) {
-      this.refreshing = this.refresh(this.token, now).finally(() => {
+      this.refreshing = this.refresh(this.token).finally(() => {
         this.refreshing = undefined
       })
     }
@@ -36,9 +36,9 @@ export class CommitActivity {
     return { ...this.snapshot, stale: age >= HOUR }
   }
 
-  private async refresh(token: string, startedAt: number) {
+  private async refresh(token: string) {
     try {
-      const { retryAt, ...data } = await fetchGitHubCommits(token, startedAt)
+      const { retryAt, ...data } = await fetchGitHubCalendar(token)
       this.savedAt = Date.now()
       this.nextRefresh = Math.max(this.savedAt + HOUR, retryAt)
       this.snapshot = {
@@ -50,8 +50,8 @@ export class CommitActivity {
       this.nextRefresh = Math.max(Date.now() + HOUR, retryAt)
       this.logger.warn(
         retryAt
-          ? 'GitHub commit activity is rate limited.'
-          : 'GitHub commit activity refresh failed.',
+          ? 'GitHub contribution activity is rate limited.'
+          : 'GitHub contribution activity refresh failed.',
       )
     }
   }

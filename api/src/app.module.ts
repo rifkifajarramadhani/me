@@ -6,18 +6,18 @@ import { GithubOAuth } from './admin/github-oauth'
 import { OwnerAuth } from './admin/owner-auth'
 import { OwnerGuard } from './admin/owner.guard'
 import { Sessions } from './admin/sessions'
-import { CommitActivity } from './contributions/commit-activity'
-import { CommitActivityController } from './contributions/commit-activity.controller'
+import { GitHubActivity } from './contributions/github-activity'
+import { GitHubActivityController } from './contributions/github-activity.controller'
 import { HealthController } from './health.controller'
 
 @Module({
-  controllers: [HealthController, AdminController, CommitActivityController],
+  controllers: [HealthController, AdminController, GitHubActivityController],
   providers: [
     CmsConfig,
     GithubOAuth,
     Sessions,
     OwnerAuth,
-    CommitActivity,
+    GitHubActivity,
     { provide: APP_GUARD, useClass: OwnerGuard },
   ],
 })

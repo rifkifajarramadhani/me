@@ -84,21 +84,24 @@ cp .env.example .env
 | `CMS_GITHUB_CLIENT_SECRET` | Client secret of the GitHub OAuth app | — |
 | `CMS_GITHUB_OWNER_ID` | Numeric ID of the single GitHub account allowed to sign in | — |
 | `CMS_API_TARGET` | Internal API origin for the Astro development proxy | `http://127.0.0.1:3000` |
-| `GITHUB_CONTRIBUTIONS_TOKEN` | Optional fine-grained GitHub token with public repository read access for the commit calendar | — |
+| `GITHUB_CONTRIBUTIONS_TOKEN` | Optional fine-grained GitHub token with public repository read access for the contribution calendar | — |
 
 An omitted `PUBLISHING_PROFILE` builds the apex site at `https://rifkiramadhani.my.id/`. Use `PUBLISHING_PROFILE=github-pages` to verify compatibility with `https://rifkifajarramadhani.github.io/me/`. Unknown names fail during Astro configuration.
 
 GitHub Pages is a build-compatibility target only; this repository does not deploy it.
 
-### GitHub commit activity
+### GitHub contribution activity
 
 To enable the heatmap on the apex portfolio, create a fine-grained GitHub
 personal access token with **Public repositories** access and leave additional
 permissions unset. Add it as `GITHUB_CONTRIBUTIONS_TOKEN` in the root `.env`
 for local development or the project's `.env` on the VPS, then restart the API.
-The API caches commit totals for an hour and can serve the last successful
-response for up to 24 hours. The cache starts empty after an API restart.
-The portfolio links to the GitHub profile when commit data is unavailable.
+The heatmap and streaks use GitHub's profile calendar, including anonymized
+private activity when GitHub's **Private contributions** profile setting is enabled.
+The API fetches daily counts and activity levels with one query, caches the
+calendar for an hour, and can serve the last successful response for up to 24
+hours. The cache starts empty after an API restart. The portfolio links to the
+GitHub profile when contribution data is unavailable.
 
 ## Docker
 

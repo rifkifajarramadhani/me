@@ -1,8 +1,6 @@
 const DAY = 86_400_000
-const DAYS = 365
 const WEEK = 7
 const WEEK_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', '']
-const LEVEL_THRESHOLDS = [1, 3, 6, 10]
 
 const number = new Intl.NumberFormat('en')
 const month = new Intl.DateTimeFormat('en', { month: 'short', timeZone: 'UTC' })
@@ -16,33 +14,41 @@ const time = new Intl.DateTimeFormat('en', {
   timeZone: 'UTC',
 })
 
-interface CommitDay {
+interface ContributionDay {
   date: string
   count: number
+  level: number
 }
 
-interface CommitActivity {
-  days: CommitDay[]
-  totalCommits: number
+interface ContributionActivity {
+  days: ContributionDay[]
+  totalContributions: number
   currentStreak: number
   longestStreak: number
   updatedAt: string
   stale: boolean
 }
 
-function parseActivity(value: unknown): CommitActivity {
-  const activity = value as Partial<CommitActivity> | null
-  const { days, totalCommits, currentStreak, longestStreak, updatedAt, stale } =
-    activity ?? {}
+function parseActivity(value: unknown): ContributionActivity {
+  const activity = value as Partial<ContributionActivity> | null
+  const {
+    days,
+    totalContributions,
+    currentStreak,
+    longestStreak,
+    updatedAt,
+    stale,
+  } = activity ?? {}
   if (
     !Array.isArray(days) ||
-    days.length !== DAYS ||
-    ![totalCommits, currentStreak, longestStreak].every(isCount) ||
+    days.length < 365 ||
+    days.length > 373 ||
+    ![totalContributions, currentStreak, longestStreak].every(isCount) ||
     typeof updatedAt !== 'string' ||
     !Number.isFinite(Date.parse(updatedAt)) ||
     typeof stale !== 'boolean'
   ) {
-    throw new Error('Invalid commit activity response.')
+    throw new Error('Invalid GitHub contribution response.')
   }
 
   let previous = 0
@@ -52,13 +58,15 @@ function parseActivity(value: unknown): CommitActivity {
       !/^\d{4}-\d{2}-\d{2}$/.test(day?.date) ||
       !Number.isFinite(timestamp) ||
       (index > 0 && timestamp !== previous + DAY) ||
-      !isCount(day.count)
+      !isCount(day.count) ||
+      !isCount(day.level) ||
+      day.level > 4
     ) {
-      throw new Error('Invalid daily commit activity.')
+      throw new Error('Invalid daily contribution data.')
     }
     previous = timestamp
   }
-  return activity as CommitActivity
+  return activity as ContributionActivity
 }
 
 function isCount(value: unknown): value is number {
@@ -67,7 +75,7 @@ function isCount(value: unknown): value is number {
 
 function createRow() {
   const row = document.createElement('div')
-  row.className = 'commit-row'
+  row.className = 'contribution-row'
   row.setAttribute('role', 'row')
   return row
 }
@@ -75,20 +83,22 @@ function createRow() {
 function renderCalendar(
   grid: HTMLElement,
   detail: HTMLElement,
-  { days, totalCommits }: CommitActivity,
+  { days, totalContributions }: ContributionActivity,
 ) {
   const firstWeekday = new Date(days[0].date).getUTCDay()
+  const weeks = Math.ceil((days.length + firstWeekday) / WEEK)
+  const lastDay = days.length - 1
   const rows = WEEK_LABELS.map((label) => {
     const row = createRow()
     const weekday = document.createElement('span')
-    weekday.className = 'commit-weekday'
+    weekday.className = 'contribution-weekday'
     weekday.setAttribute('aria-hidden', 'true')
     weekday.textContent = label
     row.append(weekday)
     return row
   })
   const monthRow = createRow()
-  monthRow.classList.add('commit-months')
+  monthRow.classList.add('contribution-months')
   monthRow.setAttribute('aria-hidden', 'true')
   let previousMonth = -1
   let previousLabelWeek = -3
@@ -102,9 +112,9 @@ function renderCalendar(
     if (monthNumber !== previousMonth) {
       if (week - previousLabelWeek >= 3) {
         const label = document.createElement('span')
-        label.className = 'commit-month'
+        label.className = 'contribution-month'
         label.textContent = month.format(timestamp)
-        label.style.gridColumn = `${Math.min(week + 2, 53)} / span 2`
+        label.style.gridColumn = `${Math.min(week + 2, weeks)} / span 2`
         monthRow.append(label)
         previousLabelWeek = week
       }
@@ -117,14 +127,12 @@ function renderCalendar(
     cell.style.gridColumnStart = String(week + 2)
     const button = document.createElement('button')
     button.type = 'button'
-    button.className = 'commit-day'
+    button.className = 'contribution-day'
     button.tabIndex = -1
-    button.dataset.level = String(
-      LEVEL_THRESHOLDS.filter((threshold) => day.count >= threshold).length,
-    )
+    button.dataset.level = String(day.level)
     button.setAttribute(
       'aria-label',
-      `${date.format(timestamp)} · ${number.format(day.count)} ${day.count === 1 ? 'commit' : 'commits'}`,
+      `${date.format(timestamp)} · ${number.format(day.count)} ${day.count === 1 ? 'contribution' : 'contributions'}`,
     )
     button.setAttribute('aria-pressed', 'false')
     cell.append(button)
@@ -132,20 +140,18 @@ function renderCalendar(
     return button
   })
 
-  let tabStop = buttons.length - 1
+  let tabStop = lastDay
   let selection: HTMLButtonElement | undefined
   buttons[tabStop].tabIndex = 0
-  grid.setAttribute(
-    'aria-colcount',
-    String(Math.ceil((DAYS + firstWeekday) / WEEK)),
-  )
+  grid.style.setProperty('--weeks', String(weeks))
+  grid.setAttribute('aria-colcount', String(weeks))
   grid.replaceChildren(monthRow, ...rows)
 
   const show = (button = selection) => {
     detail.textContent =
       button?.getAttribute('aria-label') ??
-      (totalCommits === 0
-        ? 'No public commits in this period.'
+      (totalContributions === 0
+        ? 'No contributions in this period.'
         : buttons[tabStop].getAttribute('aria-label'))
   }
 
@@ -179,14 +185,14 @@ function renderCalendar(
     const weekday = (tabStop + firstWeekday) % WEEK
     const firstInRow = (weekday - firstWeekday + WEEK) % WEEK
     const lastInRow =
-      firstInRow + Math.floor((DAYS - 1 - firstInRow) / WEEK) * WEEK
+      firstInRow + Math.floor((lastDay - firstInRow) / WEEK) * WEEK
     const destinations: Record<string, number> = {
       ArrowLeft: tabStop - WEEK,
       ArrowRight: tabStop + WEEK,
       ArrowUp: tabStop - Number(weekday > 0),
       ArrowDown: tabStop + Number(weekday < WEEK - 1),
       Home: event.ctrlKey ? 0 : firstInRow,
-      End: event.ctrlKey ? DAYS - 1 : lastInRow,
+      End: event.ctrlKey ? lastDay : lastInRow,
     }
     const next = destinations[event.key]
     if (next === undefined) return
@@ -199,12 +205,18 @@ function renderCalendar(
 
 export function mountGithubActivity(panel: HTMLElement) {
   const endpoint = panel.dataset.githubActivity
-  const status = panel.querySelector<HTMLElement>('[data-commit-status]')
-  const content = panel.querySelector<HTMLElement>('[data-commit-content]')
-  const scroll = panel.querySelector<HTMLElement>('[data-commit-scroll]')
-  const calendar = panel.querySelector<HTMLElement>('[data-commit-calendar]')
-  const detail = panel.querySelector<HTMLElement>('[data-commit-detail]')
-  const updated = panel.querySelector<HTMLTimeElement>('[data-commit-updated]')
+  const status = panel.querySelector<HTMLElement>('[data-contribution-status]')
+  const content = panel.querySelector<HTMLElement>(
+    '[data-contribution-content]',
+  )
+  const scroll = panel.querySelector<HTMLElement>('[data-contribution-scroll]')
+  const calendar = panel.querySelector<HTMLElement>(
+    '[data-contribution-calendar]',
+  )
+  const detail = panel.querySelector<HTMLElement>('[data-contribution-detail]')
+  const updated = panel.querySelector<HTMLTimeElement>(
+    '[data-contribution-updated]',
+  )
   if (
     !endpoint ||
     !status ||
@@ -217,24 +229,24 @@ export function mountGithubActivity(panel: HTMLElement) {
     return
 
   const load = async () => {
-    status.textContent = 'Loading GitHub commit activity…'
+    status.textContent = 'Loading GitHub contributions…'
 
     try {
       const response = await fetch(endpoint, {
         credentials: 'omit',
         signal: AbortSignal.timeout(10_000),
       })
-      if (!response.ok) throw new Error('Commit activity is unavailable.')
+      if (!response.ok) throw new Error('GitHub contributions are unavailable.')
       const activity = parseActivity(await response.json())
       renderCalendar(calendar, detail, activity)
 
       const text = {
-        'total-commits': number.format(activity.totalCommits),
+        'total-contributions': number.format(activity.totalContributions),
         'current-streak': number.format(activity.currentStreak),
         'longest-streak': number.format(activity.longestStreak),
         'current-unit': activity.currentStreak === 1 ? 'day' : 'days',
         'longest-unit': activity.longestStreak === 1 ? 'day' : 'days',
-        'commit-freshness': activity.stale
+        'contribution-freshness': activity.stale
           ? 'Showing cached data · Updated'
           : 'Updated',
       }
@@ -250,7 +262,7 @@ export function mountGithubActivity(panel: HTMLElement) {
       scroll.scrollLeft = scroll.scrollWidth
     } catch {
       status.textContent =
-        'Commit activity is temporarily unavailable. View the profile on GitHub.'
+        'GitHub contributions are temporarily unavailable. View the profile on GitHub.'
     }
   }
 

@@ -135,7 +135,7 @@ services:
       - traefik.http.routers.me-cms.middlewares=me-cms-ratelimit
       - traefik.http.middlewares.me-cms-ratelimit.ratelimit.average=5
       - traefik.http.middlewares.me-cms-ratelimit.ratelimit.burst=10
-      # Public commit activity uses the site's rate limit, separate from CMS sign-in.
+      # Profile contributions use the site's rate limit, separate from CMS sign-in.
       - "traefik.http.routers.me-contributions.rule=Host(`rifkiramadhani.my.id`) && Path(`/api/github/contributions`)"
       - traefik.http.routers.me-contributions.entrypoints=websecure
       - traefik.http.routers.me-contributions.tls=true

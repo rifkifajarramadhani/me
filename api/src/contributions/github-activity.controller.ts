@@ -5,11 +5,11 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common'
 import { PublicRoute } from '../admin/owner.guard'
-import { CommitActivity } from './commit-activity'
+import { GitHubActivity } from './github-activity'
 
 @Controller('api/github/contributions')
-export class CommitActivityController {
-  constructor(private readonly activity: CommitActivity) {}
+export class GitHubActivityController {
+  constructor(private readonly activity: GitHubActivity) {}
 
   @Get()
   @PublicRoute()
@@ -18,7 +18,7 @@ export class CommitActivityController {
     const snapshot = await this.activity.get()
     if (!snapshot)
       throw new ServiceUnavailableException(
-        'GitHub commit activity is unavailable.',
+        'GitHub contribution activity is unavailable.',
       )
     return snapshot
   }
