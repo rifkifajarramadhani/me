@@ -17,6 +17,15 @@ before substantial work.
 `bun run build` builds both apps. `bun run check` runs linting, type checks,
 tests for both apps, and publishing verification.
 
+## Playwright artifacts
+
+Follow the
+[Playwright artifact cleanup](AGENTS.md#playwright-artifact-cleanup) rules:
+before the final reply, delete the screenshots, traces, logs, and reports you
+created under `.playwright-mcp/` or other Playwright output folders. Move
+requested deliverables to their intended destinations first, keep pre-existing
+files, and confirm with `git status --short`.
+
 ## Commit conventions
 
 Commits use concise, imperative Conventional Commit subjects in the form
