@@ -5,14 +5,14 @@
   "type": "commonjs",
   "packageManager": "bun@1.4.4",
   "engines": {
-    "node": ">=24"
+    "bun": ">=1.4.4"
   },
   "scripts": {
-    "dev": "bun run build && node --env-file-if-exists=../.env dist/main.js",
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/main.js",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "bun run build && node --test test/*.integration.cjs"
+    "dev": "bun run build && bun --env-file=../.env dist/main.js",
+    "build": "bun run --bun tsc -p tsconfig.json",
+    "start": "bun dist/main.js",
+    "typecheck": "bun run --bun tsc -p tsconfig.json --noEmit",
+    "test": "bun run build && bun test --isolate ./test/*.integration.cjs"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.16",

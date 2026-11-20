@@ -7,7 +7,8 @@ NestJS API in `api/` handles CMS authentication and sessions. Both apps use
 TypeScript and install through the root Bun workspace.
 
 ## Get started
-Use [Bun](https://bun.sh) 1.4.4 and Node.js 24, as specified in [`.nvmrc`](.nvmrc). Run the following commands from the repository root.
+Use [Bun](https://bun.sh) 1.4.4 or later as the JavaScript runtime. Run the
+following commands from the repository root.
 
 ### Installation
 

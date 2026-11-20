@@ -5,14 +5,14 @@
   "type": "module",
   "packageManager": "bun@1.4.4",
   "engines": {
-    "node": ">=24"
+    "bun": ">=1.4.4"
   },
   "scripts": {
     "dev": "bun run --cwd web dev",
     "dev:api": "bun run --cwd api dev",
     "build": "bun run --cwd web build && bun run --cwd api build",
     "preview": "bun run --cwd web preview",
-    "lint": "eslint .",
+    "lint": "bun run --bun eslint .",
     "typecheck": "bun run --cwd web typecheck && bun run --cwd api typecheck",
     "test": "bun run --cwd web test && bun run --cwd api test",
     "verify:publishing": "bun run --cwd web verify:publishing",

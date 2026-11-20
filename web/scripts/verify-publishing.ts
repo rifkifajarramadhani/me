@@ -47,7 +47,7 @@ async function build(profile: PublishingProfileName, outDir: string) {
   await new Promise<void>((resolveBuild, rejectBuild) => {
     const child = spawn(
       process.execPath,
-      ['run', 'astro', 'build', '--outDir', outDir],
+      ['run', 'build', '--outDir', outDir],
       {
         cwd: projectRoot,
         env: { ...process.env, PUBLISHING_PROFILE: profile },
