@@ -46,7 +46,7 @@ Run linting, TypeScript checks, web tests, API integration tests, and artifact v
 bun run check
 ```
 
-## CMS backend
+## CMS API
 
 Register a GitHub OAuth app with the callback URL `http://127.0.0.1:3000/admin/auth/github/callback` and leave wildcard matching disabled. Set the app credentials in the root `.env`.
 
@@ -82,7 +82,25 @@ GitHub Pages is a build-compatibility target only; this repository does not depl
 
 ## Docker
 
-Build and run the production image locally:
+### Development with Compose
+
+Copy `.env.example` to the root `.env` and fill in the local GitHub OAuth
+credentials described above. From the repository root, run this with Docker
+Compose 2.24 or newer.
+
+```bash
+docker compose --profile dev up --build --watch
+```
+
+Open Astro at `http://127.0.0.1:4321/` and the CMS at
+`http://127.0.0.1:3000/admin/`. Compose Watch syncs Astro source and public
+assets for live reload and rebuilds the API when its source changes. Both
+services use the project's default Docker network. Restart the command after
+editing `.env`.
+
+### Build production images locally
+
+Build and run the production web image locally.
 
 ```bash
 docker build -f web/Dockerfile \

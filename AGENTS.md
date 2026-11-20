@@ -18,6 +18,7 @@ Before substantial work, read:
 
 - `bun install` installs dependencies.
 - `bun dev` starts Astro. `bun run dev:api` starts the CMS.
+- `docker compose --profile dev up --build --watch` starts both apps in Docker.
 - `bun run build` builds both apps.
 - `bun run lint`, `bun run typecheck`, and `bun run test` check both apps.
 - `bun run verify:publishing` verifies publishing profile output.

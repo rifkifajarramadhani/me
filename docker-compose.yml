@@ -1,6 +1,73 @@
 name: me
 
 services:
+  web-dev:
+    profiles: [dev]
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      target: development
+    environment:
+      PUBLISHING_PROFILE: ${PUBLISHING_PROFILE:-apex}
+    ports:
+      - "127.0.0.1:4321:4321"
+    develop:
+      watch:
+        - action: sync
+          path: ./web/src
+          target: /app/web/src
+        - action: sync
+          path: ./web/public
+          target: /app/web/public
+        - action: sync
+          path: ./shared/tokens.css
+          target: /app/shared/tokens.css
+        - action: sync+restart
+          path: ./web/astro.config.mjs
+          target: /app/web/astro.config.mjs
+        - action: sync+restart
+          path: ./web/tsconfig.json
+          target: /app/web/tsconfig.json
+        - action: rebuild
+          path: ./web/Dockerfile
+        - action: rebuild
+          path: ./web/package.json
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./bun.lock
+
+  api-dev:
+    profiles: [dev]
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+      target: development
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      CMS_ORIGIN: http://127.0.0.1:3000
+      NODE_ENV: development
+    ports:
+      - "127.0.0.1:3000:3000"
+    develop:
+      watch:
+        - action: rebuild
+          path: ./api/src
+        - action: rebuild
+          path: ./shared/tokens.css
+        - action: rebuild
+          path: ./api/Dockerfile
+        - action: rebuild
+          path: ./api/package.json
+        - action: rebuild
+          path: ./api/tsconfig.json
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./bun.lock
+
   web:
     profiles: [prod]
     image: ghcr.io/rifkifajarramadhani/me:${IMAGE_TAG:-latest}
