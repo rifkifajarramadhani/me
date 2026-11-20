@@ -136,7 +136,7 @@ services:
       - traefik.http.middlewares.me-cms-ratelimit.ratelimit.average=5
       - traefik.http.middlewares.me-cms-ratelimit.ratelimit.burst=10
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/healthz').then(r => { if (!r.ok) process.exitCode = 1 }).catch(() => { process.exitCode = 1 })"]
+      test: ["CMD", "bun", "-e", "fetch('http://127.0.0.1:3000/healthz').then(r => { if (!r.ok) process.exitCode = 1 }).catch(() => { process.exitCode = 1 })"]
       interval: 10s
       timeout: 3s
       start_period: 10s

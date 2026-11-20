@@ -162,10 +162,19 @@ legacy CMS if it was running.
 ### Roll back by SHA
 
 Use a known-good commit SHA published for both images. On the VPS, run the
-following from that revision's checkout so the Compose routes match the images.
+following from a clone that contains that SHA. Extract the Compose file and
+deploy script from the same commit as the image tags so the runtime and health
+checks match.
 
 ```bash
-./scripts/deploy.sh <commit-sha>
+(
+  set -euo pipefail
+  sha=REPLACE_WITH_COMMIT_SHA
+  deploy_dir=$(mktemp -d)
+  trap 'rm -rf "$deploy_dir"' EXIT
+  git archive "$sha" docker-compose.yml scripts/deploy.sh | tar -xf - -C "$deploy_dir"
+  "$deploy_dir/scripts/deploy.sh" "$sha"
+)
 ```
 
 The script uses the same VPS credentials for the rollback and waits for both

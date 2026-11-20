@@ -1,7 +1,4 @@
-FROM oven/bun:1.4.4 AS bun
-
-FROM node:24-bookworm-slim AS dependencies
-COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+FROM oven/bun:1.4.4 AS dependencies
 WORKDIR /app
 COPY package.json bun.lock ./
 COPY api/package.json ./api/

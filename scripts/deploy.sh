@@ -38,10 +38,9 @@ compose config --quiet 2>/dev/null ||
   fail 'Could not load the production Compose configuration. Check the CMS credentials file syntax.'
 compose pull --policy always web api
 
-# Reuse the selected image's config validator, including when rolling back to an
-# image built by the legacy CMS workflow. Keep the one-off container off Traefik.
+# Reuse the selected image's config validator. Keep the one-off container off Traefik.
 compose run --rm --no-deps --pull never -T --label traefik.enable=false \
-  --entrypoint node api -e 'require("reflect-metadata"); new (require("./dist/admin/cms-config").CmsConfig)()'
+  --entrypoint bun api -e 'require("reflect-metadata"); new (require("./dist/admin/cms-config").CmsConfig)()'
 
 previous_api=$(compose ps --status running --quiet api)
 legacy_running=$(docker ps --quiet \
