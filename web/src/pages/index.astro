@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro'
 import Portfolio from '@/components/Portfolio.astro'
 import { createSitePublishing } from '@/lib/site-publishing'
+import { serializeJsonLd } from '@/lib/json-ld'
 import {
   alternateSiteNames,
   jobTitle,
@@ -38,6 +39,6 @@ const jsonLd = {
 ---
 
 <Layout>
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />
   <Portfolio />
 </Layout>

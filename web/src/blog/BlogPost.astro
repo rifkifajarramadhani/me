@@ -2,6 +2,7 @@
 import BlogFrame from './BlogFrame.astro'
 import { name, socialLinks } from '@/lib/site'
 import { createSitePublishing } from '@/lib/site-publishing'
+import { serializeJsonLd } from '@/lib/json-ld'
 import {
   BlogUnavailable,
   formatLongDate,
@@ -47,7 +48,7 @@ const jsonLd = post && {
   description={post?.excerpt}
   noindex={!post}
 >
-  {jsonLd && <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  {jsonLd && <script slot="head" type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />}
 
   <a
     href={blogPath}
