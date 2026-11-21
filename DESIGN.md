@@ -200,7 +200,7 @@ The palette pairs Carbon and Paper neutrals across light and dark modes, using O
 
 The primary reading column is centered and capped at 56rem, with a narrower 42rem measure for the contact close. Sections use a 1.5rem inline gutter and a 6rem vertical rhythm; the contact section expands to 8rem to create a deliberate closing pause. The hero fills the viewport and centers its terminal window vertically beneath the fixed navigation.
 
-Desktop content uses simple grids only when comparison benefits: three columns for the About composition, twelve columns for featured project media and copy, four columns for skills, and two columns for secondary projects. Below the medium breakpoint, every major composition becomes a single reading flow; navigation collapses into a menu, skills use two columns, and the footer trades its status-bar layout for a compact centered line.
+Desktop content uses simple grids only when comparison benefits: three columns for the About composition, twelve columns for featured project media and copy, four columns for skills, and two columns for secondary projects. Below the medium breakpoint, every major composition becomes a single reading flow; skills use two columns, and the footer trades its status-bar layout for a compact centered line. Navigation collapses into a menu below the large breakpoint, where its eight items no longer fit on one line.
 
 Spacing should feel calm rather than dense. Controls remain compact inside generous page whitespace, and related command fragments wrap naturally instead of shrinking below comfortable reading sizes.
 
@@ -292,3 +292,15 @@ On desktop, the footer reads as a compact editor status bar: a solid green mode 
 - **Don't** add gradients, glass panels, or broad card shadows to create hierarchy.
 - **Don't** mix in a second display or body typeface.
 - **Don't** turn the terminal metaphor into fake shell complexity that obscures portfolio evidence.
+
+### Post Status
+
+Blog posts use one colour per status, always paired with the status word and a circular status light: Draft in Steel/Ash (secondary ink), Scheduled in Warning Amber, Published in Operational Green, and Archived in tertiary ink. Green marks only the live state, keeping the One Signal Rule.
+
+### Editor Status Line
+
+The post editor ends in a sticky status bar that echoes the homepage `NORMAL` footer. A solid mode block carries the post status in its status colour, followed by the post path (`~/blog/<slug>`), word count and reading time, and the save state. Unsaved changes turn the save state Warning Amber.
+
+### Post Prose
+
+Article text shares one stylesheet, `shared/prose.css`, between the admin editor and public pages so the editor shows what readers get. It keeps JetBrains Mono at 1rem with 1.8 leading and a 68ch measure. Headings 2–4 carry their Markdown level (`##`) as a prompt-coloured prefix, so the Command Leads Rule continues inside articles. Code blocks and quotes use square, hairline-bordered panels; links use ink with a strong-hairline underline and turn Operational Green on hover.

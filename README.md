@@ -2,9 +2,10 @@
 
 A dark-themed personal portfolio with lightweight native scroll animations for [rifkiramadhani.my.id](https://rifkiramadhani.my.id).
 
-Astro and Tailwind CSS serve the portfolio and admin UI from `web/`. The
-NestJS API in `api/` handles CMS authentication and sessions. Both apps use
-TypeScript and install through the root Bun workspace.
+Astro and Tailwind CSS serve the portfolio, the blog, and the admin UI from
+`web/`. The NestJS API in `api/` handles CMS authentication, sessions, and blog
+posts stored in SQLite. Both apps use TypeScript and install through the root
+Bun workspace.
 
 ## Get started
 Use [Bun](https://bun.sh) 1.4.4 or later as the JavaScript runtime. Run the
@@ -67,6 +68,36 @@ API restarts.
 
 Check `/healthz` for readiness. Run `bun run --cwd api test` to build and test the service with a simulated GitHub provider.
 
+### Blog
+
+Write posts at `/admin/posts/`. The editor is [Tiptap](https://tiptap.dev)
+with the StarterKit extensions (headings 2–4, lists, quotes, code, links, and
+inline marks). A post is a draft, scheduled, published, or archived:
+
+| From | Can become |
+|------|------------|
+| Draft | Published, scheduled |
+| Scheduled | Draft (cancel), published |
+| Published | Draft (unpublish), archived |
+| Archived | Draft, published (restore) |
+
+Only drafts and archived posts can be deleted. A scheduled post goes live at
+its publish time without a background job. The slug locks once a post has been
+public so its link keeps working.
+
+The API validates the editor's JSON against the same StarterKit schema, allows
+only `http`, `https`, `mailto`, site-relative, and in-page links, and renders
+the HTML that readers get. If you add Tiptap extensions, add them to both
+[`api/src/posts/post-extensions.ts`](api/src/posts/post-extensions.ts) and
+[`web/src/admin/posts/editor-extensions.ts`](web/src/admin/posts/editor-extensions.ts).
+
+Posts live in one SQLite file: `api/data/cms.sqlite` locally (ignored by Git)
+and the `cms-data` Docker volume in production. Migrations run on API start.
+
+Public `/blog/` pages render on demand in the apex profile, so publishing needs
+no rebuild. With `bun dev`, Astro renders them itself and reads posts from
+`CMS_API_TARGET`. The GitHub Pages profile has no blog.
+
 ## Environment variables
 
 Copy `.env.example` and adjust values for your target environment:
@@ -83,7 +114,8 @@ cp .env.example .env
 | `CMS_GITHUB_CLIENT_ID` | Client ID of the GitHub OAuth app | — |
 | `CMS_GITHUB_CLIENT_SECRET` | Client secret of the GitHub OAuth app | — |
 | `CMS_GITHUB_OWNER_ID` | Numeric ID of the single GitHub account allowed to sign in | — |
-| `CMS_API_TARGET` | Internal API origin for the Astro development proxy | `http://127.0.0.1:3000` |
+| `CMS_API_TARGET` | Internal API origin for the Astro development proxy and the blog server | `http://127.0.0.1:3000` |
+| `CMS_DATABASE_PATH` | SQLite file for blog posts when the API runs outside Docker | `data/cms.sqlite` in `api/` |
 | `GITHUB_CONTRIBUTIONS_TOKEN` | Optional fine-grained GitHub token with public repository read access for the contribution calendar | — |
 
 An omitted `PUBLISHING_PROFILE` builds the apex site at `https://rifkiramadhani.my.id/`. Use `PUBLISHING_PROFILE=github-pages` to verify compatibility with `https://rifkifajarramadhani.github.io/me/`. Unknown names fail during Astro configuration.
@@ -137,20 +169,24 @@ docker build -f web/Dockerfile \
 docker run -p 8080:80 me
 ```
 
-The site will be available at `http://localhost:8080`. Build the CMS image from the same workspace with `docker build -f api/Dockerfile -t me-cms .`.
+The site will be available at `http://localhost:8080`. Build the CMS image from the same workspace with `docker build -f api/Dockerfile -t me-cms .`, and the blog server with `docker build -f web/Dockerfile --target server -t me-blog .`.
 
 ## Deployment
 
 On pushes to `main`, the [GitHub Actions workflow](.github/workflows/publish.yml)
-runs the root checks and builds, publishes both GHCR images with the same commit
-SHA, then sends the Compose file and [deploy script](scripts/deploy.sh) to the
+runs the root checks and builds, publishes the web, CMS, and blog GHCR images
+with the same commit SHA, then sends the Compose file and [deploy script](scripts/deploy.sh) to the
 VPS over SSH.
 
 The script uses the `prod` profile in [`docker-compose.yml`](docker-compose.yml).
 It reuses the portfolio web container's Compose project name, or uses `me` on a
-fresh VPS. It pulls both SHA-tagged images and runs the API's configuration
+fresh VPS. It pulls the SHA-tagged images and runs the API's configuration
 check before stopping any running services. It then stops the legacy `cms`
-service in the `me-cms` project, if active, and waits for both new health checks.
+service in the `me-cms` project, if active, and waits for the new health checks.
+
+Traefik sends `/blog` to the blog server and everything else to nginx. The blog
+server reaches the API over the project's private `cms` network. Blog posts
+live in the `cms-data` volume; back it up, because it holds the only copy.
 If startup fails during migration, the script stops the new API and restarts the
 legacy CMS if it was running.
 
@@ -158,8 +194,9 @@ legacy CMS if it was running.
 
 1. Confirm that the GitHub Actions secrets `SSH_HOST`, `SSH_USER`, and `SSH_KEY`
    connect to the VPS. The SSH user needs Docker access, Compose 2.24 or newer,
-   Bash, and `flock`. Confirm that it can pull both
-   `ghcr.io/rifkifajarramadhani/me` and `ghcr.io/rifkifajarramadhani/me-cms`.
+   Bash, and `flock`. Confirm that it can pull
+   `ghcr.io/rifkifajarramadhani/me`, `ghcr.io/rifkifajarramadhani/me-cms`, and
+   `ghcr.io/rifkifajarramadhani/me-blog`.
 2. Confirm that Traefik is running on the external Docker network `edge` with
    the `websecure` entry point and the `letsencrypt` certificate resolver.
 3. Register a GitHub OAuth app with the exact callback URL
@@ -171,14 +208,14 @@ legacy CMS if it was running.
    `0600`. The workflow uses `~/me/.env` by default. If your project directory
    is elsewhere, set the GitHub Actions repository variable `ME_PROJECT_DIR`
    to its absolute path on the VPS.
-4. After deployment, confirm both containers are healthy with
+4. After deployment, confirm all three containers are healthy with
    `docker ps --filter label=com.docker.compose.project=<project>`.
-   Open the portfolio home page, then visit `/admin/` and sign in and out as the
-   owner to verify the production OAuth app.
+   Open the portfolio home page and `/blog/`, then visit `/admin/` and sign in
+   and out as the owner to verify the production OAuth app.
 
 ### Roll back by SHA
 
-Use a known-good commit SHA published for both images. On the VPS, run the
+Use a known-good commit SHA published for all images. On the VPS, run the
 following from the project root that contains the production `.env` and has
 the target commit available. Extract the Compose file and deploy script from
 the same commit as the image tags so the runtime and health checks match.
@@ -194,8 +231,9 @@ the same commit as the image tags so the runtime and health checks match.
 )
 ```
 
-The script uses the same VPS credentials for the rollback and waits for both
-services to pass their health checks. Verify the home page and owner sign-in
+The script uses the same VPS credentials for the rollback and waits for the
+services to pass their health checks. Rolling back across a database migration
+is not supported: the API refuses a database newer than its build. Verify the home page and owner sign-in
 again after rollback.
 
 ## Content customization
@@ -230,4 +268,4 @@ In [`web/src/data/skills.ts`](web/src/data/skills.ts), each object is a skill fi
 
 ## Styling
 
-The portfolio and admin UI use the color variables in [`shared/tokens.css`](shared/tokens.css). Portfolio styles live in [`web/src/styles/globals.css`](web/src/styles/globals.css) and admin styles live in [`web/src/admin/admin.css`](web/src/admin/admin.css).
+The portfolio and admin UI use the color variables in [`shared/tokens.css`](shared/tokens.css). Portfolio styles live in [`web/src/styles/globals.css`](web/src/styles/globals.css) and admin styles live in [`web/src/admin/admin.css`](web/src/admin/admin.css). Post typography lives in [`shared/prose.css`](shared/prose.css), shared by the editor and public articles.
