@@ -101,6 +101,12 @@ export function renderPostContent(input: unknown): RenderedPostContent {
   }
 }
 
+/** Plain text of an already-validated stored document. */
+export function plainText(json: JSONContent) {
+  const doc = Node.fromJSON(schema, json)
+  return doc.textBetween(0, doc.content.size, '\n\n', '\n')
+}
+
 export const EMPTY_DOCUMENT: JSONContent = {
   type: 'doc',
   content: [{ type: 'paragraph' }],

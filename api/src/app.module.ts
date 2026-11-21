@@ -11,6 +11,7 @@ import { GitHubActivity } from './contributions/github-activity'
 import { GitHubActivityController } from './contributions/github-activity.controller'
 import { HealthController } from './health.controller'
 import { AdminPostsController } from './posts/admin-posts.controller'
+import { PublicPostsController } from './posts/public-posts.controller'
 import { PostsRepository } from './posts/posts.repository'
 import { PostsService } from './posts/posts.service'
 
@@ -20,6 +21,7 @@ import { PostsService } from './posts/posts.service'
     AdminController,
     GitHubActivityController,
     AdminPostsController,
+    PublicPostsController,
   ],
   providers: [
     CmsConfig,
