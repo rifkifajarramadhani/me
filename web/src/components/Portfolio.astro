@@ -28,6 +28,7 @@ import SiteFooter from '@/components/SiteFooter.astro'
 
 <script>
   import { mountDataStreams } from '@/motion/data-streams'
+  import { trackWindowAchievement } from '@/motion/hero-achievement'
   import { minimizeTerminal } from '@/motion/hero-dock'
   import { restartTerminal } from '@/motion/hero-restart'
   import { maximizeTerminal } from '@/motion/hero-shell'
@@ -47,10 +48,14 @@ import SiteFooter from '@/components/SiteFooter.astro'
 
   const heroWindow = document.querySelector<HTMLElement>('[data-hero-window]')
   if (heroWindow) {
-    mountHeroWindow(heroWindow, {
-      close: restartTerminal,
-      minimize: minimizeTerminal,
-      maximize: maximizeTerminal,
-    })
+    mountHeroWindow(
+      heroWindow,
+      {
+        close: restartTerminal,
+        minimize: minimizeTerminal,
+        maximize: maximizeTerminal,
+      },
+      trackWindowAchievement(),
+    )
   }
 </script>

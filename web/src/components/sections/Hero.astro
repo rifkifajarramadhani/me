@@ -249,6 +249,16 @@ const windowControls = [
     />
   </dialog>
 
+  <div class="hero-achievement terminal-window" data-hero-achievement aria-hidden="true" hidden>
+    <p class="font-mono text-xs font-bold uppercase tracking-[0.14em] text-primary">
+      ★ achievement unlocked
+    </p>
+    <p class="mt-1 font-mono text-sm text-ink">window manager</p>
+    <p class="mt-1 font-mono text-xs text-ink-subtle">
+      closed, minimized, and maximized. you know your way around a desktop.
+    </p>
+  </div>
+
   <a
     href="#about"
     class="hero-scroll absolute z-10 bottom-5 left-1/2 inline-flex min-h-11 -translate-x-1/2 items-center px-2 font-mono text-xs text-ink-subtle transition-colors hover:text-primary sm:bottom-7"
@@ -355,6 +365,16 @@ const windowControls = [
     display: flex;
     gap: 1ch;
     align-items: baseline;
+  }
+
+  .hero-achievement {
+    position: fixed;
+    right: 1rem;
+    bottom: calc(var(--portfolio-status-height, 0px) + 1rem);
+    z-index: 40;
+    max-width: min(22rem, calc(100vw - 2rem));
+    padding: 0.875rem 1rem;
+    border-color: var(--primary);
   }
 
   .hero-controls {

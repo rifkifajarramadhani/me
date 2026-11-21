@@ -55,6 +55,7 @@ export async function play(
 export function mountHeroWindow(
   root: HTMLElement,
   handlers: Partial<Record<WindowAction, WindowActionHandler>>,
+  onActionComplete?: (action: WindowAction, win: HeroWindow) => void,
 ) {
   const terminal = root.querySelector<HTMLElement>('[data-hero-terminal]')
   const buttons = ACTIONS.map((action) =>
@@ -103,6 +104,7 @@ export function mountHeroWindow(
         setState('open')
         ;(focusTarget ?? win.controls[action]).focus({ preventScroll: true })
       }
+      onActionComplete?.(action, win)
     })
   }
 }
