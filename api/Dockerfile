@@ -10,14 +10,17 @@ RUN bun install --frozen-lockfile --filter me-cms
 COPY api/tsconfig.json ./api/
 COPY api/src ./api/src
 RUN bun run --cwd api build
-ENV HOST=0.0.0.0
+ENV HOST=0.0.0.0 CMS_DATABASE_PATH=/data/cms.sqlite
 CMD ["bun", "api/dist/main.js"]
 
 FROM dependencies AS production-dependencies
 RUN bun install --frozen-lockfile --production --filter me-cms
 
 FROM bun AS production
-ENV NODE_ENV=production HOST=0.0.0.0
+ENV NODE_ENV=production HOST=0.0.0.0 CMS_DATABASE_PATH=/data/cms.sqlite
+# A named volume mounted here inherits this ownership on first use.
+RUN mkdir -p /data && chown bun:bun /data
+VOLUME /data
 WORKDIR /app/api
 COPY --from=production-dependencies /app/node_modules /app/node_modules
 COPY --from=production-dependencies /app/api/node_modules ./node_modules

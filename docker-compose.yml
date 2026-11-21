@@ -44,9 +44,12 @@ services:
         required: false
     environment:
       CMS_ORIGIN: http://127.0.0.1:4321
+      CMS_DATABASE_PATH: /data/cms.sqlite
       NODE_ENV: development
     ports:
       - "127.0.0.1:3000:3000"
+    volumes:
+      - cms-data-dev:/data
     develop:
       watch:
         - action: rebuild
@@ -116,14 +119,18 @@ services:
         required: false
     environment:
       CMS_ORIGIN: https://rifkiramadhani.my.id
+      CMS_DATABASE_PATH: /data/cms.sqlite
     expose:
       - "3000"
+    volumes:
+      # Blog posts. Back this volume up; it is the only copy of CMS content.
+      - cms-data:/data
     networks:
       - edge
     labels:
       - traefik.enable=true
       - traefik.docker.network=edge
-      - "traefik.http.routers.me-cms.rule=Host(`rifkiramadhani.my.id`) && (Path(`/admin/auth/github`) || Path(`/admin/auth/github/callback`) || Path(`/admin/session`) || Path(`/admin/logout`))"
+      - "traefik.http.routers.me-cms.rule=Host(`rifkiramadhani.my.id`) && (Path(`/admin/auth/github`) || Path(`/admin/auth/github/callback`) || Path(`/admin/session`) || Path(`/admin/logout`) || PathPrefix(`/admin/api/`))"
       - traefik.http.routers.me-cms.priority=100
       - traefik.http.routers.me-cms.entrypoints=websecure
       - traefik.http.routers.me-cms.tls=true
@@ -149,6 +156,10 @@ services:
       start_period: 10s
       retries: 5
     restart: unless-stopped
+
+volumes:
+  cms-data:
+  cms-data-dev:
 
 networks:
   edge:
