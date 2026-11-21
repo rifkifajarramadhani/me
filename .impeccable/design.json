@@ -440,9 +440,9 @@
       "name": "Operational Status Footer",
       "kind": "custom",
       "refersTo": "panel-dark",
-      "description": "Desktop status bar that closes the portfolio with mode, path, year, and health.",
+      "description": "Homepage status bar pinned to the bottom of the viewport at widths of 48rem and up. The compact path and year sit at the end of the page below 48rem.",
       "html": "<footer class=\"ds-status\"><strong>NORMAL</strong><span>~/rifki</span><span>© 2026&nbsp;&nbsp;<i></i> operational</span></footer>",
-      "css": ".ds-status{display:flex;align-items:center;border-top:1px solid var(--hairline);background:var(--surface-1);color:var(--ink-tertiary);font:400 12px/1 'JetBrains Mono',ui-monospace,monospace}.ds-status strong{align-self:stretch;display:flex;align-items:center;background:var(--primary);padding:0 12px;color:var(--primary-foreground)}.ds-status>span{padding:12px 16px}.ds-status>span:last-child{margin-left:auto}.ds-status i{display:inline-block;width:6px;height:6px;border-radius:9999px;background:var(--success);vertical-align:1px}.ds-status:focus-within{border-color:var(--primary)}"
+      "css": ".ds-status{box-sizing:border-box;display:flex;align-items:center;height:2.25rem;border-top:1px solid var(--hairline);background:var(--surface-1);color:var(--ink-subtle);font:400 12px/1 'JetBrains Mono',ui-monospace,monospace}.ds-status strong{align-self:stretch;display:flex;align-items:center;background:var(--primary-hover);padding:0 12px;color:var(--primary-foreground)}:host-context(.dark) .ds-status strong{background:var(--primary)}.ds-status>span{padding:0 16px}.ds-status>span:last-child{margin-left:auto}.ds-status i{display:inline-block;width:6px;height:6px;border-radius:9999px;background:var(--success);vertical-align:1px}"
     }
   ],
   "narrative": {

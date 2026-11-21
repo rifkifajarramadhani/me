@@ -1,11 +1,26 @@
 ---
 import { shortName } from '@/lib/site'
 
+interface Props {
+  stickyDesktop?: boolean
+}
+
+const { stickyDesktop = false } = Astro.props
 const year = new Date().getFullYear()
 ---
 
-<footer class="relative z-[1] hidden h-9 items-stretch border-t border-hairline bg-surface-1 font-mono text-xs text-ink-tertiary md:flex">
-  <span class="flex h-full items-center bg-primary px-3 font-bold text-primary-foreground">
+<footer
+  class:list={[
+    'relative z-[1] hidden h-9 items-stretch border-t border-hairline bg-surface-1 font-mono text-xs md:flex',
+    stickyDesktop ? 'portfolio-status-footer text-ink-subtle' : 'text-ink-tertiary',
+  ]}
+>
+  <span
+    class:list={[
+      'flex h-full items-center px-3 font-bold text-primary-foreground',
+      stickyDesktop ? 'bg-primary-hover dark:bg-primary' : 'bg-primary',
+    ]}
+  >
     NORMAL
   </span>
   <div class="flex flex-1 items-center justify-between px-4">
@@ -24,3 +39,19 @@ const year = new Date().getFullYear()
   <span class="mx-2 text-prompt">·</span>
   <span>© {year}</span>
 </footer>
+
+<style is:global>
+  @media screen and (min-width: 48rem) {
+    html:has(.portfolio-status-footer) {
+      --portfolio-status-height: 2.25rem;
+      scroll-padding-bottom: calc(var(--portfolio-status-height) + 0.5rem);
+    }
+
+    .portfolio-status-footer {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      height: var(--portfolio-status-height);
+    }
+  }
+</style>

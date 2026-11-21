@@ -198,7 +198,7 @@ The palette pairs Carbon and Paper neutrals across light and dark modes, using O
 
 ## Layout
 
-The primary reading column is centered and capped at 56rem, with a narrower 42rem measure for the contact close. Sections use a 1.5rem inline gutter and a 6rem vertical rhythm; the contact section expands to 8rem to create a deliberate closing pause. The hero fills the viewport and centers its terminal window vertically beneath the fixed navigation.
+The primary reading column is centered and capped at 56rem, with a narrower 42rem measure for the contact close. Sections use a 1.5rem inline gutter and a 6rem vertical rhythm; the contact section expands to 8rem to create a deliberate closing pause. The hero centers its terminal window in the viewport beneath the fixed navigation, leaving room for the pinned status bar when visible.
 
 Desktop content uses simple grids only when comparison benefits: three columns for the About composition, twelve columns for featured project media and copy, four columns for skills, and two columns for secondary projects. Below the medium breakpoint, every major composition becomes a single reading flow; skills use two columns, and the footer trades its status-bar layout for a compact centered line. Navigation collapses into a menu below the large breakpoint, where its eight items no longer fit on one line.
 
@@ -273,7 +273,7 @@ Section commands sit directly on the canvas with no frame: a bracketed `[ kicker
 
 ### Status Footer
 
-On desktop, the footer reads as a compact editor status bar: a solid green mode segment, project path, year, and healthy-state indicator. Mobile reduces this to the project path and year so it does not compete with the content.
+At widths of 48rem and up, the homepage footer pins a 2.25rem editor status bar to the bottom of the viewport. It uses an opaque surface and a top hairline, with a solid green mode segment, project path, year, and healthy-state indicator. The mode segment uses the deeper Operational Green on light surfaces for readable text. Below 48rem, the compact project path and year appear at the end of the page.
 
 ## Do's and Don'ts
 
