@@ -6,6 +6,7 @@ import { GithubOAuth } from './admin/github-oauth'
 import { OwnerAuth } from './admin/owner-auth'
 import { OwnerGuard } from './admin/owner.guard'
 import { Sessions } from './admin/sessions'
+import { Database } from './database/database'
 import { GitHubActivity } from './contributions/github-activity'
 import { GitHubActivityController } from './contributions/github-activity.controller'
 import { HealthController } from './health.controller'
@@ -18,6 +19,7 @@ import { HealthController } from './health.controller'
     Sessions,
     OwnerAuth,
     GitHubActivity,
+    Database,
     { provide: APP_GUARD, useClass: OwnerGuard },
   ],
 })
