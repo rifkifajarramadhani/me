@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "arial",
+        "createdAt": "2026-11-21T06:39:21.716Z",
+        "reason": "Resume PDF intentionally uses ATS-safe system font Arial (pre-existing, print document outside site design system)"
+      }
+    ]
+  }
+}
