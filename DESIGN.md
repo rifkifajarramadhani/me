@@ -257,7 +257,18 @@ Components are utilitarian and exact: each one exposes its role through a border
 
 ### Terminal Window
 
-The signature container uses a strong outer hairline, a stepped title bar, three circular status lights, sequential command rows, a green caret, and a compact action row. It carries identity and role information without imitating a fully interactive shell.
+The signature container uses a strong outer hairline, a stepped title bar, three circular window controls, sequential command rows, a green caret, and a compact action row. At rest it carries identity and role information as a static transcript; the interactive shell is opt-in behind the maximize control and never replaces the evidence on the page.
+
+### Window Controls
+
+The title-bar lights are real buttons ("Close terminal", "Minimize terminal", "Maximize to interactive shell"). Each has a 24px hit area around a 0.62rem dot, shows its `×` `−` `+` glyph on hover or focus, and gets a circular green focus ring. Every action is a full cycle that returns the window to rest. Controls stay disabled until the cycle finishes, and focus returns to the control that started it.
+
+- **Close (Danger Red):** types `exit`, collapses the window like a CRT, prints a systemd-style restart log in ink with a green `✓ Started` line, then respawns it. This is a nod to services that heal themselves.
+- **Minimize (Warning Amber):** shrinks the window into a `▣ ~/portfolio` tab in the Status Footer and leaves a `[1]+ Stopped ~/portfolio` job with an outlined `$ fg` action in its place. Below 48rem, where there is no status bar, it shrinks into `fg` instead. Restoring from the footer scrolls the hero back into view first.
+- **Maximize (Operational Green):** grows the window into a modal `<dialog>` shell over a dimmed backdrop. Commands answer only from repository data (projects, experience, skills, links, resume). Tab completes, ↑/↓ recall history, Ctrl+L clears, and Esc, `exit`, or the shell's own red or green control returns to rest.
+- **Achievement:** close, minimize, then maximize within a minute shows a one-per-session "window manager" toast framed in green above the status bar.
+
+Screen-reader users hear each state change through a polite status region. Under reduced motion every transition is an immediate state change. The restart log still appears briefly so the joke survives without movement.
 
 ### Terminal Backdrop
 
@@ -273,7 +284,7 @@ Section commands sit directly on the canvas with no frame: a bracketed `[ kicker
 
 ### Status Footer
 
-At widths of 48rem and up, the homepage footer pins a 2.25rem editor status bar to the bottom of the viewport. It uses an opaque surface and a top hairline, with a solid green mode segment, project path, year, and healthy-state indicator. The mode segment uses the deeper Operational Green on light surfaces for readable text. Below 48rem, the compact project path and year appear at the end of the page.
+At widths of 48rem and up, the homepage footer pins a 2.25rem editor status bar to the bottom of the viewport. It uses an opaque surface and a top hairline, with a solid green mode segment, project path, year, and healthy-state indicator. While the hero terminal is minimized, a `▣ ~/portfolio` restore tab sits beside the mode segment and flashes green once as the window docks. The mode segment uses the deeper Operational Green on light surfaces for readable text. Below 48rem, the compact project path and year appear at the end of the page.
 
 ## Do's and Don'ts
 
@@ -291,7 +302,7 @@ At widths of 48rem and up, the homepage footer pins a 2.25rem editor status bar 
 - **Don't** spread green across large backgrounds or use it as general decoration; the low-alpha Data Streams backdrop is the only ambient green.
 - **Don't** add gradients, glass panels, or broad card shadows to create hierarchy.
 - **Don't** mix in a second display or body typeface.
-- **Don't** turn the terminal metaphor into fake shell complexity that obscures portfolio evidence.
+- **Don't** turn the terminal metaphor into fake shell complexity that obscures portfolio evidence. The maximize shell is an opt-in shortcut to the same facts, never a gate in front of them.
 
 ### Post Status
 
