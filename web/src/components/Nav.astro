@@ -3,14 +3,25 @@ import { createSitePublishing } from '@/lib/site-publishing'
 import { shortName } from '@/lib/site'
 import ThemeToggle from '@/components/ThemeToggle.astro'
 
+const publishing = createSitePublishing()
+const { assets } = publishing
+const home = publishing.publicPath()
+const pathname = Astro.url.pathname.replace(/\/?$/, '/')
+// Off the homepage, section anchors must point back to it.
+const section = (id: string) => (pathname === home ? `#${id}` : `${home}#${id}`)
+const blogPath = publishing.publicPath('blog/')
+const onBlog = publishing.hasBlog && pathname.startsWith(blogPath)
+
 const links = [
-  { href: '#about', label: 'about' },
-  { href: '#skills', label: 'skills' },
-  { href: '#experience', label: 'experience' },
-  { href: '#work', label: 'work' },
-  { href: '#contact', label: 'contact' },
+  { href: section('about'), label: 'about' },
+  { href: section('skills'), label: 'skills' },
+  { href: section('experience'), label: 'experience' },
+  { href: section('work'), label: 'work' },
+  ...(publishing.hasBlog
+    ? [{ href: blogPath, label: 'blog', current: onBlog }]
+    : []),
+  { href: section('contact'), label: 'contact' },
 ]
-const { assets } = createSitePublishing()
 ---
 
 <header
@@ -21,20 +32,21 @@ const { assets } = createSitePublishing()
 >
   <nav class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
     <a
-      href="#hero"
+      href={section('hero')}
       class="font-mono text-sm font-bold text-ink transition-colors hover:text-primary"
       aria-label="Home"
     >
       <span class="text-prompt">[</span>{shortName.toLowerCase()}<span class="text-prompt">]</span>
     </a>
 
-    <ul class="hidden items-center gap-6 md:flex">
+    <ul class="hidden items-center gap-6 lg:flex">
       {
         links.map((link) => (
           <li>
             <a
               href={link.href}
-              class="font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+              aria-current={link.current ? 'page' : undefined}
+              class="font-mono text-sm text-ink-subtle transition-colors hover:text-primary aria-[current=page]:text-primary"
             >
               <span class="text-prompt">~/</span>{link.label}
             </a>
@@ -56,7 +68,7 @@ const { assets } = createSitePublishing()
       </li>
     </ul>
 
-    <div class="flex items-center gap-4 md:hidden">
+    <div class="flex items-center gap-4 lg:hidden">
       <ThemeToggle />
       <button
         id="mobile-menu-toggle"
@@ -75,7 +87,7 @@ const { assets } = createSitePublishing()
 
   <ul
     id="mobile-menu"
-    class="hidden flex-col gap-1 border-t border-hairline bg-surface-1/95 px-6 py-4 backdrop-blur-lg md:hidden"
+    class="hidden flex-col gap-1 border-t border-hairline bg-surface-1/95 px-6 py-4 backdrop-blur-lg lg:hidden"
   >
     {
       links.map((link) => (
@@ -83,7 +95,8 @@ const { assets } = createSitePublishing()
           <a
             href={link.href}
             data-mobile-menu-link
-            class="block py-2 font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+            aria-current={link.current ? 'page' : undefined}
+            class="block py-2 font-mono text-sm text-ink-subtle transition-colors hover:text-primary aria-[current=page]:text-primary"
           >
             <span class="text-prompt">~/</span>{link.label}
           </a>
