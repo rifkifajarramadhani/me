@@ -112,18 +112,6 @@ components:
     typography: '{typography.body}'
     rounded: '{rounded.none}'
     padding: '{spacing.panel-comfortable}'
-  skill-tab:
-    backgroundColor: 'transparent'
-    textColor: '{colors.steel}'
-    typography: '{typography.body}'
-    rounded: '{rounded.none}'
-    padding: '{spacing.control-xs} {spacing.control-sm}'
-  skill-tab-active:
-    backgroundColor: 'transparent'
-    textColor: '{colors.operational-green}'
-    typography: '{typography.body}'
-    rounded: '{rounded.none}'
-    padding: '{spacing.control-xs} {spacing.control-sm}'
 ---
 
 # Design System: Rifki Fajar Ramadhani Portfolio
@@ -150,7 +138,7 @@ The palette pairs Carbon and Paper neutrals across light and dark modes, using O
 
 ### Primary
 
-- **Operational Green:** Used for command output, active tabs, interactive hover and focus states, the blinking caret, and healthy system status. The brighter pair serves dark surfaces; the deeper pair maintains contrast on Paper.
+- **Operational Green:** Used for command output, interactive hover and focus states, the blinking caret, and healthy system status. The brighter pair serves dark surfaces; the deeper pair maintains contrast on Paper.
 - **Operational Green Ink:** Used only where text sits on a solid bright-green status surface.
 
 ### Neutral
@@ -218,7 +206,7 @@ The system is flat by default. Panels gain structure through one-pixel hairlines
 
 ## Shapes
 
-The dominant form is rectangular and square-cornered. Panels, terminal windows, buttons, tabs, image frames, scrollbars, and navigation actions use zero radius. Borders are one-pixel hairlines, with the stronger neutral reserved for primary frames and outlined actions.
+The dominant form is rectangular and square-cornered. Panels, terminal windows, buttons, image frames, scrollbars, and navigation actions use zero radius. Borders are one-pixel hairlines, with the stronger neutral reserved for primary frames and outlined actions.
 
 Circles are semantic exceptions, not a competing shape language: they represent terminal controls and operational status. Content imagery is clipped to square frames even when its internal aspect ratio is cinematic.
 
@@ -235,11 +223,10 @@ Components are utilitarian and exact: each one exposes its role through a border
 - **Hover / Focus:** Border and text shift to the theme-appropriate Operational Green; focus remains visibly equivalent for keyboard users.
 - **Text / Ghost Action:** Bracket links omit the border and change only their text signal.
 
-### Tabs
+### Directory Listing
 
-- **Style:** Compact text controls with a two-pixel bottom rule and no container fill.
-- **State:** The selected tab turns Operational Green and gains `[_` / `_]` command markers; inactive tabs remain secondary ink.
-- **Behavior:** Arrow keys, Home, and End move focus and selection; panel transitions collapse to an immediate change under reduced motion.
+- **Style:** Skill groups read as subdirectories of the `ls skills/` command: a bold lowercase `name/` label with a green slash, a one-pixel hairline filling the row, and a secondary-ink item count.
+- **Behavior:** Every group is visible at once and reveals on scroll; nothing is hidden behind a control.
 
 ### Cards / Containers
 

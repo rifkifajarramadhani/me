@@ -358,7 +358,7 @@
       {
         "name": "duration-state",
         "value": "300ms",
-        "purpose": "Hover opacity and tab-panel state changes."
+        "purpose": "Hover opacity and state changes."
       },
       {
         "name": "duration-tagline",
@@ -419,14 +419,6 @@
       "description": "Flat tonal container for project evidence, experience entries, and skill tiles.",
       "html": "<article class=\"ds-panel\"><small><span>[+]</span> project</small><h3>Production work</h3><p>Evidence-led description of shipped engineering work.</p></article>",
       "css": ".ds-panel{border:1px solid var(--hairline);border-radius:0;background:var(--surface-1);padding:20px;color:var(--ink-muted);font:400 14px/1.7 'JetBrains Mono',ui-monospace,monospace;transition:border-color 150ms}.ds-panel small{color:var(--ink-tertiary)}.ds-panel small span{color:var(--prompt)}.ds-panel h3{margin:12px 0 8px;color:var(--ink);font-size:16px}.ds-panel p{margin:0}.ds-panel:hover,.ds-panel:focus-within{border-color:var(--primary)}"
-    },
-    {
-      "name": "Skill Tabs",
-      "kind": "button",
-      "refersTo": "skill-tab",
-      "description": "Keyboard-operable category switcher with command markers on the active state.",
-      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button class=\"ds-tab ds-tab-active\" role=\"tab\" aria-selected=\"true\">frontend</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">backend</button></div>",
-      "css": ".ds-tabs{display:flex;gap:8px;font:400 14px/1.5 'JetBrains Mono',ui-monospace,monospace}.ds-tab{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;padding:4px 8px;color:var(--ink-subtle);transition:border-color 150ms,color 150ms}.ds-tab:hover,.ds-tab:focus-visible{color:var(--ink);outline:none}.ds-tab:focus-visible{box-shadow:0 2px 0 var(--primary)}.ds-tab-active{border-color:var(--primary);color:var(--primary)}.ds-tab-active::before{content:'[_'}.ds-tab-active::after{content:'_]'}"
     },
     {
       "name": "Command Navigation",
