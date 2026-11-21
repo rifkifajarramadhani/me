@@ -59,7 +59,7 @@ const windowControls = [
         </div>
 
         <div class="p-6 sm:p-8">
-          <div class="hero-transcript">
+          <div class="hero-transcript" data-hero-transcript>
             <div class="hero-line">
               <p class="hero-command" aria-hidden="true">
                 <span class="text-prompt">$</span>
@@ -133,6 +133,13 @@ const windowControls = [
           </div>
         </div>
       </div>
+      <div
+        class="hero-restart-log"
+        data-hero-restart-log
+        aria-hidden="true"
+        hidden
+      ></div>
+      <p class="sr-only" role="status" data-hero-status></p>
     </div>
   </div>
 
@@ -172,6 +179,25 @@ const windowControls = [
 
   .hero-enter {
     animation: hero-enter 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-restart-log {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+    padding: 1.5rem 0.25rem;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-restart-log[hidden] {
+    display: none;
   }
 
   .hero-controls {

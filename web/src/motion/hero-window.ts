@@ -9,17 +9,39 @@ export interface HeroWindow {
   readonly controls: Readonly<Record<WindowAction, HTMLButtonElement>>
   reducedMotion(): boolean
   setState(next: WindowState): void
+  /** Sends a message to the polite screen-reader status region. */
+  announce(message: string): void
 }
 
 /**
  * Runs one action's whole cycle, such as minimize through restore. The window
  * stays `busy` (or whatever the handler sets) until the promise settles, then
- * returns to `open`.
+ * returns to `open` and focuses the returned element, or the action's button.
  */
-export type WindowActionHandler = (win: HeroWindow) => Promise<void>
+export type WindowActionHandler = (
+  win: HeroWindow,
+) => Promise<HTMLElement | void>
 
 const ACTIONS: readonly WindowAction[] = ['close', 'minimize', 'maximize']
 const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+export const wait = (ms: number) =>
+  new Promise<void>((resolve) => window.setTimeout(resolve, ms))
+
+/** Plays a Web Animation and resolves once it finishes or is cancelled. */
+export async function play(
+  element: Element,
+  keyframes: Keyframe[],
+  options: KeyframeAnimationOptions,
+) {
+  const animation = element.animate(keyframes, options)
+  try {
+    await animation.finished
+  } catch {
+    // A cancelled animation rejects; the caller has already moved on.
+  }
+  return animation
+}
 
 export function mountHeroWindow(
   root: HTMLElement,
@@ -32,6 +54,7 @@ export function mountHeroWindow(
   if (!terminal || buttons.some((button) => !button)) return
 
   const [close, minimize, maximize] = buttons as HTMLButtonElement[]
+  const status = root.querySelector<HTMLElement>('[data-hero-status]')
   let state: WindowState = 'open'
   const setState = (next: WindowState) => {
     state = next
@@ -47,6 +70,14 @@ export function mountHeroWindow(
     controls: { close, minimize, maximize },
     reducedMotion: () => reducedMotionQuery.matches,
     setState,
+    announce: (message) => {
+      if (!status) return
+      // Clearing first makes repeated messages announce again.
+      status.textContent = ''
+      window.requestAnimationFrame(() => {
+        status.textContent = message
+      })
+    },
   }
   setState('open')
 
@@ -56,10 +87,12 @@ export function mountHeroWindow(
       if (state !== 'open' || !handler) return
 
       setState('busy')
+      let focusTarget: HTMLElement | void = undefined
       try {
-        await handler(win)
+        focusTarget = await handler(win)
       } finally {
         setState('open')
+        ;(focusTarget ?? win.controls[action]).focus({ preventScroll: true })
       }
     })
   }
