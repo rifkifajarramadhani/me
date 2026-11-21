@@ -1,0 +1,202 @@
+---
+import {
+  ArrowLeft,
+  Bold,
+  Code,
+  Heading2,
+  Heading3,
+  Heading4,
+  Italic,
+  Link,
+  List,
+  ListOrdered,
+  Minus,
+  Quote,
+  Redo2,
+  SquareCode,
+  Strikethrough,
+  Underline,
+  Undo2,
+} from 'lucide-react'
+import AdminIcon from '../AdminIcon.astro'
+import AdminWorkspace from '../AdminWorkspace.astro'
+import stylesheet from './posts.css?url'
+
+const toolbarGroups = [
+  [
+    { action: 'bold', label: 'Bold', keys: 'Ctrl+B', icon: Bold },
+    { action: 'italic', label: 'Italic', keys: 'Ctrl+I', icon: Italic },
+    { action: 'underline', label: 'Underline', keys: 'Ctrl+U', icon: Underline },
+    { action: 'strike', label: 'Strikethrough', keys: 'Ctrl+Shift+S', icon: Strikethrough },
+    { action: 'code', label: 'Inline code', keys: 'Ctrl+E', icon: Code },
+  ],
+  [
+    { action: 'heading2', label: 'Heading 2', keys: 'Ctrl+Alt+2', icon: Heading2 },
+    { action: 'heading3', label: 'Heading 3', keys: 'Ctrl+Alt+3', icon: Heading3 },
+    { action: 'heading4', label: 'Heading 4', keys: 'Ctrl+Alt+4', icon: Heading4 },
+  ],
+  [
+    { action: 'bulletList', label: 'Bulleted list', keys: 'Ctrl+Shift+8', icon: List },
+    { action: 'orderedList', label: 'Numbered list', keys: 'Ctrl+Shift+7', icon: ListOrdered },
+    { action: 'blockquote', label: 'Quote', keys: 'Ctrl+Shift+B', icon: Quote },
+    { action: 'codeBlock', label: 'Code block', keys: 'Ctrl+Alt+C', icon: SquareCode },
+  ],
+  [
+    { action: 'link', label: 'Link', keys: 'Ctrl+K', icon: Link },
+    { action: 'horizontalRule', label: 'Divider', keys: '', icon: Minus },
+  ],
+  [
+    { action: 'undo', label: 'Undo', keys: 'Ctrl+Z', icon: Undo2 },
+    { action: 'redo', label: 'Redo', keys: 'Ctrl+Shift+Z', icon: Redo2 },
+  ],
+]
+---
+
+<AdminWorkspace
+  title="New post"
+  documentTitle="Post editor · Portfolio admin"
+  path="~/portfolio/admin/posts/edit"
+  stylesheet={stylesheet}
+  wide
+>
+  <Fragment slot="head">
+    <script>
+      import './post-editor'
+    </script>
+  </Fragment>
+  <a slot="actions" class="admin-secondary-action" href="/admin/posts/">
+    <AdminIcon icon={ArrowLeft} size={16} />
+    All posts
+  </a>
+
+  <p id="editor-loading" role="status">Loading post…</p>
+  <div id="editor-load-error" hidden>
+    <p id="editor-load-message" role="alert">Could not load this post.</p>
+    <button id="editor-retry" type="button">Try again</button>
+  </div>
+
+  <form id="post-form" class="post-editor" novalidate hidden>
+    <div class="post-editor-main">
+      <label class="visually-hidden" for="post-title">Title</label>
+      <input
+        id="post-title"
+        class="post-title-input"
+        name="title"
+        maxlength="200"
+        placeholder="Post title"
+        autocomplete="off"
+        required
+      />
+
+      <div class="post-field">
+        <label for="post-slug">Slug</label>
+        <div class="post-slug-input">
+          <span aria-hidden="true">~/blog/</span>
+          <input
+            id="post-slug"
+            name="slug"
+            maxlength="80"
+            autocomplete="off"
+            spellcheck="false"
+            aria-describedby="post-slug-hint"
+          />
+        </div>
+        <p id="post-slug-hint" class="post-hint">
+          Lowercase letters, numbers, and hyphens. Fills in from the title.
+        </p>
+      </div>
+
+      <div class="post-field">
+        <label for="post-excerpt">
+          Excerpt <span class="post-optional">(optional)</span>
+        </label>
+        <textarea
+          id="post-excerpt"
+          name="excerpt"
+          rows="2"
+          maxlength="300"
+          aria-describedby="post-excerpt-hint"></textarea>
+        <p id="post-excerpt-hint" class="post-hint">
+          Shown on the blog list and in search results. Leave it empty to use the
+          opening lines.
+        </p>
+      </div>
+
+      <div class="post-field">
+        <span id="post-content-label" class="post-label">Content</span>
+        <div class="post-content-frame">
+          <div
+            id="post-toolbar"
+            class="post-toolbar"
+            role="toolbar"
+            aria-label="Formatting"
+            aria-controls="post-content"
+          >
+            {
+              toolbarGroups.map((group) => (
+                <div class="post-toolbar-group">
+                  {group.map(({ action, label, keys, icon }) => (
+                    <button
+                      type="button"
+                      class="post-tool"
+                      data-action={action}
+                      aria-label={label}
+                      title={keys ? `${label} (${keys})` : label}
+                    >
+                      <AdminIcon icon={icon} size={16} />
+                    </button>
+                  ))}
+                </div>
+              ))
+            }
+          </div>
+          <div id="post-content" class="post-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="post-panel" aria-labelledby="post-panel-title">
+      <h2 id="post-panel-title">Status</h2>
+      <span id="post-status-badge" class="post-status" data-status="draft">
+        Draft
+      </span>
+      <p id="post-status-detail" class="post-hint">Only you can see drafts.</p>
+      <button id="post-save" class="post-save" type="submit">Save draft</button>
+      <p id="post-form-error" class="post-error" role="alert" hidden></p>
+      <div id="post-status-actions" class="post-status-actions"></div>
+    </aside>
+
+    <div class="post-statusline" aria-label="Post status line">
+      <span id="statusline-mode" class="post-statusline-mode" data-status="draft">
+        Draft
+      </span>
+      <span id="statusline-path" class="post-statusline-path">~/blog/</span>
+      <span id="statusline-count">0 words · 1 min read</span>
+      <span id="statusline-save" class="post-statusline-save" role="status">
+        Not saved yet
+      </span>
+    </div>
+  </form>
+
+  <dialog id="link-dialog" class="post-dialog" aria-labelledby="link-title">
+    <form method="dialog" novalidate>
+      <h2 id="link-title">Link</h2>
+      <label for="link-href">Link address</label>
+      <input
+        id="link-href"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="https://"
+        aria-describedby="link-error"
+      />
+      <p id="link-error" class="post-error" hidden>
+        Use an address that starts with https://, http://, mailto:, / or #.
+      </p>
+      <div class="post-dialog-actions">
+        <button type="submit">Apply link</button>
+        <button id="link-remove" type="button">Remove link</button>
+        <button id="link-cancel" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+</AdminWorkspace>

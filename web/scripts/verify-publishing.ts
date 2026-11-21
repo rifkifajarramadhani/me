@@ -118,6 +118,7 @@ async function verifyAdmin(outDir: string, profile: PublishingProfileName) {
     ['admin/index.html', 'Portfolio admin', '/admin/session'],
     ['admin/login/index.html', 'Admin sign-in', 'sign-in-error'],
     ['admin/posts/index.html', 'Posts · Portfolio admin', '/admin/api/posts'],
+    ['admin/posts/edit/index.html', 'Post editor · Portfolio admin', 'ProseMirror'],
   ]) {
     const html = await readRequired(join(outDir, file))
     assertIncludes(html, `<title>${title}</title>`, file)

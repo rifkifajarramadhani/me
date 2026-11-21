@@ -1,0 +1,126 @@
+/*
+ * Long-form post typography, shared by the admin editor and public articles so
+ * the editor shows exactly what readers get. Uses tokens from tokens.css.
+ * Headings carry their Markdown level as a quiet prompt, keeping the
+ * Command Leads rule inside the article itself.
+ */
+.prose-post {
+  max-width: 68ch;
+  color: var(--ink-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+  overflow-wrap: break-word;
+}
+.prose-post > :first-child {
+  margin-top: 0;
+}
+.prose-post > :last-child {
+  margin-bottom: 0;
+}
+.prose-post p {
+  margin: 0 0 1.25em;
+  color: inherit;
+}
+.prose-post h2,
+.prose-post h3,
+.prose-post h4 {
+  margin: 2.25em 0 0.75em;
+  color: var(--ink);
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+.prose-post h2 {
+  font-size: 1.375rem;
+  font-weight: 700;
+}
+.prose-post h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.prose-post h4 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.prose-post h2::before,
+.prose-post h3::before,
+.prose-post h4::before {
+  color: var(--prompt);
+  font-weight: 400;
+}
+.prose-post h2::before {
+  content: '## ';
+}
+.prose-post h3::before {
+  content: '### ';
+}
+.prose-post h4::before {
+  content: '#### ';
+}
+.prose-post strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.prose-post a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--hairline-strong);
+  text-underline-offset: 0.2em;
+}
+.prose-post a:hover {
+  color: var(--primary);
+  text-decoration-color: currentColor;
+}
+.prose-post ul,
+.prose-post ol {
+  margin: 0 0 1.25em;
+  padding-left: 1.75em;
+}
+.prose-post li {
+  margin: 0.25em 0;
+}
+.prose-post li > p {
+  margin: 0;
+}
+.prose-post li::marker {
+  color: var(--prompt);
+}
+.prose-post ul > li::marker {
+  content: '- ';
+}
+.prose-post blockquote {
+  margin: 1.75em 0;
+  padding: 0.25em 0 0.25em 1.25em;
+  border-left: 2px solid var(--hairline-strong);
+  color: var(--ink-subtle);
+}
+.prose-post blockquote > :last-child {
+  margin-bottom: 0;
+}
+.prose-post code {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 0.875em;
+}
+.prose-post pre {
+  margin: 1.75em 0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  border: 1px solid var(--hairline);
+  background: var(--surface-1);
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+.prose-post pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: inherit;
+}
+.prose-post hr {
+  margin: 2.5em 0;
+  border: 0;
+  border-top: 1px solid var(--hairline);
+}
