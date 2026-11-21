@@ -28,6 +28,7 @@ import SiteFooter from '@/components/SiteFooter.astro'
 
 <script>
   import { mountDataStreams } from '@/motion/data-streams'
+  import { mountHeroWindow } from '@/motion/hero-window'
   import { mountTaglineRotator } from '@/motion/tagline-rotator'
   import { mountTerminalBackdrop } from '@/motion/terminal-backdrop'
 
@@ -40,4 +41,7 @@ import SiteFooter from '@/components/SiteFooter.astro'
 
   const rotator = document.querySelector<HTMLElement>('#tagline-rotator')
   if (rotator) mountTaglineRotator(rotator)
+
+  const heroWindow = document.querySelector<HTMLElement>('[data-hero-window]')
+  if (heroWindow) mountHeroWindow(heroWindow, {})
 </script>

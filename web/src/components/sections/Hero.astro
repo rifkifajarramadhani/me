@@ -22,93 +22,114 @@ const socials = [
     external: true,
   },
 ]
+const windowControls = [
+  { action: 'close', label: 'Close terminal', glyph: '×', tone: 'bg-danger' },
+  { action: 'minimize', label: 'Minimize terminal', glyph: '−', tone: 'bg-warning' },
+  {
+    action: 'maximize',
+    label: 'Maximize to interactive shell',
+    glyph: '+',
+    tone: 'bg-success',
+  },
+]
 ---
 
 <section id="hero" class="hero-section relative">
   <div class="hero-content relative z-10 mx-auto flex min-h-screen max-w-4xl flex-col justify-center px-5 pt-24 pb-24 sm:px-6 sm:pt-28 sm:pb-28">
-    <div class="terminal-window hero-enter">
-      <div class="terminal-titlebar">
-        <div class="flex items-center gap-1.5" aria-hidden="true">
-          <span class="size-[0.62rem] rounded-full bg-danger"></span>
-          <span class="size-[0.62rem] rounded-full bg-warning"></span>
-          <span class="size-[0.62rem] rounded-full bg-success"></span>
-        </div>
-        <span class="font-mono text-xs text-ink-subtle" aria-hidden="true">
-          ~/portfolio
-        </span>
-      </div>
-
-      <div class="p-6 sm:p-8">
-        <div class="hero-transcript">
-          <div class="hero-line">
-            <p class="hero-command" aria-hidden="true">
-              <span class="text-prompt">$</span>
-              <span class="text-ink-subtle">whoami</span>
-            </p>
-            <h1 class="font-mono text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink">
-              {name}
-            </h1>
-          </div>
-
-          <div class="hero-line">
-            <p class="hero-command" aria-hidden="true">
-              <span class="text-prompt">$</span>
-              <span class="text-ink-subtle">cat role.txt</span>
-            </p>
-            <p class="font-mono text-sm leading-relaxed text-ink sm:text-base">
-              <span class="sr-only">Role: </span>
-              {jobTitle}
-            </p>
-          </div>
-
-          <div
-            id="tagline-rotator"
-            class="hero-line"
-            data-taglines={JSON.stringify(taglines)}
-          >
-            <p class="hero-command" aria-hidden="true">
-              <span class="text-prompt">$</span>
-              <span class="text-ink-subtle">echo</span>
-            </p>
-            <p class="flex min-w-0 items-baseline font-mono text-sm leading-relaxed sm:text-base">
-              <span data-tagline class="tagline text-primary">
-                &quot;{taglines[0]}&quot;
-              </span>
-              <span
-                class="ml-[0.55ch] inline-block h-[1.05em] w-[0.55ch] shrink-0 translate-y-[0.12em] animate-command-caret bg-primary motion-reduce:animate-none"
-                aria-hidden="true"
-              ></span>
-            </p>
-          </div>
-        </div>
-
-        <p class="mt-6 max-w-[68ch] font-mono text-sm leading-[1.75] text-ink-muted sm:text-[0.9375rem]">
-          Full-stack software engineer based in Indonesia, building web
-          applications since 2018 with TypeScript, Golang, PHP, React, Vue, and
-          Tailwind CSS.
-        </p>
-
-        <div class="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-          <a
-            href="#work"
-            class="hero-primary-action inline-flex min-h-11 items-center border border-hairline-strong px-4 py-2 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
-          >
-            <span class="text-prompt">[</span> view work{' '}
-            <span class="text-prompt">]</span>
-          </a>
-          <div class="flex flex-wrap items-center gap-x-1 gap-y-1 sm:gap-x-2">
-            {socials.map(({ href, label, accessibleLabel, external }) => (
-              <a
-                href={href}
-                target={external ? '_blank' : undefined}
-                rel={external ? 'noopener noreferrer' : undefined}
-                aria-label={accessibleLabel}
-                class="hero-secondary-action inline-flex min-h-11 items-center px-1 font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+    <div class="hero-stage relative" data-hero-window>
+      <div class="terminal-window hero-enter" data-hero-terminal>
+        <div class="terminal-titlebar">
+          <div class="hero-controls" role="group" aria-label="Terminal window controls">
+            {windowControls.map(({ action, label, glyph, tone }) => (
+              <button
+                type="button"
+                class="hero-control"
+                data-window-action={action}
+                aria-label={label}
               >
-                <span class="text-prompt">[</span> {label}{' '}
-                <span class="text-prompt">]</span>
-              </a>
+                <span class:list={['hero-control-dot', tone]} aria-hidden="true">
+                  <span class="hero-control-glyph">{glyph}</span>
+                </span>
+              </button>
             ))}
+          </div>
+          <span class="font-mono text-xs text-ink-subtle" aria-hidden="true">
+            ~/portfolio
+          </span>
+        </div>
+
+        <div class="p-6 sm:p-8">
+          <div class="hero-transcript">
+            <div class="hero-line">
+              <p class="hero-command" aria-hidden="true">
+                <span class="text-prompt">$</span>
+                <span class="text-ink-subtle">whoami</span>
+              </p>
+              <h1 class="font-mono text-2xl font-semibold leading-tight tracking-[-0.02em] text-ink">
+                {name}
+              </h1>
+            </div>
+
+            <div class="hero-line">
+              <p class="hero-command" aria-hidden="true">
+                <span class="text-prompt">$</span>
+                <span class="text-ink-subtle">cat role.txt</span>
+              </p>
+              <p class="font-mono text-sm leading-relaxed text-ink sm:text-base">
+                <span class="sr-only">Role: </span>
+                {jobTitle}
+              </p>
+            </div>
+
+            <div
+              id="tagline-rotator"
+              class="hero-line"
+              data-taglines={JSON.stringify(taglines)}
+            >
+              <p class="hero-command" aria-hidden="true">
+                <span class="text-prompt">$</span>
+                <span class="text-ink-subtle">echo</span>
+              </p>
+              <p class="flex min-w-0 items-baseline font-mono text-sm leading-relaxed sm:text-base">
+                <span data-tagline class="tagline text-primary">
+                  &quot;{taglines[0]}&quot;
+                </span>
+                <span
+                  class="ml-[0.55ch] inline-block h-[1.05em] w-[0.55ch] shrink-0 translate-y-[0.12em] animate-command-caret bg-primary motion-reduce:animate-none"
+                  aria-hidden="true"
+                ></span>
+              </p>
+            </div>
+          </div>
+
+          <p class="mt-6 max-w-[68ch] font-mono text-sm leading-[1.75] text-ink-muted sm:text-[0.9375rem]">
+            Full-stack software engineer based in Indonesia, building web
+            applications since 2018 with TypeScript, Golang, PHP, React, Vue, and
+            Tailwind CSS.
+          </p>
+
+          <div class="mt-7 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+            <a
+              href="#work"
+              class="hero-primary-action inline-flex min-h-11 items-center border border-hairline-strong px-4 py-2 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
+            >
+              <span class="text-prompt">[</span> view work{' '}
+              <span class="text-prompt">]</span>
+            </a>
+            <div class="flex flex-wrap items-center gap-x-1 gap-y-1 sm:gap-x-2">
+              {socials.map(({ href, label, accessibleLabel, external }) => (
+                <a
+                  href={href}
+                  target={external ? '_blank' : undefined}
+                  rel={external ? 'noopener noreferrer' : undefined}
+                  aria-label={accessibleLabel}
+                  class="hero-secondary-action inline-flex min-h-11 items-center px-1 font-mono text-sm text-ink-subtle transition-colors hover:text-primary"
+                >
+                  <span class="text-prompt">[</span> {label}{' '}
+                  <span class="text-prompt">]</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -151,6 +172,71 @@ const socials = [
 
   .hero-enter {
     animation: hero-enter 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-controls {
+    display: flex;
+    align-items: center;
+    margin-block: -0.3rem;
+    margin-inline-start: -0.4rem;
+  }
+
+  /* 24px targets keep WCAG 2.5.8 spacing while the dots stay 0.62rem. */
+  .hero-control {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+  }
+
+  .hero-control:disabled {
+    cursor: default;
+  }
+
+  .hero-control-dot {
+    display: grid;
+    place-items: center;
+    width: 0.62rem;
+    height: 0.62rem;
+    border-radius: 9999px;
+    transition:
+      transform 160ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 160ms ease;
+  }
+
+  .hero-control-glyph {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    line-height: 1;
+    color: rgb(0 0 0 / 0.6);
+    opacity: 0;
+    transition: opacity 120ms ease;
+  }
+
+  .hero-controls:hover .hero-control-glyph,
+  .hero-control:focus-visible .hero-control-glyph {
+    opacity: 1;
+  }
+
+  .hero-control:hover .hero-control-dot {
+    transform: scale(1.15);
+  }
+
+  .hero-control:active .hero-control-dot {
+    filter: brightness(0.85);
+  }
+
+  .hero-control:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+    border-radius: 9999px;
+  }
+
+  .hero-control:disabled .hero-control-dot {
+    filter: saturate(0.4);
+    transform: none;
   }
 
   .tagline {
