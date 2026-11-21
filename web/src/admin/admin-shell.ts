@@ -1,15 +1,26 @@
+/**
+ * Behaviour shared by every signed-in admin page: the sidebar and mobile
+ * drawer, the session check, and sign-out. A page marks its own content with
+ * `data-admin-content`; the shell reveals it once the owner is verified.
+ */
 const signInUrl = '/admin/login/'
 
+export function byId<T extends HTMLElement = HTMLElement>(id: string) {
+  const element = document.getElementById(id)
+  if (!element) throw new Error(`Missing #${id}`)
+  return element as T
+}
+
 function mountNavigation() {
-  const ownerLogin = document.getElementById('owner-login')
-  const ownerAvatar = document.getElementById('owner-avatar')
-  const sidebar = document.getElementById('admin-sidebar')
-  const desktopNavigation = document.getElementById('desktop-navigation')
-  const drawer = document.getElementById('mobile-navigation')
-  const openNavigation = document.getElementById('open-navigation')
-  const closeNavigation = document.getElementById('close-navigation')
-  const profile = document.getElementById('admin-profile')
-  const profileTrigger = profile.querySelector('summary')
+  const ownerLogin = byId('owner-login')
+  const ownerAvatar = byId('owner-avatar')
+  const sidebar = byId('admin-sidebar')
+  const desktopNavigation = byId('desktop-navigation')
+  const drawer = byId<HTMLDialogElement>('mobile-navigation')
+  const openNavigation = byId<HTMLButtonElement>('open-navigation')
+  const closeNavigation = byId<HTMLButtonElement>('close-navigation')
+  const profile = byId<HTMLDetailsElement>('admin-profile')
+  const profileTrigger = profile.querySelector('summary')!
   const desktop = matchMedia('(min-width: 48rem)')
 
   function closeDrawer() {
@@ -36,12 +47,14 @@ function mountNavigation() {
     profile.open = false
     if (desktop.matches && drawer.open) {
       closeDrawer()
-      sidebar.querySelector('[aria-current="page"]').focus()
+      sidebar.querySelector<HTMLElement>('[aria-current="page"]')?.focus()
     }
   })
 
   document.addEventListener('click', (event) => {
-    if (profile.open && !profile.contains(event.target)) profile.open = false
+    if (profile.open && !profile.contains(event.target as Node)) {
+      profile.open = false
+    }
   })
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && profile.open) {
@@ -52,7 +65,7 @@ function mountNavigation() {
   })
 
   return {
-    setOwner(login) {
+    setOwner(login: string) {
       sidebar.hidden = !login
       openNavigation.hidden = !login
       ownerLogin.textContent = login ? `@${login}` : ''
@@ -70,25 +83,32 @@ function mountNavigation() {
   }
 }
 
-function mountSession(navigation) {
-  const checking = document.getElementById('checking-session')
-  const unavailable = document.getElementById('session-unavailable')
-  const retry = document.getElementById('retry-session')
-  const ownerPanel = document.getElementById('owner-panel')
-  const signOut = document.getElementById('sign-out')
-  const signOutError = document.getElementById('sign-out-error')
-  const signOutButton = signOut.querySelector('button')
-  const signOutLabel = document.getElementById('sign-out-label')
+export interface AdminShellOptions {
+  /** Runs each time the owner's session is verified. */
+  onReady?: (login: string) => void | Promise<void>
+}
 
-  function show(panel, login = '') {
+export function mountAdminShell({ onReady }: AdminShellOptions = {}) {
+  const navigation = mountNavigation()
+  const checking = byId('checking-session')
+  const unavailable = byId('session-unavailable')
+  const retry = byId<HTMLButtonElement>('retry-session')
+  const content = document.querySelector<HTMLElement>('[data-admin-content]')
+  const signOut = byId<HTMLFormElement>('sign-out')
+  const signOutError = byId('sign-out-error')
+  const signOutButton = signOut.querySelector('button')!
+  const signOutLabel = byId('sign-out-label')
+
+  function show(panel: HTMLElement | null, login = '') {
     checking.hidden = panel !== checking
     unavailable.hidden = panel !== unavailable
-    ownerPanel.hidden = panel !== ownerPanel
+    if (content) content.hidden = panel !== content
     navigation.setOwner(login)
   }
 
   async function checkSession() {
     show(checking)
+    let login: unknown
     try {
       const response = await fetch('/admin/session', {
         cache: 'no-store',
@@ -99,13 +119,16 @@ function mountSession(navigation) {
         return
       }
       if (!response.ok) throw new Error('Session lookup failed')
-      const { login } = await response.json()
-      if (typeof login !== 'string' || !login)
+      ;({ login } = await response.json())
+      if (typeof login !== 'string' || !login) {
         throw new Error('Invalid session')
-      show(ownerPanel, login)
+      }
     } catch {
       show(unavailable)
+      return
     }
+    show(content, login)
+    await onReady?.(login)
   }
 
   retry.addEventListener('click', checkSession)
@@ -143,4 +166,19 @@ function mountSession(navigation) {
   void checkSession()
 }
 
-mountSession(mountNavigation())
+/** Sends an owner API request. 401 means the session ended: go to sign-in. */
+export async function adminFetch(path: string, init: RequestInit = {}) {
+  const response = await fetch(path, {
+    cache: 'no-store',
+    signal: AbortSignal.timeout(10_000),
+    ...init,
+    headers: init.body
+      ? { 'Content-Type': 'application/json', ...init.headers }
+      : init.headers,
+  })
+  if (response.status === 401) {
+    location.replace(signInUrl)
+    throw new Error('Signed out')
+  }
+  return response
+}

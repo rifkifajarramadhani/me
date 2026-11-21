@@ -3,10 +3,14 @@ import { Menu, ShieldCheck } from 'lucide-react'
 import AdminIcon from './AdminIcon.astro'
 import AdminLayout from './AdminLayout.astro'
 import AdminSidebar from './AdminSidebar.astro'
-import scriptUrl from './dashboard.js?url&no-inline'
 ---
 
-<AdminLayout title="Portfolio admin" scriptUrl={scriptUrl}>
+<AdminLayout title="Portfolio admin">
+  <Fragment slot="head">
+    <script>
+      import './dashboard'
+    </script>
+  </Fragment>
   <Fragment slot="workspace">
     <header class="admin-topbar">
       <button
@@ -48,6 +52,7 @@ import scriptUrl from './dashboard.js?url&no-inline'
       <section
         id="owner-panel"
         class="admin-session"
+        data-admin-content
         aria-labelledby="session-title"
         hidden
       >

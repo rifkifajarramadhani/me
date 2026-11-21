@@ -5,6 +5,20 @@ import { createSitePublishing } from './src/lib/site-publishing'
 
 const publishing = createSitePublishing()
 
+const adminRoutes = [
+  { pattern: '/admin', entrypoint: './src/admin/Admin.astro' },
+  { pattern: '/admin/login', entrypoint: './src/admin/Login.astro' },
+]
+
+// The admin CSP allows only same-origin script files, so Astro must never
+// inline an admin page's script. Other scripts keep Vite's default limit.
+const adminScript = new RegExp(
+  `^_astro/(?:${adminRoutes
+    .map(({ entrypoint }) => entrypoint.match(/(\w+)\.astro$/)[1])
+    .join('|')})\\.astro_astro_type_script_`,
+)
+const assetsInlineLimit = (path) => (adminScript.test(path) ? false : undefined)
+
 const cms = {
   name: 'cms-admin',
   hooks: {
@@ -12,14 +26,7 @@ const cms = {
       // Astro checks trailing slashes before Vite can proxy the API paths.
       if (command === 'dev') updateConfig({ trailingSlash: 'ignore' })
 
-      injectRoute({
-        pattern: '/admin',
-        entrypoint: './src/admin/Admin.astro',
-      })
-      injectRoute({
-        pattern: '/admin/login',
-        entrypoint: './src/admin/Login.astro',
-      })
+      adminRoutes.forEach((route) => injectRoute(route))
     },
   },
 }
@@ -35,6 +42,7 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    build: { assetsInlineLimit },
     server: {
       proxy:
         publishing.profile === 'apex'

@@ -1,9 +1,13 @@
 ---
 import AdminLayout from './AdminLayout.astro'
-import scriptUrl from './login.js?url&no-inline'
 ---
 
-<AdminLayout title="Admin sign-in" scriptUrl={scriptUrl}>
+<AdminLayout title="Admin sign-in">
+  <Fragment slot="head">
+    <script>
+      import './login.js'
+    </script>
+  </Fragment>
   <p id="sign-in-error" role="alert" hidden></p>
   <p>Sign in with the portfolio owner’s GitHub account.</p>
   <a href="/admin/auth/github">Sign in with GitHub</a>
