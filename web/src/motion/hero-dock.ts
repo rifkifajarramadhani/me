@@ -1,16 +1,7 @@
-import { play, wait, type WindowActionHandler } from './hero-window'
+import { mapRect, play, wait, type WindowActionHandler } from './hero-window'
 
 const DOCK_EASE = 'cubic-bezier(0.7, 0, 0.84, 0)'
 const UNDOCK_EASE = 'cubic-bezier(0.16, 1, 0.3, 1)'
-
-/** The transform that moves and squashes `from` onto `to`. */
-function collapseInto(from: DOMRect, to: DOMRect) {
-  const dx = to.left + to.width / 2 - (from.left + from.width / 2)
-  const dy = to.top + to.height / 2 - (from.top + from.height / 2)
-  const sx = Math.max(to.width / from.width, 0.02)
-  const sy = Math.max(to.height / from.height, 0.02)
-  return `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`
-}
 
 function isShown(element: Element | null): element is HTMLElement {
   return !!element && element.getClientRects().length > 0
@@ -70,7 +61,7 @@ export const minimizeTerminal: WindowActionHandler = async (win) => {
       terminal,
       [
         { transform: 'none', opacity: 1 },
-        { transform: collapseInto(origin, target), opacity: 0 },
+        { transform: mapRect(origin, target), opacity: 0 },
       ],
       { duration: 460, easing: DOCK_EASE, fill: 'forwards' },
     )
@@ -112,7 +103,7 @@ export const minimizeTerminal: WindowActionHandler = async (win) => {
     await play(
       terminal,
       [
-        { transform: collapseInto(terminal.getBoundingClientRect(), source), opacity: 0 },
+        { transform: mapRect(terminal.getBoundingClientRect(), source), opacity: 0 },
         { transform: 'none', opacity: 1 },
       ],
       { duration: 520, easing: UNDOCK_EASE },

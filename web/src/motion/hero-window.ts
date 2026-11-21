@@ -28,6 +28,15 @@ const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
 export const wait = (ms: number) =>
   new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 
+/** The transform that moves and scales the `from` box onto the `to` box. */
+export function mapRect(from: DOMRect, to: DOMRect) {
+  const dx = to.left + to.width / 2 - (from.left + from.width / 2)
+  const dy = to.top + to.height / 2 - (from.top + from.height / 2)
+  const sx = Math.max(to.width / from.width, 0.02)
+  const sy = Math.max(to.height / from.height, 0.02)
+  return `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`
+}
+
 /** Plays a Web Animation and resolves once it finishes or is cancelled. */
 export async function play(
   element: Element,

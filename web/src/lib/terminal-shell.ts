@@ -198,7 +198,8 @@ function cat(data: ShellData, target?: string): ShellResult {
 function open(data: ShellData, target?: string): ShellResult {
   if (!target) return { lines: [err('open: missing target — try `open resume`')] }
   const known = openTargets(data)[target]
-  const href = known ?? findProject(data, target)?.liveLink
+  const project = findProject(data, target)
+  const href = known ?? project?.liveLink ?? project?.repoUrl
   if (!href) return { lines: [err(`open: ${target}: nothing to open`)] }
   return { lines: [link(`opening ${href}`, href)], effect: { type: 'open', href } }
 }

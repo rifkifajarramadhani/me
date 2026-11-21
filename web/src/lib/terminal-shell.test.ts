@@ -110,6 +110,12 @@ describe('runCommand', () => {
       href: 'https://typefn.dev/',
     })
     expect(run('open museum-macan').effect).toBeUndefined()
+    const repoOnly = { ...data.projects[0], slug: 'aibar', liveLink: undefined }
+    const withRepoOnly = { ...data, projects: [repoOnly] }
+    expect(runCommand('open aibar', context({ data: withRepoOnly })).effect).toEqual({
+      type: 'open',
+      href: 'https://github.com/ada/typefn',
+    })
     expect(run('open').lines[0].kind).toBe('err')
   })
 

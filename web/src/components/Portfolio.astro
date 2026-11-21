@@ -30,6 +30,7 @@ import SiteFooter from '@/components/SiteFooter.astro'
   import { mountDataStreams } from '@/motion/data-streams'
   import { minimizeTerminal } from '@/motion/hero-dock'
   import { restartTerminal } from '@/motion/hero-restart'
+  import { maximizeTerminal } from '@/motion/hero-shell'
   import { mountHeroWindow } from '@/motion/hero-window'
   import { mountTaglineRotator } from '@/motion/tagline-rotator'
   import { mountTerminalBackdrop } from '@/motion/terminal-backdrop'
@@ -49,6 +50,7 @@ import SiteFooter from '@/components/SiteFooter.astro'
     mountHeroWindow(heroWindow, {
       close: restartTerminal,
       minimize: minimizeTerminal,
+      maximize: maximizeTerminal,
     })
   }
 </script>

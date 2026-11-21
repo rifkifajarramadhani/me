@@ -1,5 +1,11 @@
 ---
+import PAST_ROLES from '@/data/experience'
+import PROJECTS from '@/data/projects'
+import SKILLS from '@/data/skills'
+import { serializeJsonLd } from '@/lib/json-ld'
 import { name, jobTitle, socialLinks } from '@/lib/site'
+import { createSitePublishing } from '@/lib/site-publishing'
+import { projectSlug, type ShellData } from '@/lib/terminal-shell'
 
 const taglines = ['build things for the web.', 'build digital experiences.']
 const socials = [
@@ -22,6 +28,33 @@ const socials = [
     external: true,
   },
 ]
+const { assets } = createSitePublishing()
+const shellData: ShellData = {
+  name,
+  jobTitle,
+  resumeUrl: assets.resume,
+  links: socialLinks,
+  projects: PROJECTS.map((project) => ({
+    slug: projectSlug(project.name),
+    name: project.name,
+    description: project.description,
+    tags: project.tags ?? [],
+    liveLink: project.liveLink || undefined,
+    repoUrl: project.repoUrl !== '#' ? project.repoUrl : undefined,
+  })),
+  experience: PAST_ROLES.map(({ company, country, role, startDate, endDate }) => ({
+    company,
+    country,
+    role,
+    startDate,
+    endDate,
+  })),
+  skills: SKILLS.map(({ field, skills }) => ({
+    field,
+    skills: skills.map(({ skill }) => skill),
+  })),
+}
+
 const windowControls = [
   { action: 'close', label: 'Close terminal', glyph: '×', tone: 'bg-danger' },
   { action: 'minimize', label: 'Minimize terminal', glyph: '−', tone: 'bg-warning' },
@@ -158,6 +191,64 @@ const windowControls = [
     </div>
   </div>
 
+  <dialog
+    class="hero-shell terminal-window"
+    data-hero-shell
+    aria-label="Interactive portfolio shell"
+  >
+    <div class="terminal-titlebar">
+      <div class="hero-controls" role="group" aria-label="Shell window controls">
+        <button type="button" class="hero-control" data-shell-exit aria-label="Exit shell">
+          <span class="hero-control-dot bg-danger" aria-hidden="true">
+            <span class="hero-control-glyph">×</span>
+          </span>
+        </button>
+        <span class="hero-control" aria-hidden="true">
+          <span class="hero-control-dot bg-warning opacity-40"></span>
+        </span>
+        <button
+          type="button"
+          class="hero-control"
+          data-shell-exit
+          aria-label="Restore terminal size"
+        >
+          <span class="hero-control-dot bg-success" aria-hidden="true">
+            <span class="hero-control-glyph">−</span>
+          </span>
+        </button>
+      </div>
+      <span class="font-mono text-xs text-ink-subtle" aria-hidden="true">
+        visitor@portfolio: ~
+      </span>
+    </div>
+    <div class="hero-shell-body" data-shell-body>
+      <div role="log" aria-live="polite" data-shell-log></div>
+      <form class="hero-shell-prompt" data-shell-form>
+        <label for="hero-shell-input" class="shrink-0"
+          ><span class="text-primary">visitor@portfolio</span><span
+            class="text-ink-subtle">:~$</span
+          ><span class="sr-only"> command</span></label
+        >
+        <input
+          id="hero-shell-input"
+          data-shell-input
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          spellcheck="false"
+          enterkeyhint="send"
+          class="min-w-0 flex-1 bg-transparent text-ink caret-primary outline-none"
+        />
+      </form>
+    </div>
+    <script
+      type="application/json"
+      data-shell-data
+      set:html={serializeJsonLd(shellData)}
+    />
+  </dialog>
+
   <a
     href="#about"
     class="hero-scroll absolute z-10 bottom-5 left-1/2 inline-flex min-h-11 -translate-x-1/2 items-center px-2 font-mono text-xs text-ink-subtle transition-colors hover:text-primary sm:bottom-7"
@@ -226,6 +317,44 @@ const windowControls = [
 
   .hero-stopped[hidden] {
     display: none;
+  }
+
+  .hero-shell {
+    position: fixed;
+    inset: 0;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    margin: clamp(0.5rem, 3vw, 2rem);
+    padding: 0;
+    flex-direction: column;
+    color: var(--ink);
+  }
+
+  .hero-shell[open] {
+    display: flex;
+  }
+
+  .hero-shell::backdrop {
+    background: rgb(0 0 0 / 0.45);
+    backdrop-filter: blur(2px);
+  }
+
+  .hero-shell-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.7;
+    cursor: text;
+  }
+
+  .hero-shell-prompt {
+    display: flex;
+    gap: 1ch;
+    align-items: baseline;
   }
 
   .hero-controls {
