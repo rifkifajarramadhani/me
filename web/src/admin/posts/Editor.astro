@@ -163,7 +163,17 @@ const toolbarGroups = [
       <p id="post-status-detail" class="post-hint">Only you can see drafts.</p>
       <button id="post-save" class="post-save" type="submit">Save draft</button>
       <p id="post-form-error" class="post-error" role="alert" hidden></p>
+      <p id="post-action-notice" class="post-notice" role="status"></p>
       <div id="post-status-actions" class="post-status-actions"></div>
+      <div id="schedule-form" class="post-schedule" hidden>
+        <label for="schedule-at">Publish at</label>
+        <input id="schedule-at" type="datetime-local" />
+        <p id="schedule-zone" class="post-hint"></p>
+        <div class="post-schedule-actions">
+          <button id="schedule-confirm" type="button">Schedule</button>
+          <button id="schedule-cancel" type="button">Cancel</button>
+        </div>
+      </div>
     </aside>
 
     <div class="post-statusline" aria-label="Post status line">
@@ -177,6 +187,25 @@ const toolbarGroups = [
       </span>
     </div>
   </form>
+
+  <dialog
+    id="delete-dialog"
+    class="post-dialog"
+    aria-labelledby="delete-title"
+    aria-describedby="delete-description"
+  >
+    <h2 id="delete-title">Delete this post?</h2>
+    <p id="delete-description">
+      “<span id="delete-post-title"></span>” will be removed permanently. This
+      can’t be undone.
+    </p>
+    <div class="post-dialog-actions">
+      <button id="delete-confirm" class="post-danger" type="button">
+        Delete post
+      </button>
+      <button id="delete-cancel" type="button" autofocus>Keep post</button>
+    </div>
+  </dialog>
 
   <dialog id="link-dialog" class="post-dialog" aria-labelledby="link-title">
     <form method="dialog" novalidate>

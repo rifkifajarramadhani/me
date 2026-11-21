@@ -8,6 +8,7 @@ import {
   STATUS_LABELS,
   type AdminPost,
 } from './post-types'
+import { mountStatusActions } from './status-actions'
 import { mountToolbar } from './toolbar'
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -116,6 +117,7 @@ function showPost(current: AdminPost) {
   slugHint.textContent = current.slugLocked
     ? 'Locked after publishing so existing links keep working.'
     : 'Lowercase letters, numbers, and hyphens.'
+  statusActions.render()
   updateStatusline()
 }
 
@@ -185,6 +187,27 @@ async function save(): Promise<AdminPost | undefined> {
     setBusy(false)
   }
 }
+
+async function exclusive<T>(label: string, task: () => Promise<T>) {
+  if (busy) return undefined
+  setBusy(label)
+  try {
+    return await task()
+  } finally {
+    setBusy(false)
+  }
+}
+
+const statusActions = mountStatusActions({
+  current: () => post,
+  saveIfNeeded: async () => (!post || isDirty() ? save() : post),
+  exclusive,
+  apply: showPost,
+  showError: showFormError,
+  discard() {
+    savedSnapshot = snapshot()
+  },
+})
 
 function createEditor(document: AdminPost['content'] | undefined) {
   editor = new Editor({
