@@ -28,6 +28,7 @@ import SiteFooter from '@/components/SiteFooter.astro'
 
 <script>
   import { mountDataStreams } from '@/motion/data-streams'
+  import { minimizeTerminal } from '@/motion/hero-dock'
   import { restartTerminal } from '@/motion/hero-restart'
   import { mountHeroWindow } from '@/motion/hero-window'
   import { mountTaglineRotator } from '@/motion/tagline-rotator'
@@ -47,6 +48,7 @@ import SiteFooter from '@/components/SiteFooter.astro'
   if (heroWindow) {
     mountHeroWindow(heroWindow, {
       close: restartTerminal,
+      minimize: minimizeTerminal,
     })
   }
 </script>

@@ -139,6 +139,21 @@ const windowControls = [
         aria-hidden="true"
         hidden
       ></div>
+      <div class="hero-stopped" data-hero-stopped hidden>
+        <p class="font-mono text-sm text-ink-muted" aria-hidden="true">
+          <span class="text-prompt">[1]+</span> Stopped
+          <span class="ml-[3ch] text-ink-subtle">~/portfolio</span>
+        </p>
+        <button
+          type="button"
+          data-hero-restore
+          aria-label="Restore terminal"
+          class="hero-primary-action inline-flex min-h-11 w-fit items-center gap-[1ch] border border-hairline-strong px-4 py-2 font-mono text-sm text-ink-subtle transition-colors hover:border-primary hover:text-primary"
+        >
+          <span class="text-prompt">$</span> fg
+          <span class="text-ink-tertiary" aria-hidden="true"># bring it back</span>
+        </button>
+      </div>
       <p class="sr-only" role="status" data-hero-status></p>
     </div>
   </div>
@@ -197,6 +212,19 @@ const windowControls = [
   }
 
   .hero-restart-log[hidden] {
+    display: none;
+  }
+
+  .hero-stopped {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding: 1.5rem 0.25rem;
+  }
+
+  .hero-stopped[hidden] {
     display: none;
   }
 

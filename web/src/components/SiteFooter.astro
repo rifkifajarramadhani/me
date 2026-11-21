@@ -23,6 +23,18 @@ const year = new Date().getFullYear()
   >
     NORMAL
   </span>
+  {stickyDesktop && (
+    <button
+      type="button"
+      data-hero-dock
+      aria-label="Restore terminal"
+      class="hero-dock flex h-full items-center gap-1.5 border-r border-hairline px-3 text-ink-subtle transition-colors hover:bg-surface-2 hover:text-primary focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+      hidden
+    >
+      <span class="text-prompt" aria-hidden="true">▣</span>
+      ~/portfolio
+    </button>
+  )}
   <div class="flex flex-1 items-center justify-between px-4">
     <span class="text-ink-subtle">~/{shortName.toLowerCase()}</span>
     <span class="flex items-center gap-4">
