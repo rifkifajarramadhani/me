@@ -28,36 +28,6 @@
   color: var(--ink-subtle);
 }
 
-/* Status: one colour per state. Green only for what is live. */
-.post-status {
-  --status-color: var(--ink-subtle);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--status-color);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.post-status::before {
-  content: '';
-  width: 0.4375rem;
-  height: 0.4375rem;
-  border-radius: 50%;
-  background: currentColor;
-}
-[data-status='scheduled'] {
-  --status-color: var(--warning);
-}
-[data-status='published'] {
-  --status-color: var(--primary);
-}
-[data-status='archived'] {
-  --status-color: var(--ink-tertiary);
-}
-
 .post-filters {
   display: flex;
   flex-wrap: wrap;
