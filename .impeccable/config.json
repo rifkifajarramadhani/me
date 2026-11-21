@@ -8,6 +8,12 @@
         "value": "arial",
         "createdAt": "2026-11-21T06:39:21.716Z",
         "reason": "Resume PDF intentionally uses ATS-safe system font Arial (pre-existing, print document outside site design system)"
+      },
+      {
+        "rule": "overused-font",
+        "value": "arial",
+        "createdAt": "2026-11-21T06:40:01.031Z",
+        "reason": "Resume PDF intentionally uses ATS-safe system font Arial (pre-existing, print document outside site design system)"
       }
     ]
   }
