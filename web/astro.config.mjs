@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 import sitemap from '@astrojs/sitemap'
+import node from '@astrojs/node'
 import { createSitePublishing } from './src/lib/site-publishing'
 
 const publishing = createSitePublishing()
@@ -32,6 +33,17 @@ const cms = {
       if (command === 'dev') updateConfig({ trailingSlash: 'ignore' })
 
       adminRoutes.forEach((route) => injectRoute(route))
+      // Published posts render on demand so publishing needs no rebuild.
+      injectRoute({
+        pattern: '/blog',
+        entrypoint: './src/blog/BlogIndex.astro',
+        prerender: false,
+      })
+      injectRoute({
+        pattern: '/blog/[slug]',
+        entrypoint: './src/blog/BlogPost.astro',
+        prerender: false,
+      })
     },
   },
 }
@@ -41,9 +53,11 @@ export default defineConfig({
   // Astro 7 defaults to JSX whitespace rules, which drop the spaces our
   // inline markup relies on; keep the lossless HTML-aware compression.
   compressHTML: true,
+  // Everything stays prerendered; the adapter serves only the /blog routes.
+  adapter: publishing.hasBlog ? node({ mode: 'standalone' }) : undefined,
   integrations: [
     sitemap(publishing.sitemap),
-    ...(publishing.profile === 'apex' ? [cms] : []),
+    ...(publishing.hasBlog ? [cms] : []),
   ],
   vite: {
     plugins: [tailwindcss()],

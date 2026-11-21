@@ -1,0 +1,79 @@
+---
+import BlogFrame from './BlogFrame.astro'
+import CommandHeading from '@/components/CommandHeading.astro'
+import { name } from '@/lib/site'
+import { createSitePublishing } from '@/lib/site-publishing'
+import {
+  BlogUnavailable,
+  formatListDate,
+  formatReadingTime,
+  listPosts,
+  type BlogPostSummary,
+} from '@/lib/blog'
+
+const publishing = createSitePublishing()
+let posts: BlogPostSummary[] | undefined
+try {
+  posts = await listPosts()
+  Astro.response.headers.set('Cache-Control', 'public, max-age=60')
+} catch (error) {
+  if (!(error instanceof BlogUnavailable)) throw error
+  Astro.response.status = 503
+  Astro.response.headers.set('Cache-Control', 'no-store')
+  Astro.response.headers.set('Retry-After', '60')
+}
+---
+
+<BlogFrame
+  title={`Blog | ${name}`}
+  description="Writing by Rifki Fajar Ramadhani on building, shipping, and running web software."
+  noindex={!posts}
+>
+  <CommandHeading as="h1" command="ls -lt ~/blog" kicker="blog" />
+  <p class="mt-4 max-w-[60ch] text-sm leading-[1.7] text-ink-muted">
+    Notes on building, shipping, and running web software.
+  </p>
+
+  {
+    !posts ? (
+      <p role="alert" class="mt-12 border border-hairline bg-surface-1 p-5 text-sm text-ink-muted">
+        The blog is unavailable right now. Try again in a minute.
+      </p>
+    ) : posts.length === 0 ? (
+      <p class="mt-12 border border-dashed border-hairline p-5 text-sm text-ink-muted">
+        No posts yet. Check back soon.
+      </p>
+    ) : (
+      <ol class="mt-12 border-t border-hairline" aria-label="Posts, newest first">
+        {posts.map((post) => (
+          <li class="group relative grid gap-x-6 gap-y-1 border-b border-hairline py-6 sm:grid-cols-[11ch_9ch_minmax(0,1fr)]">
+            <time
+              datetime={post.publishedAt}
+              class="text-xs leading-[1.9] text-ink-subtle tabular-nums"
+            >
+              {formatListDate(post.publishedAt)}
+            </time>
+            <span class="text-xs leading-[1.9] text-ink-tertiary">
+              {formatReadingTime(post.readingMinutes)}
+            </span>
+            <div class="sm:row-span-1">
+              <h2 class="text-base font-bold leading-snug text-ink transition-colors group-hover:text-primary">
+                <a
+                  href={publishing.publicPath(`blog/${post.slug}/`)}
+                  class="after:absolute after:inset-0 focus-visible:outline-none group-focus-within:underline group-focus-within:underline-offset-4"
+                >
+                  {post.title}
+                </a>
+              </h2>
+              {post.excerpt && (
+                <p class="mt-2 max-w-[65ch] text-sm leading-[1.7] text-ink-muted">
+                  {post.excerpt}
+                </p>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+</BlogFrame>

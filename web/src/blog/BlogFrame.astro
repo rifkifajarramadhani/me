@@ -1,0 +1,22 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import Nav from '@/components/Nav.astro'
+import SiteFooter from '@/components/SiteFooter.astro'
+
+interface Props {
+  title: string
+  description?: string
+  noindex?: boolean
+}
+
+const { title, description, noindex } = Astro.props
+---
+
+<Layout title={title} description={description} noindex={noindex}>
+  <slot name="head" />
+  <Nav />
+  <main class="mx-auto min-h-[calc(100vh-2.25rem)] max-w-4xl px-6 pt-32 pb-24">
+    <slot />
+  </main>
+  <SiteFooter />
+</Layout>

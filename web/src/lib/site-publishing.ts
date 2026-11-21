@@ -65,6 +65,8 @@ export interface SiteManifest {
 
 export interface SitePublishing {
   readonly profile: PublishingProfileName
+  /** Only the apex deployment runs the CMS and the on-demand blog server. */
+  readonly hasBlog: boolean
   readonly astro: AstroPublishingConfig
   readonly assets: PublishingAssets
   readonly robots: string
@@ -197,9 +199,13 @@ export function createSitePublishing(
       },
     ],
   }
+  const hasBlog = selected === 'apex'
   const homeUrl = absoluteUrl()
   const homeWithoutSlash = homeUrl.replace(/\/$/, '')
+  const blogUrl = absoluteUrl('blog/')
   const sitemap: Exclude<SitemapOptions, undefined> = {
+    // The blog renders on demand, so Astro cannot discover it at build time.
+    customPages: hasBlog ? [blogUrl] : [],
     filter: (page) => {
       const pathname = new URL(page).pathname.replace(/\/$/, '')
       return (
@@ -208,16 +214,20 @@ export function createSitePublishing(
         !pathname.startsWith(publicPath('admin/'))
       )
     },
-    serialize: (item) => ({
-      ...item,
-      url: item.url === homeWithoutSlash ? homeUrl : item.url,
-      changefreq: ChangeFreqEnum.MONTHLY,
-      priority: 1,
-    }),
+    serialize: (item) =>
+      item.url === blogUrl
+        ? { ...item, changefreq: ChangeFreqEnum.WEEKLY, priority: 0.8 }
+        : {
+            ...item,
+            url: item.url === homeWithoutSlash ? homeUrl : item.url,
+            changefreq: ChangeFreqEnum.MONTHLY,
+            priority: 1,
+          },
   }
 
   return {
     profile: selected,
+    hasBlog,
     astro,
     assets,
     robots,

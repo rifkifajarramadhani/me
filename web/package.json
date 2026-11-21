@@ -11,6 +11,7 @@
     "verify:publishing": "bun scripts/verify-publishing.ts"
   },
   "dependencies": {
+    "@astrojs/node": "^11.1.14",
     "@astrojs/sitemap": "^3.7.5",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@tailwindcss/vite": "^4.3.5",

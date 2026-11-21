@@ -15,6 +15,8 @@ interface ExpectedBuild {
   profile: PublishingProfileName
   base: '/' | '/me/'
   homeUrl: string
+  /** Builds with the Node adapter: static files in client/, the blog server in server/. */
+  blog: boolean
 }
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -24,11 +26,13 @@ const expectedBuilds: ExpectedBuild[] = [
     profile: 'apex',
     base: '/',
     homeUrl: 'https://rifkiramadhani.my.id/',
+    blog: true,
   },
   {
     profile: 'github-pages',
     base: '/me/',
     homeUrl: 'https://rifkifajarramadhani.github.io/me/',
+    blog: false,
   },
 ]
 
@@ -292,6 +296,34 @@ async function verifyBuild(outDir: string, expected: ExpectedBuild) {
   await verifyNoObsoleteDomain(outDir)
 }
 
+async function verifyBlog(outDir: string, expected: ExpectedBuild) {
+  const { blog, homeUrl, profile } = expected
+  const entries = await readdir(outDir)
+  if (!blog) {
+    assert(
+      !entries.includes('blog') && !entries.includes('server'),
+      `${profile} contains blog pages or a blog server`,
+    )
+    assert(
+      !(await readRequired(join(outDir, 'sitemap-0.xml'))).includes('/blog/'),
+      `${profile} sitemap lists the blog`,
+    )
+    return
+  }
+
+  const staticDir = join(outDir, 'client')
+  await readRequired(join(outDir, 'server', 'entry.mjs'))
+  assert(
+    !(await readdir(staticDir)).includes('blog'),
+    `${profile} prerendered blog pages instead of rendering them on demand`,
+  )
+  assertIncludes(
+    await readRequired(join(staticDir, 'sitemap-0.xml')),
+    `<loc>${homeUrl}blog/</loc>`,
+    `${profile} sitemap`,
+  )
+}
+
 // Astro moves build assets with rename(), which fails across filesystems, so
 // the output must live on the same device as the project, not the OS tmpdir.
 const temporaryParent = join(projectRoot, '.astro')
@@ -302,7 +334,8 @@ try {
   for (const expected of expectedBuilds) {
     const outDir = join(temporaryRoot, expected.profile)
     await build(expected.profile, outDir)
-    await verifyBuild(outDir, expected)
+    await verifyBuild(expected.blog ? join(outDir, 'client') : outDir, expected)
+    await verifyBlog(outDir, expected)
     console.log(`Verified ${expected.profile} publishing artifacts.`)
   }
 

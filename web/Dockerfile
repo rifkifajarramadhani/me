@@ -19,7 +19,7 @@ RUN bun run --cwd web build
 
 FROM nginx:1.30-alpine
 
-COPY --from=build /app/web/dist /usr/share/nginx/html
+COPY --from=build /app/web/dist/client /usr/share/nginx/html
 COPY web/docker/nginx/me.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80

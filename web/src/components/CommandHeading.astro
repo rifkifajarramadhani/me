@@ -3,9 +3,11 @@ interface Props {
   command: string
   kicker?: string
   class?: string
+  /** Heading level; sections use h2, a page's own title uses h1. */
+  as?: 'h1' | 'h2'
 }
 
-const { command, kicker, class: className } = Astro.props
+const { command, kicker, class: className, as: Heading = 'h2' } = Astro.props
 ---
 
 <div class={className}>
@@ -18,9 +20,9 @@ const { command, kicker, class: className } = Astro.props
       </p>
     )
   }
-  <h2 class="animate-rise-in text-2xl font-bold tracking-[-0.03em] text-ink motion-reduce:animate-none sm:text-3xl">
+  <Heading class="animate-rise-in text-2xl font-bold tracking-[-0.03em] text-ink motion-reduce:animate-none sm:text-3xl">
     <span class="mr-[0.4ch] text-prompt">$</span>
     {command}
     <span class="ml-[0.15ch] inline-block h-[1.05em] w-[0.55ch] translate-y-[0.16em] animate-command-caret bg-primary motion-reduce:animate-none"></span>
-  </h2>
+  </Heading>
 </div>

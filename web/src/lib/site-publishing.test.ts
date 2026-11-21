@@ -197,4 +197,19 @@ describe('createSitePublishing', () => {
       priority: 1,
     })
   })
+
+  test('lists the on-demand blog only where it is deployed', () => {
+    const apex = createSitePublishing('apex')
+    expect(apex.hasBlog).toBe(true)
+    expect(apex.sitemap.customPages).toEqual([
+      'https://rifkiramadhani.my.id/blog/',
+    ])
+    expect(
+      apex.sitemap.serialize?.({ url: 'https://rifkiramadhani.my.id/blog/' }),
+    ).toMatchObject({ changefreq: 'weekly', priority: 0.8 })
+
+    const pages = createSitePublishing('github-pages')
+    expect(pages.hasBlog).toBe(false)
+    expect(pages.sitemap.customPages).toEqual([])
+  })
 })
