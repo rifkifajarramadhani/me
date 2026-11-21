@@ -1,14 +1,15 @@
 ---
 import { createSitePublishing } from '@/lib/site-publishing'
-import { shortName } from '@/lib/site'
+import { name, shortName } from '@/lib/site'
 import ThemeToggle from '@/components/ThemeToggle.astro'
 
 const publishing = createSitePublishing()
 const { assets } = publishing
 const home = publishing.publicPath()
 const pathname = Astro.url.pathname.replace(/\/?$/, '/')
+const onHome = pathname === home
 // Off the homepage, section anchors must point back to it.
-const section = (id: string) => (pathname === home ? `#${id}` : `${home}#${id}`)
+const section = (id: string) => (onHome ? `#${id}` : `${home}#${id}`)
 const blogPath = publishing.publicPath('blog/')
 const onBlog = publishing.hasBlog && pathname.startsWith(blogPath)
 
@@ -30,13 +31,34 @@ const links = [
   data-scrolled="false"
   data-open="false"
 >
-  <nav class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+  <nav
+    class:list={[
+      'mx-auto flex max-w-4xl items-center justify-between px-6',
+      onHome ? 'py-1 lg:py-1.5' : 'py-4',
+    ]}
+  >
     <a
       href={section('hero')}
-      class="font-mono text-sm font-bold text-ink transition-colors hover:text-primary"
-      aria-label="Home"
+      class={onHome
+        ? 'flex size-11 shrink-0 items-center justify-center outline outline-transparent hover:outline-hairline-strong focus-visible:outline-2 focus-visible:outline-primary'
+        : 'font-mono text-sm font-bold text-ink transition-colors hover:text-primary'}
+      aria-label={onHome ? `${name} home` : 'Home'}
     >
-      <span class="text-prompt">[</span>{shortName.toLowerCase()}<span class="text-prompt">]</span>
+      {
+        onHome ? (
+          <img
+            src={publishing.publicPath('logo-mark.svg')}
+            alt=""
+            width="32"
+            height="32"
+            class="outline outline-hairline"
+          />
+        ) : (
+          <>
+            <span class="text-prompt">[</span>{shortName.toLowerCase()}<span class="text-prompt">]</span>
+          </>
+        )
+      }
     </a>
 
     <ul class="hidden items-center gap-6 lg:flex">

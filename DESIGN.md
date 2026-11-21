@@ -251,7 +251,7 @@ Components are utilitarian and exact: each one exposes its role through a border
 
 ### Navigation
 
-- **Style:** A fixed, centered command path using quiet secondary text, a bold bracketed identity, and a bordered resume action.
+- **Style:** A fixed, centered command path using quiet secondary text and a bordered resume action. The homepage uses the RF mark as its home link. The blog uses a bold bracketed identity.
 - **State:** Links turn Operational Green on hover or active use. After scrolling, the header gains a hairline, translucent tonal surface, ambient shadow, and blur.
 - **Mobile:** Keep the theme and menu controls visible, then reveal a full-width tonal menu with comfortably tappable command links.
 
