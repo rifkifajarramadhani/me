@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
   <title id="title">Rifki RF terminal monogram</title>
-  <rect width="512" height="512" rx="88" fill="#171514" />
+  <rect width="512" height="512" fill="#171514" />
   <path
     fill="#fdfcfc"
     fill-rule="evenodd"
-    d="M96 92h146c75 0 122 42 122 109 0 46-23 80-64 97l76 122h-82l-66-110h-54v110H96V92Zm78 66v88h62c33 0 50-15 50-44 0-30-17-44-50-44h-62Z"
+    d="M64 128h112c36 0 60 24 60 58v42c0 28-16 48-44 55l52 69h-58l-51-68h-23v68H64V128Zm48 48v64h60c10 0 16-6 16-16v-32c0-10-6-16-16-16h-60Z"
   />
-  <path fill="#fdfcfc" d="M330 92h102v66h-24v67h20v66h-20v129h-78V92Z" />
-  <path fill="#3fb950" d="m86 354 36 33-36 33 17 19 57-52-57-52-17 19Zm78 53h62v26h-62v-26Z" />
+  <path fill="#fdfcfc" d="M288 128h160v48H336v48h92v48h-92v80h-48V128Z" />
+  <rect x="288" y="384" width="64" height="32" fill="#3fb950" />
 </svg>
