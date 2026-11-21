@@ -1,0 +1,73 @@
+---
+import { Plus } from 'lucide-react'
+import AdminIcon from '../AdminIcon.astro'
+import AdminWorkspace from '../AdminWorkspace.astro'
+import { POST_STATUSES, STATUS_LABELS } from './post-types'
+import stylesheet from './posts.css?url'
+
+const filters = [
+  { value: '', label: 'All' },
+  ...POST_STATUSES.map((status) => ({
+    value: status,
+    label: STATUS_LABELS[status],
+  })),
+]
+---
+
+<AdminWorkspace
+  title="Posts"
+  path="~/portfolio/admin/posts"
+  stylesheet={stylesheet}
+>
+  <Fragment slot="head">
+    <script>
+      import './posts-list'
+    </script>
+  </Fragment>
+  <a slot="actions" class="admin-primary-action" href="/admin/posts/edit/">
+    <AdminIcon icon={Plus} size={16} />
+    New post
+  </a>
+
+  <div class="post-filters" role="group" aria-label="Filter posts by status">
+    {
+      filters.map(({ value, label }) => (
+        <button
+          type="button"
+          class="post-filter"
+          data-filter={value}
+          aria-pressed={value === '' ? 'true' : 'false'}
+        >
+          {label}
+          <span class="post-filter-count" data-count={value || 'all'}>
+            0
+          </span>
+        </button>
+      ))
+    }
+  </div>
+
+  <p id="posts-loading" role="status">Loading posts…</p>
+  <div id="posts-error" hidden>
+    <p role="alert">Could not load posts.</p>
+    <button id="posts-retry" type="button">Try again</button>
+  </div>
+
+  <div id="posts-empty" class="posts-empty" hidden>
+    <p id="posts-empty-message">No posts yet. Start with your first draft.</p>
+    <a id="posts-empty-action" href="/admin/posts/edit/">Write a post</a>
+  </div>
+
+  <table id="posts-table" class="posts-table" hidden>
+    <caption class="visually-hidden">Blog posts</caption>
+    <thead>
+      <tr>
+        <th scope="col">Status</th>
+        <th scope="col">Title</th>
+        <th scope="col">Publish date</th>
+        <th scope="col">Updated</th>
+      </tr>
+    </thead>
+    <tbody id="posts-rows"></tbody>
+  </table>
+</AdminWorkspace>

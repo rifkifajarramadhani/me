@@ -1,0 +1,84 @@
+---
+import { Menu } from 'lucide-react'
+import AdminIcon from './AdminIcon.astro'
+import AdminLayout from './AdminLayout.astro'
+import AdminSidebar from './AdminSidebar.astro'
+
+interface Props {
+  /** Page heading. */
+  title: string
+  /** Defaults to "<title> · Portfolio admin". */
+  documentTitle?: string
+  /** Page stylesheet, imported with `?url` so the CSP-safe link is used. */
+  stylesheet?: string
+  /** Terminal-style location shown in the top bar. */
+  path?: string
+  /** Lets the page use the full workspace width (the editor needs it). */
+  wide?: boolean
+}
+
+const {
+  title,
+  documentTitle = `${title} · Portfolio admin`,
+  stylesheet,
+  path = '~/portfolio/admin',
+  wide = false,
+} = Astro.props
+---
+
+<AdminLayout title={documentTitle}>
+  <Fragment slot="head">
+    {stylesheet && <link rel="stylesheet" href={stylesheet} />}
+    <slot name="head" />
+  </Fragment>
+  <Fragment slot="workspace">
+    <header class="admin-topbar">
+      <button
+        class="admin-icon-button admin-menu-button"
+        id="open-navigation"
+        type="button"
+        aria-label="Open navigation"
+        aria-controls="mobile-navigation"
+        aria-expanded="false"
+        hidden
+      >
+        <AdminIcon icon={Menu} size={20} />
+      </button>
+      <span>{path}</span>
+    </header>
+
+    <div id="desktop-navigation">
+      <AdminSidebar />
+    </div>
+    <dialog
+      id="mobile-navigation"
+      class="admin-drawer"
+      aria-label="Admin navigation"
+    ></dialog>
+
+    <main
+      class:list={['admin-workspace', { 'admin-workspace-wide': wide }]}
+      aria-labelledby="page-title"
+    >
+      <div class="admin-page-header">
+        <h1 id="page-title">
+          <span aria-hidden="true">&gt;</span>
+          {title}
+        </h1>
+        <slot name="actions" />
+      </div>
+      <p id="checking-session" role="status" hidden>Checking your session…</p>
+      <div id="session-unavailable" hidden>
+        <p role="alert">Could not verify your session.</p>
+        <button id="retry-session" type="button">Try again</button>
+      </div>
+      <div data-admin-content hidden>
+        <slot />
+      </div>
+      <noscript>
+        <p>Enable JavaScript to open the portfolio admin.</p>
+        <a href="/admin/login/">Go to sign-in</a>
+      </noscript>
+    </main>
+  </Fragment>
+</AdminLayout>

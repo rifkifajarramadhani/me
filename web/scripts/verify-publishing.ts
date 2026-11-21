@@ -85,6 +85,25 @@ async function verifyNoObsoleteDomain(path: string): Promise<void> {
   )
 }
 
+/** An entry script plus every chunk it statically imports, concatenated. */
+async function readScriptGraph(outDir: string, entry: string) {
+  const seen = new Set<string>()
+  const sources: string[] = []
+  const visit = async (file: string) => {
+    if (seen.has(file)) return
+    seen.add(file)
+    const source = await readRequired(join(outDir, file))
+    sources.push(source)
+    for (const [, specifier] of source.matchAll(
+      /\bimport\s*(?:[^'"`;]*?from\s*)?["'`](\.{1,2}\/[^"'`]+\.js)["'`]/g,
+    )) {
+      await visit(join(dirname(file), specifier))
+    }
+  }
+  await visit(entry)
+  return sources.join('\n')
+}
+
 async function verifyAdmin(outDir: string, profile: PublishingProfileName) {
   if (profile === 'github-pages') {
     assert(
@@ -98,6 +117,7 @@ async function verifyAdmin(outDir: string, profile: PublishingProfileName) {
   for (const [file, title, scriptMarker] of [
     ['admin/index.html', 'Portfolio admin', '/admin/session'],
     ['admin/login/index.html', 'Admin sign-in', 'sign-in-error'],
+    ['admin/posts/index.html', 'Posts · Portfolio admin', '/admin/api/posts'],
   ]) {
     const html = await readRequired(join(outDir, file))
     assertIncludes(html, `<title>${title}</title>`, file)
@@ -109,10 +129,14 @@ async function verifyAdmin(outDir: string, profile: PublishingProfileName) {
       /<script type="module" src="\/(_astro\/[^"]+\.js)">/,
     )?.[1]
     assert(stylesheet && script, `${file} is missing its external CSS or JavaScript`)
+    assert(
+      !/<style[\s>]/.test(html) && !/<script(?![^>]*\ssrc=)[^>]*>/.test(html),
+      `${file} has inline CSS or JavaScript, which the admin CSP blocks`,
+    )
     assert(!scripts.has(script), `${file} shares its script with another admin page`)
     scripts.add(script)
     assertIncludes(await readRequired(join(outDir, stylesheet)), '--canvas:', stylesheet)
-    const source = await readRequired(join(outDir, script))
+    const source = await readScriptGraph(outDir, script)
     assertIncludes(source, scriptMarker, script)
     if (file === 'admin/login/index.html') {
       assert(!source.includes('/admin/session'), `${file} includes dashboard session logic`)

@@ -1,12 +1,25 @@
 ---
-import { ChevronDown, Globe, LayoutDashboard, LogOut, X } from 'lucide-react'
+import {
+  ChevronDown,
+  FileText,
+  Globe,
+  LayoutDashboard,
+  LogOut,
+  X,
+} from 'lucide-react'
 import AdminIcon from './AdminIcon.astro'
 
 const links = [
   { href: '/admin/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/posts/', label: 'Posts', icon: FileText },
   { href: '/', label: 'View portfolio', icon: Globe },
 ]
 const pathname = Astro.url.pathname.replace(/\/?$/, '/')
+// Section links stay current on their sub-pages, e.g. Posts on the editor.
+const isCurrent = (href: string) =>
+  href === '/admin/'
+    ? pathname === href
+    : href.startsWith('/admin/') && pathname.startsWith(href)
 ---
 
 <aside
@@ -36,7 +49,7 @@ const pathname = Astro.url.pathname.replace(/\/?$/, '/')
           <a
             class="admin-nav-link"
             href={href}
-            aria-current={pathname === href ? 'page' : undefined}
+            aria-current={isCurrent(href) ? 'page' : undefined}
           >
             <AdminIcon icon={icon} />
             {label}

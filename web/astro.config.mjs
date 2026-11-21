@@ -8,6 +8,7 @@ const publishing = createSitePublishing()
 const adminRoutes = [
   { pattern: '/admin', entrypoint: './src/admin/Admin.astro' },
   { pattern: '/admin/login', entrypoint: './src/admin/Login.astro' },
+  { pattern: '/admin/posts', entrypoint: './src/admin/posts/Posts.astro' },
 ]
 
 // The admin CSP allows only same-origin script files, so Astro must never
@@ -49,6 +50,7 @@ export default defineConfig({
           ? {
               '^/admin/(?:auth/github(?:/callback)?|session|logout)(?:\\?|$)':
                 process.env.CMS_API_TARGET ?? 'http://127.0.0.1:3000',
+              '^/admin/api/': process.env.CMS_API_TARGET ?? 'http://127.0.0.1:3000',
               '^/api/github/contributions(?:\\?|$)':
                 process.env.CMS_API_TARGET ?? 'http://127.0.0.1:3000',
             }
