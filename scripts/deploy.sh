@@ -36,7 +36,7 @@ compose() {
 
 compose config --quiet 2>/dev/null ||
   fail 'Could not load the production Compose configuration. Check the CMS credentials file syntax.'
-compose pull --policy always web api
+compose pull --policy always web api blog
 
 # Reuse the selected image's config validator. Keep the one-off container off Traefik.
 compose run --rm --no-deps --pull never -T --label traefik.enable=false \
@@ -56,7 +56,7 @@ if [[ -n "$legacy_running" ]]; then
   fi
 fi
 
-compose up --detach --no-build --pull never --wait --wait-timeout 120 web api || {
+compose up --detach --no-build --pull never --wait --wait-timeout 120 web api blog || {
   status=$?
   if [[ -z "$previous_api" ]] || (( ${#legacy[@]} )); then
     compose stop api || printf 'Could not stop the new API.\n' >&2

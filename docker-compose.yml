@@ -127,6 +127,8 @@ services:
       - cms-data:/data
     networks:
       - edge
+      # The blog server reaches the CMS here, never through the public edge.
+      - cms
     labels:
       - traefik.enable=true
       - traefik.docker.network=edge
@@ -157,6 +159,44 @@ services:
       retries: 5
     restart: unless-stopped
 
+  blog:
+    profiles: [prod]
+    image: ghcr.io/rifkifajarramadhani/me-blog:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      target: server
+      args:
+        PUBLISHING_PROFILE: apex
+    environment:
+      CMS_API_TARGET: http://api:3000
+    expose:
+      - "4321"
+    networks:
+      - edge
+      - cms
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=edge
+      # Only the blog renders on demand; nginx keeps serving everything else.
+      - "traefik.http.routers.me-blog.rule=Host(`rifkiramadhani.my.id`) && (Path(`/blog`) || PathPrefix(`/blog/`))"
+      - traefik.http.routers.me-blog.priority=90
+      - traefik.http.routers.me-blog.entrypoints=websecure
+      - traefik.http.routers.me-blog.tls=true
+      - traefik.http.routers.me-blog.tls.certresolver=letsencrypt
+      - traefik.http.routers.me-blog.service=me-blog
+      - traefik.http.routers.me-blog.middlewares=me-ratelimit
+      - traefik.http.services.me-blog.loadbalancer.server.port=4321
+    healthcheck:
+      # The prerendered home page needs no CMS, so a CMS outage stays a 503
+      # on blog pages instead of taking the blog server out of rotation.
+      test: ["CMD", "bun", "-e", "fetch('http://127.0.0.1:4321/').then(r => { if (!r.ok) process.exitCode = 1 }).catch(() => { process.exitCode = 1 })"]
+      interval: 10s
+      timeout: 3s
+      start_period: 10s
+      retries: 5
+    restart: unless-stopped
+
 volumes:
   cms-data:
   cms-data-dev:
@@ -165,3 +205,4 @@ networks:
   edge:
     name: edge
     external: true
+  cms:

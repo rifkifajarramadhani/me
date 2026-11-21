@@ -15,6 +15,7 @@ concurrency:
 env:
   IMAGE: ghcr.io/rifkifajarramadhani/me
   CMS_IMAGE: ghcr.io/rifkifajarramadhani/me-cms
+  BLOG_IMAGE: ghcr.io/rifkifajarramadhani/me-blog
   PUBLISHING_PROFILE: apex
 
 jobs:
@@ -62,6 +63,20 @@ jobs:
           tags: |
             ${{ env.CMS_IMAGE }}:latest
             ${{ env.CMS_IMAGE }}:${{ github.sha }}
+
+      - name: Build and push blog server image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: web/Dockerfile
+          target: server
+          push: true
+          build-args: |
+            PUBLISHING_PROFILE=${{ env.PUBLISHING_PROFILE }}
+          labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          tags: |
+            ${{ env.BLOG_IMAGE }}:latest
+            ${{ env.BLOG_IMAGE }}:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
