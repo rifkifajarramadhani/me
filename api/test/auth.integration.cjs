@@ -1,89 +1,27 @@
-require('reflect-metadata')
-
 const assert = require('node:assert/strict')
-const { createHash } = require('node:crypto')
 const { after, before, test } = require('node:test')
-const { createApp } = require('../dist/app')
 const { FLOW_LIFETIME, SESSION_LIFETIME } = require('../dist/admin/sessions')
+const {
+  getCookie,
+  mockGitHub,
+  origin,
+  owner,
+  startCms,
+} = require('./owner-session.cjs')
 
-const origin = 'https://cms.example.test'
-const owner = { id: 157324525, login: 'rifkifajarramadhani' }
-const requestFetch = globalThis.fetch
-let app
-let address
+let cms
+let request
+let beginSignIn
+let callback
 
 before(async () => {
-  Object.assign(process.env, {
-    CMS_ORIGIN: origin,
-    CMS_GITHUB_CLIENT_ID: 'test-client',
-    CMS_GITHUB_CLIENT_SECRET: 'test-secret',
-    CMS_GITHUB_OWNER_ID: String(owner.id),
-  })
-  app = await createApp(false)
-  await app.listen(0, '127.0.0.1')
-  address = await app.getUrl()
+  cms = await startCms()
+  ;({ request, beginSignIn, callback } = cms)
 })
 
 after(async () => {
-  await app?.close()
+  await cms?.app.close()
 })
-
-function request(path, { cookie, refererOrigin, method = 'GET' } = {}) {
-  const headers = {}
-  if (cookie) headers.Cookie = cookie
-  if (refererOrigin) headers.Origin = refererOrigin
-  return requestFetch(`${address}${path}`, {
-    redirect: 'manual',
-    method,
-    headers,
-  })
-}
-
-function getCookie(response, name) {
-  return response.headers
-    .getSetCookie()
-    .find((cookie) => cookie.startsWith(`${name}=`))
-}
-
-async function beginSignIn() {
-  const response = await request('/admin/auth/github')
-  assert.equal(response.status, 303)
-  const authorization = new URL(response.headers.get('location'))
-  const flowCookie = getCookie(response, 'cms_oauth')
-  assert.ok(flowCookie)
-  return { authorization, cookie: flowCookie.split(';')[0], flowCookie }
-}
-
-function callback(
-  { authorization, cookie },
-  state = authorization.searchParams.get('state'),
-) {
-  const query = new URLSearchParams({ code: 'test-code' })
-  if (state) query.set('state', state)
-  return request(`/admin/auth/github/callback?${query}`, { cookie })
-}
-
-function mockGitHub(t, account, authorization) {
-  return t.mock.method(globalThis, 'fetch', async (url, options) => {
-    if (url === 'https://github.com/login/oauth/access_token') {
-      assert.equal(options.method, 'POST')
-      assert.equal(options.body.get('client_secret'), 'test-secret')
-      assert.equal(options.body.get('code'), 'test-code')
-      assert.equal(
-        options.body.get('redirect_uri'),
-        `${origin}/admin/auth/github/callback`,
-      )
-      const challenge = createHash('sha256')
-        .update(options.body.get('code_verifier'))
-        .digest('base64url')
-      assert.equal(challenge, authorization.searchParams.get('code_challenge'))
-      return Response.json({ access_token: 'provider-token' })
-    }
-    assert.equal(url, 'https://api.github.com/user')
-    assert.equal(options.headers.Authorization, 'Bearer provider-token')
-    return Response.json(account)
-  })
-}
 
 function assertSignInFailure(response, error) {
   assert.equal(response.status, 303)
@@ -170,7 +108,10 @@ test('allows the owner, rotates the session, and invalidates it on sign-out', as
   })
   assert.equal(logout.status, 204)
   assert.match(getCookie(logout, 'cms_session'), /^cms_session=;/)
-  assert.equal((await request('/admin/session', { cookie: newCookie })).status, 401)
+  assert.equal(
+    (await request('/admin/session', { cookie: newCookie })).status,
+    401,
+  )
 })
 
 test('denies another GitHub account even if the username matches', async (t) => {
@@ -187,7 +128,10 @@ test('rejects missing, wrong, expired, unbound, and replayed OAuth state', async
   assertSignInFailure(await callback(await beginSignIn(), ''), 'incomplete')
 
   const flow = await beginSignIn()
-  assertSignInFailure(await callback({ ...flow, cookie: undefined }), 'incomplete')
+  assertSignInFailure(
+    await callback({ ...flow, cookie: undefined }),
+    'incomplete',
+  )
   assertSignInFailure(await callback(flow, 'wrong-state'), 'incomplete')
   assertSignInFailure(await callback(flow), 'incomplete')
 

@@ -19,6 +19,8 @@ export async function createApp(logger: false | undefined = undefined) {
     logger,
   })
   app.disable('x-powered-by')
+  // Post bodies carry the full editor document.
+  app.useBodyParser('json', { limit: '1mb' })
   app.use('/admin', adminHeaders)
   return app
 }

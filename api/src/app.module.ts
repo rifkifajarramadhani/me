@@ -10,9 +10,17 @@ import { Database } from './database/database'
 import { GitHubActivity } from './contributions/github-activity'
 import { GitHubActivityController } from './contributions/github-activity.controller'
 import { HealthController } from './health.controller'
+import { AdminPostsController } from './posts/admin-posts.controller'
+import { PostsRepository } from './posts/posts.repository'
+import { PostsService } from './posts/posts.service'
 
 @Module({
-  controllers: [HealthController, AdminController, GitHubActivityController],
+  controllers: [
+    HealthController,
+    AdminController,
+    GitHubActivityController,
+    AdminPostsController,
+  ],
   providers: [
     CmsConfig,
     GithubOAuth,
@@ -20,6 +28,8 @@ import { HealthController } from './health.controller'
     OwnerAuth,
     GitHubActivity,
     Database,
+    PostsRepository,
+    PostsService,
     { provide: APP_GUARD, useClass: OwnerGuard },
   ],
 })
