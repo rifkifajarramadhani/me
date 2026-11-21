@@ -95,8 +95,12 @@
         margin-bottom: 3px;
       }
 
-      .page-break {
-        break-before: page;
+      h2 {
+        break-after: avoid;
+      }
+
+      .keep-together {
+        break-inside: avoid;
       }
 
       .skills p {
@@ -184,10 +188,6 @@
             <li>Optimized complex database queries and resolved performance issues before release.</li>
           </ul>
         </article>
-      </section>
-
-      <section class="page-break">
-        <h2>EXPERIENCE (CONTINUED)</h2>
 
         <article class="job">
           <div class="job-heading">
@@ -212,7 +212,7 @@
         </article>
       </section>
 
-      <section>
+      <section class="keep-together">
         <h2>EDUCATION</h2>
         <div class="education-heading">
           <span>Brawijaya University</span>
@@ -221,7 +221,7 @@
         <p class="compact">B.Sc. in Computer Science — GPA: 3.29 / 4.00</p>
       </section>
 
-      <section>
+      <section class="keep-together">
         <h2>ORGANIZATIONS</h2>
         <div class="education-heading">
           <span>Kominfo Division, Eksekutif Mahasiswa Informatika</span>
@@ -230,7 +230,7 @@
         <p class="compact">Handled external relations and information dissemination for the organization.</p>
       </section>
 
-      <section class="skills">
+      <section class="skills keep-together">
         <h2>SKILLS</h2>
         <p><strong>Languages &amp; Frameworks:</strong> Go, Gofiber, JavaScript, TypeScript, Node.js, NestJS, Express.js, PHP, Laravel</p>
         <p><strong>Architecture &amp; Design:</strong> Clean Architecture, Domain-Driven Design, Microservices, RESTful API design</p>
